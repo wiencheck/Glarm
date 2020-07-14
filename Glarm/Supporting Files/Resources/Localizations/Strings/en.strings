@@ -1,0 +1,71 @@
+/* 
+  English.strings
+  Plum 2
+
+  Created by Adam Wienconek on 03.06.2018.
+  Copyright © 2018 Adam Wienconek. All rights reserved.
+*/
+
+"launchTitle" = "Glarm";
+"browserTitle" = "Alarms";
+"editTitle" = "Edit Alarm";
+"mapTitle" = "Choose Location";
+"audioTitle" = "Sound";
+
+"activeSection" = "Active Alarms";
+"markedSection" = "Marked Alarms";
+"pastSection" = "Previous Alarms";
+
+"createButtonTitle" = "Create New Alarm";
+"playButtonTitle" = "Play";
+"pauseButtonTitle" = "Pause";
+"toneBrowserFooter" = "Choose sound to be played when you reach the chosen region. Note that alarm sounds can only play for 30 seconds.";
+"searchLocationPlaceholder" = "Search for location";
+"choosePlacemark" = "Choose destination";
+"setDistance" = "Set region's radius";
+"location" = "Location";
+"tone" = "Sound";
+
+"markActionTitle" = "Mark";
+"unmarkActionTitle" = "Unmark";
+"scheduleActionTitle" = "Schedule";
+"schedule" = "Schedule Alarm";
+"update" = "Save changes";
+"cancel" = "Cancel";
+"alarm" = "Alarm";
+"alarms" = "Alarms";
+
+"emptyCellTitle" = "No location set";
+"emptyCellDetail" = "Click here to choose destination region";
+"emptyViewTitle" = "No alarms created yet";
+"emptyViewDetail" = "Press the button below to create one.";
+
+"notificationTitle" = "You're almost there!";
+"notificationMessageIsLessThan" = "is less than";
+"notificationMessageAway" = "away.";
+"youAre" = "You are";
+"awayFromDestination" = "away.";
+
+"infoTitle" = "Glarm";
+"infoDetail" = "Simple location-based alarms\nMade by Adam Wienconek 🇵🇱\n\nConsider leaving a review in the App Store, each one really helps!\nHaving a problem or question? Send me a message!";
+"leaveReview" = "Leave a review";
+"messageMe" = "Message me";
+"dismiss" = "Dismiss";
+"openTips" = "How does it work?";
+"tipsDescription" = "Glarm creates and schedules alarms based on your location, which is tracked by iOS in the background. What that means is you can close Glarm and still receive the alarm after entering region and battery consumption is minimal.\n\nFew tips:\n• Swipe left on any alarm to show options for it\n• Mark your favourite alarms so they are easily accessed and don't disappear after time (Glarm keeps track of last 10 non-marked alarms)";
+"areYouEnjoyingTitle" = "Are You enjoying Glarm?";
+"areYouEnjoyingMessage" = "Please consider writing a review, it really helps 😊";
+"errorOccurred" = "Error occurred";
+"errorUnknown" = "Unknown, really mysterious error.";
+
+"permissionLocation" = "Enable location tracking";
+"permissionNotifications" = "Allow notifications";
+"disclaimerFirst" = "To work properly, Glarm needs permission to:";
+"disclaimerSecond" = "We don't gather any personal info or track your location outside of the app.";
+"locationDisclaimer" = "• Read your location (in-app only!)";
+"notificationDisclaimer" = "• Show notifications";
+
+"locationPermissionDeniedTitle" = "Location permission denied";
+"locationPermissionDeniedMessage" = "Glarm needs";
+"notificationPermissionDeniedTitle" = "Notification permission denied";
+"notificationPermissionDeniedMessage" = "";
