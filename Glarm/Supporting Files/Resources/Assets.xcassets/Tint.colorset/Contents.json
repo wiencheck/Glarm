@@ -2,10 +2,15 @@
   "colors" : [
     {
       "color" : {
-        "platform" : "osx",
-        "reference" : "systemOrangeColor"
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0.000",
+          "green" : "0.584",
+          "red" : "1.000"
+        }
       },
-      "idiom" : "universal"
+      "idiom" : "iphone"
     }
   ],
   "info" : {
