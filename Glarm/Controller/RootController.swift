@@ -10,7 +10,11 @@ import UIKit
 import SnapKit
 
 class RootController: UIViewController {
-    private lazy var navigation = RootNavigationController(rootViewController: LaunchController())
+    private lazy var navigation: UINavigationController = {
+        let model = BrowseViewModel(manager: AlarmsManager())
+        let vc = BrowseViewController(model: model)
+        return RootNavigationController(rootViewController: vc)
+    }()
     
     fileprivate lazy var drawer = UIView()
     fileprivate lazy var contentContainer = UIView()
@@ -29,6 +33,11 @@ class RootController: UIViewController {
         navigation.navigationBar.prefersLargeTitles = true
         add(child: navigation, duration: 0)
         setupView()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        navigation.topViewController?.additionalSafeAreaInsets.bottom = drawer.frame.height - view.safeAreaInsets.bottom
     }
     
     private func setupView() {
@@ -89,7 +98,6 @@ extension RootNavigationController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if let root = parent as? RootController {
             root.setDrawerContentViewController((viewController as? Drawerable)?.drawerContentViewController, animated: animated)
-            viewController.additionalSafeAreaInsets.bottom = root.contentContainer.frame.height
         }
         
         transitionCoordinator?.notifyWhenInteractionChanges { context in

@@ -50,3 +50,16 @@ extension AWAlertController {
         }
     }
 }
+
+extension AWAlertController {
+    class var notificationsPermissionRestrictedAlert: UIAlertController {
+        let actions: [UIAlertAction] = [
+            UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+                UIApplication.shared.openSettings()
+            }),
+            .cancel()
+        ]
+        let model = AlertViewModel(localizedTitle: .notificationPermissionDeniedTitle, message: .notificationPermissionDeniedMessage, actions: actions, style: .alert)
+        return AWAlertController(model: model)
+    }
+}

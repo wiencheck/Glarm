@@ -67,6 +67,8 @@ extension LocationManager: CLLocationManagerDelegate {
             return
         }
         coordinate = location.coordinate
+        onLocationAuthorizationStatusChange?(.authorized)
+        onLocationAuthorizationStatusChange = nil
     }
     
     internal func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -75,10 +77,9 @@ extension LocationManager: CLLocationManagerDelegate {
             return
         case .authorizedWhenInUse, .authorizedAlways:
             manager.startUpdatingLocation()
-            onLocationAuthorizationStatusChange?(.authorized)
         default:
             onLocationAuthorizationStatusChange?(.resticted)
+            onLocationAuthorizationStatusChange = nil
         }
-        onLocationAuthorizationStatusChange = nil
     }
 }

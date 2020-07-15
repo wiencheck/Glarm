@@ -8,9 +8,9 @@
 
 import UIKit
 
-protocol BrowseViewModelDelegate: class {
+protocol BrowseViewModelDelegate: Alertable {
     func model(didUpdate model: BrowseViewModel, scrollToTop: Bool)
-    func model(didSelectEditAlarm model: BrowseViewModel, alarm: AlarmEntry)
+    func model(didSelectEditAlarm model: BrowseViewModel, alarm: AlarmEntry?)
     func model(didEncounterError model: BrowseViewModel, error: Error)
 }
 
@@ -88,6 +88,28 @@ final class BrowseViewModel {
         }
         manager.unmark(alarm: alarm)
         loadData()
+    }
+    
+    func createPressed() {
+        PermissionsManager.shared.requestLocationPermission { status in
+            switch status {
+            case .authorized:
+                self.delegate?.model(didSelectEditAlarm: self, alarm: nil)
+            case .resticted:
+                let actions: [UIAlertAction] = [
+                    UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+                        UIApplication.shared.openSettings()
+                    }),
+                    .cancel(text: LocalizedStringKey.continue.localized) {
+                        self.delegate?.model(didSelectEditAlarm: self, alarm: nil)
+                    }
+                ]
+                let model = AlertViewModel(localizedTitle: .locationPermissionDeniedTitle, message: .locationPermissionDeniedMessage, actions: actions, style: .alert)
+                self.delegate?.didReceiveAlert(model: model)
+            case .notDetermined:
+                break
+            }
+        }
     }
 }
 

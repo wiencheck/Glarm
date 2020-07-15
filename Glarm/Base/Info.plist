@@ -21,7 +21,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Glarm uses your location to show more accurate search results and display your position on the map. Your location is accessed only when the app is active and is not sent to anyone or any external servers. We are not some lizard spies...unless</string>
+	<string>Glarm uses your location to show more accurate search results and display your position on the map. Your location is accessed only when the app is active and is not sent to anyone or to any external servers. We are not some lizard spies...unless</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

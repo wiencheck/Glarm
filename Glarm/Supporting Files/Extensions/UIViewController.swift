@@ -16,11 +16,9 @@ import UIKit
         controller.view.alpha = 0
         (superview ?? view).addSubview(controller.view)
         controller.view.pinToSuperView()
-        view.layoutIfNeeded()
         
         UIView.animate(withDuration: duration, animations: {
             controller.view.alpha = 1
-            self.view.layoutIfNeeded()
         }) { finished in
             controller.didMove(toParent: self)
             completion?(finished)

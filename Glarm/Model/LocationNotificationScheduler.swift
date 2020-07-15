@@ -29,7 +29,13 @@ extension AlarmsManagerDelegate {
         guard let vc = UIApplication.shared.keyWindow()?.rootViewController else {
             return
         }
-        let model = AlertViewModel(localizedTitle: .locationPermissionDeniedTitle, message: .locationPermissionDeniedMessage, actions: [.cancel()], style: .alert)
+        let actions: [UIAlertAction] = [
+            UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+                UIApplication.shared.openSettings()
+            }),
+            .cancel(text: LocalizedStringKey.dismiss.localized)
+        ]
+        let model = AlertViewModel(localizedTitle: .locationPermissionDeniedTitle, message: .locationPermissionDeniedMessage, actions: actions, style: .alert)
         vc.present(AWAlertController(model: model), animated: true, completion: nil)
     }
     
@@ -37,8 +43,7 @@ extension AlarmsManagerDelegate {
         guard let vc = UIApplication.shared.keyWindow()?.rootViewController else {
             return
         }
-        let model = AlertViewModel(localizedTitle: .notificationPermissionDeniedTitle, message: .notificationPermissionDeniedMessage, actions: [.cancel()], style: .alert)
-        vc.present(AWAlertController(model: model), animated: true, completion: nil)
+        vc.present(AWAlertController.notificationsPermissionRestrictedAlert, animated: true, completion: nil)
     }
     
     func alarmsManager(notificationScheduled manager: AlarmsManager, error: Error?) {
@@ -68,21 +73,7 @@ final class AlarmsManager: NSObject {
     }()
             
     func schedule(alarm: AlarmEntry) {
-        switch CLLocationManager.authorizationStatus() {
-        case .notDetermined:
-            PermissionsManager.shared.requestLocationPermission { status in
-                guard status == .authorized else {
-                    self.delegate?.alarmsManager(locationPermissionDenied: self)
-                    return
-                }
-                self.askForNotificationPermissions(for: alarm)
-            }
-        case .authorizedWhenInUse, .authorizedAlways:
-            askForNotificationPermissions(for: alarm)
-        default:
-            delegate?.alarmsManager(locationPermissionDenied: self)
-            break
-        }
+        askForNotificationPermissions(for: alarm)
     }
     
     func cancel(alarm: AlarmEntry) {
@@ -104,9 +95,6 @@ final class AlarmsManager: NSObject {
 
 private extension AlarmsManager {
     func askForNotificationPermissions(for alarm: AlarmEntry) {
-        guard CLLocationManager.locationServicesEnabled() else {
-            return
-        }
         PermissionsManager.shared.requestNotificationsPermission { status in
             guard status == .authorized else {
                 self.delegate?.alarmsManager(notificationPermissionDenied: self)

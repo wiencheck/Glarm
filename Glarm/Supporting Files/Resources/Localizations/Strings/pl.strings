@@ -51,6 +51,7 @@
 "leaveReview" = "Napisz recenzję";
 "messageMe" = "Napisz do mnie";
 "dismiss" = "Zamknij";
+"continue" = "Kontynuuj";
 "openTips" = "Jak to działa?";
 "tipsDescription" = "Glarm tworzy alarmy oparte na twojej lokalizacji, która jest śledzona przez iOS w tle. W praktyce oznacza to, że możesz zamknąć Glarm, a mimo tego alarm zostanie dostarczony, oraz że zużycie baterii jest minimalne.\n\nKilka porad:\n• Przesuń w lewo którykolwiek alarm, aby odsłonić opcje\n• Oznacz swoje ulubione alarmy, żeby nie zniknęły po czasie (Glarm trzyma w pamięci jedynie 10 ostatnich nieoznaczonych alarmów)";
 "areYouEnjoyingTitle" = "Jak podoba Ci się Glarm?";
@@ -61,7 +62,7 @@
 "permissionLocation" = "Zezwól na odczytywanie położenia";
 "permissionNotifications" = "Zezwól na wyświetlanie powiadomień";
 "locationPermissionDeniedTitle" = "Śledzenie lokalizacji zablokowane";
-"locationPermissionDeniedMessage" = "Rozumiemy jak ważna jest prywatność użytkowników i rozumiemy wszelkie obawy związane z udostępnianiem lokalizacji aplikacjom, jednak głównym celem Glarm jest wyświetlanie alarmów opartych na lokalizacji, więc naprawdę, bardzo potrzebujemy Twojego pozwolenia, aby móc to robić. Glarm odczytuje Twoją lokalizację tylko i wyłącznie podczas użytkowania aplikacji, w tle, poza aplikacją położenie śledzone jest przez system iOS, więc Twoja prywatność pozostaje chroniona.";
+"locationPermissionDeniedMessage" = "Twoja lokalizacja jest używana jedynie w celu wyświetlania dokładniejszych wyników wyszukiwania, oraz aby pokazać Twoją pozycję na mapie. Glarm odczytuje Twoją lokalizację tylko i wyłącznie podczas użytkowania aplikacji, w tle, poza aplikacją położenie śledzone jest przez system iOS, więc Twoja prywatność pozostaje chroniona.";
 "notificationPermissionDeniedTitle" = "Powiadomienia zablokowane";
 "notificationPermissionDeniedMessage" = "Nikt nie lubi bezużytecznych powiadomień, jednak głównym celem Glarm jest wyświetlanie alarmów opartych na lokalizacji, więc naprawdę, bardzo potrzebujemy Twojego pozwolenia, aby móc to robić. Obiecujemy, żadnego spamu!";
 "openSettings" = "Otwórz ustawienia";

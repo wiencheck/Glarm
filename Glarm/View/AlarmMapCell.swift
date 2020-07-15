@@ -12,7 +12,7 @@ import MapKit
 class AlarmMapCell: UITableViewCell {
     static let preferredHeight: CGFloat = 180
     
-    private var timer: Timer?
+    private var timer: Timer!
     
     private lazy var mapView: MKMapView = {
         let m = MKMapView()
@@ -44,6 +44,7 @@ class AlarmMapCell: UITableViewCell {
     
     private lazy var indicatorView: UIImageView = {
         let i = UIImageView(image: .disclosure)
+        i.alpha = 0.66
         i.tintColor = .gray
         i.contentMode = .scaleAspectFit
         return i
@@ -127,7 +128,8 @@ class AlarmMapCell: UITableViewCell {
     
     private func updateDetailText() {
         guard let text = radiusText,
-           let info = locationInfo else {
+           let info = locationInfo,
+            LocationManager.shared.coordinate != .zero else {
             return
         }
         let destination = CLLocation(coordinate: info.coordinate)
@@ -137,10 +139,11 @@ class AlarmMapCell: UITableViewCell {
         
     func startDisplayingUserLocation() {
         mapView.showsUserLocation = true
+        updateDetailText()
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             self?.updateDetailText()
         }
-        timer?.tolerance = 10
+        timer.tolerance = 10
     }
     
     func endDisplayingUserLocation() {

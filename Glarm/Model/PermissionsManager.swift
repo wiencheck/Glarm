@@ -30,22 +30,26 @@ final class PermissionsManager: NSObject {
     
     func getNotificationsPermissionStatus(completion: @escaping (AuthorizationStatus) -> Void) {
         notificationCenter.getNotificationSettings { settings in
-            completion(AuthorizationStatus(settings: settings))
+            DispatchQueue.main.async {
+                completion(AuthorizationStatus(settings: settings))
+            }
         }
     }
     
     func requestNotificationsPermission(completion: @escaping (AuthorizationStatus) -> Void) {
         notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { authorized, error in
-            if let error = error {
-                print("*** Couldn't grant notification permission, error: \(error.localizedDescription)")
-                completion(.notDetermined)
-                return
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("*** Couldn't grant notification permission, error: \(error.localizedDescription)")
+                    completion(.notDetermined)
+                    return
+                }
+                guard authorized else {
+                    completion(.resticted)
+                    return
+                }
+                completion(.authorized)
             }
-            guard authorized else {
-                completion(.resticted)
-                return
-            }
-            completion(.authorized)
         }
     }
 }

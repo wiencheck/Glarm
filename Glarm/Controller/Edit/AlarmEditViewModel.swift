@@ -9,7 +9,7 @@
 import CoreLocation
 import UIKit
 
-protocol AlarmEditViewModelDelegate: class {
+protocol AlarmEditViewModelDelegate: Alertable {
     func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo)
     func model(didSelectAudio model: AlarmEditViewModel, tone: AlarmTone)
     func model(didReloadRow model: AlarmEditViewModel, at indexPath: IndexPath)
@@ -53,14 +53,6 @@ final class AlarmEditViewModel {
 }
 
 extension AlarmEditViewModel: AlarmsManagerDelegate {
-    func alarmsManager(locationPermissionDenied manager: AlarmsManager) {
-        
-    }
-    
-    func alarmsManager(notificationPermissionDenied manager: AlarmsManager) {
-        
-    }
-    
     func alarmsManager(notificationScheduled manager: AlarmsManager, error: Error?) {
         delegate?.model(didScheduleAlert: self, error: error)
     }
@@ -113,7 +105,25 @@ extension AlarmEditViewModel {
     func didSelectRow(at path: IndexPath) {
         switch Section(rawValue: path.section)! {
         case .location:
-            delegate?.model(didSelectMap: self, locationInfo: alarm.locationInfo)
+            PermissionsManager.shared.requestLocationPermission { status in
+                switch status {
+                case .authorized:
+                    self.delegate?.model(didSelectMap: self, locationInfo: self.alarm.locationInfo)
+                case .resticted:
+                    let actions: [UIAlertAction] = [
+                        UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+                            UIApplication.shared.openSettings()
+                        }),
+                        .cancel(text: LocalizedStringKey.continue.localized) {
+                            self.delegate?.model(didSelectMap: self, locationInfo: self.alarm.locationInfo)
+                        }
+                    ]
+                    let model = AlertViewModel(localizedTitle: .locationPermissionDeniedTitle, message: .locationPermissionDeniedMessage, actions: actions, style: .alert)
+                    self.delegate?.didReceiveAlert(model: model)
+                case .notDetermined:
+                    break
+                }
+            }
         case .audio:
             delegate?.model(didSelectAudio: self, tone: alarm.tone)
         }

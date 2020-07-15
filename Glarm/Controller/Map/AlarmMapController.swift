@@ -115,19 +115,8 @@ class MapController: UIViewController {
         circle = MKCircle(center: locationInfo.coordinate, radius: locationInfo.radius)
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        if locationInfo.coordinate == .zero {
-//            return
-//        }
-//        mapView.showUserLocation(and: locationInfo.coordinate, animated: false)
-//    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if locationInfo.coordinate == .zero {
-            return
-        }
         mapView.showUserLocation(and: locationInfo.coordinate, animated: false)
     }
     

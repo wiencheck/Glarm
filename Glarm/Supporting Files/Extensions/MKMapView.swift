@@ -14,14 +14,16 @@ extension MKMapView {
         
         if userCoordinate == .zero {
             setCenter(coordinate, animated: animated)
-            return
+        } else if coordinate == .zero {
+            setCenter(userCoordinate, animated: animated)
+        } else {
+            let rect = MKMapRect(coordinates: [userCoordinate, coordinate])
+            
+            let insets = UIEdgeInsets(top: safeAreaInsets.top + 60,
+                                      left: safeAreaInsets.left + 60,
+                                      bottom: safeAreaInsets.bottom + 60,
+                                      right: safeAreaInsets.right + 60)
+            setVisibleMapRect(rect, edgePadding: insets, animated: true)
         }
-        let rect = MKMapRect(coordinates: [userCoordinate, coordinate])
-        
-        let insets = UIEdgeInsets(top: safeAreaInsets.top + 60,
-                                  left: safeAreaInsets.left + 60,
-                                  bottom: safeAreaInsets.bottom + 60,
-                                  right: safeAreaInsets.right + 60)
-        setVisibleMapRect(rect, edgePadding: insets, animated: true)
     }
 }

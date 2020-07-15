@@ -18,7 +18,6 @@
 		2B0F173A24B9E3A700DD8AB9 /* AlarmCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F173924B9E3A700DD8AB9 /* AlarmCellViewModel.swift */; };
 		2B0F173C24B9EE3500DD8AB9 /* EmptyLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F173B24B9EE3500DD8AB9 /* EmptyLocationCell.swift */; };
 		2B0F753B24B59FEE00EE9876 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753A24B59FEE00EE9876 /* PermissionsManager.swift */; };
-		2B0F753D24B5A39200EE9876 /* LaunchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753C24B5A39200EE9876 /* LaunchController.swift */; };
 		2B0F753F24B5E06800EE9876 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753E24B5E06800EE9876 /* UIColor.swift */; };
 		2B24757E24BF591E00A1070D /* AuthorizationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */; };
 		2B6C7BA724B8E3B4000DEEDA /* RootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6C7BA624B8E3B4000DEEDA /* RootController.swift */; };
@@ -28,6 +27,7 @@
 		2B88BFBE24B32415003B96EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B88BFBD24B32415003B96EE /* Assets.xcassets */; };
 		2B88BFC124B32415003B96EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B88BFBF24B32415003B96EE /* LaunchScreen.storyboard */; };
 		2B88BFCC24B32415003B96EE /* WakeMeAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B88BFCB24B32415003B96EE /* WakeMeAppTests.swift */; };
+		2B8C807924BF894C009EBBAE /* Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8C807824BF894C009EBBAE /* Alertable.swift */; };
 		2BB146E124BD18800076D547 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB146E024BD18800076D547 /* UIDevice.swift */; };
 		2BBDE5D724B9A69E000AF05F /* BoldButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBDE5D624B9A69E000AF05F /* BoldButtonController.swift */; };
 		2BBDE5D924B9AB3D000AF05F /* AudioBrowserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBDE5D824B9AB3D000AF05F /* AudioBrowserViewModel.swift */; };
@@ -96,7 +96,6 @@
 		2B0F173924B9E3A700DD8AB9 /* AlarmCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmCellViewModel.swift; sourceTree = "<group>"; };
 		2B0F173B24B9EE3500DD8AB9 /* EmptyLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyLocationCell.swift; sourceTree = "<group>"; };
 		2B0F753A24B59FEE00EE9876 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
-		2B0F753C24B5A39200EE9876 /* LaunchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchController.swift; sourceTree = "<group>"; };
 		2B0F753E24B5E06800EE9876 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStatus.swift; sourceTree = "<group>"; };
 		2B6C7BA624B8E3B4000DEEDA /* RootController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootController.swift; sourceTree = "<group>"; };
@@ -110,6 +109,7 @@
 		2B88BFC724B32415003B96EE /* GlarmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B88BFCB24B32415003B96EE /* WakeMeAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeMeAppTests.swift; sourceTree = "<group>"; };
 		2B88BFCD24B32415003B96EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2B8C807824BF894C009EBBAE /* Alertable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alertable.swift; sourceTree = "<group>"; };
 		2BB146E024BD18800076D547 /* UIDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDevice.swift; sourceTree = "<group>"; };
 		2BBDE5D624B9A69E000AF05F /* BoldButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoldButtonController.swift; sourceTree = "<group>"; };
 		2BBDE5D824B9AB3D000AF05F /* AudioBrowserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioBrowserViewModel.swift; sourceTree = "<group>"; };
@@ -263,6 +263,7 @@
 				2BE2691624BDA692000299A3 /* AppRatingHelper.swift */,
 				2BE2691824BDA6F9000299A3 /* Config.swift */,
 				2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */,
+				2B8C807824BF894C009EBBAE /* Alertable.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -295,7 +296,6 @@
 				2BCA121A24B33A6A009965E4 /* Map */,
 				2BCA121924B33A5B009965E4 /* Edit */,
 				2BCA121824B33A54009965E4 /* Browse */,
-				2B0F753C24B5A39200EE9876 /* LaunchController.swift */,
 				2B6C7BA624B8E3B4000DEEDA /* RootController.swift */,
 			);
 			path = Controller;
@@ -524,8 +524,8 @@
 				2B0DBDDD24B37F6C005B6A6A /* AlarmEditViewModel.swift in Sources */,
 				2BF4A6A224BCD3FF00F52A4D /* SearchResultsController.swift in Sources */,
 				2BF4A69E24BBCEC500F52A4D /* IAPHandler.swift in Sources */,
-				2B0F753D24B5A39200EE9876 /* LaunchController.swift in Sources */,
 				2B0DBDD624B36062005B6A6A /* AlarmEditController.swift in Sources */,
+				2B8C807924BF894C009EBBAE /* Alertable.swift in Sources */,
 				2BCA121224B33A21009965E4 /* BrowseViewController.swift in Sources */,
 				2BCA121C24B33A7E009965E4 /* AlarmEntry.swift in Sources */,
 				2BF4A6A024BBCF2300F52A4D /* AWError.swift in Sources */,
@@ -713,7 +713,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Glarm/Base/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -734,7 +734,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Glarm/Base/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

@@ -71,6 +71,7 @@ enum LocalizedStringKey: String, LocalizableString {
     case leaveReview
     case messageMe
     case dismiss
+    case `continue`
     case openTips
     case tipsDescription
     case areYouEnjoyingTitle

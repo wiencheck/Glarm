@@ -51,6 +51,7 @@
 "leaveReview" = "Leave a review";
 "messageMe" = "Message me";
 "dismiss" = "Dismiss";
+"continue" = "Continue";
 "openTips" = "How does it work?";
 "tipsDescription" = "Glarm creates and schedules alarms based on your location, which is tracked by iOS in the background. What that means is you can close Glarm and still receive the alarm after entering region and battery consumption is minimal.\n\nFew tips:\n• Swipe left on any alarm to show options for it\n• Mark your favourite alarms so they are easily accessed and don't disappear after time (Glarm keeps track of last 10 non-marked alarms)";
 "areYouEnjoyingTitle" = "Are You enjoying Glarm?";
@@ -61,7 +62,7 @@
 "permissionLocation" = "Enable location tracking";
 "permissionNotifications" = "Allow notifications";
 "locationPermissionDeniedTitle" = "Location restricted";
-"locationPermissionDeniedMessage" = "We understand and value privacy, however Glarm'm main purpose is to present alerts based on location, so we really need your permission to be able to do that. Glarm only reads your location while using the app, system tracks your position in the background outside of Glarm so your privacy stays safe.";
+"locationPermissionDeniedMessage" = "We use your location to provide better search results and show your position on the map. Glarm only reads your location while using the app, system tracks your position in the background outside of Glarm so your privacy stays safe.";
 "notificationPermissionDeniedTitle" = "Notifications restricted";
 "notificationPermissionDeniedMessage" = "Nobody likes apps that spam useless notifications, however Glarm's main purpose is to present alerts based on location, so we really need your permission to be able to do that. We promise no spam!";
 "openSettings" = "Open Settings";

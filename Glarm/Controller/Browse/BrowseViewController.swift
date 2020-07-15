@@ -72,6 +72,16 @@ final class BrowseViewController: UIViewController {
         }
     }
     
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        print(view.safeAreaInsets.bottom)
+//    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        print(view.safeAreaInsets.bottom)
+    }
+    
     private func openEditView(alarm: AlarmEntry?) {
         // Open edit view if alarm exists
         // Go straight to the map otherwise.
@@ -114,7 +124,7 @@ extension BrowseViewController: Drawerable {
 
 extension BrowseViewController: BoldButtonViewControllerDelegate {
     func boldButtonPressed(_ sender: BoldButton) {
-        openEditView(alarm: nil)
+        viewModel.createPressed()
     }
 }
 
@@ -131,7 +141,7 @@ extension BrowseViewController: BrowseViewModelDelegate {
         }
     }
     
-    func model(didSelectEditAlarm model: BrowseViewModel, alarm: AlarmEntry) {
+    func model(didSelectEditAlarm model: BrowseViewModel, alarm: AlarmEntry?) {
         DispatchQueue.main.async {
             self.openEditView(alarm: alarm)
         }
