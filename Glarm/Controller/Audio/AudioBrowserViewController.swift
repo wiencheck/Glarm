@@ -58,7 +58,7 @@ class AudioBrowserViewController: UIViewController {
 extension AudioBrowserViewController: AudioBrowserViewModelDelegate {
     func model(playerDidChangeStatus model: AudioBrowserViewModel, playing: Bool) {
         buttonController.text = (playing ? LocalizedStringKey.pauseButtonTitle : .playButtonTitle).localized
-        buttonController.isHighlighted = !playing
+        buttonController.isSelected = !playing
     }
     
     func model(didReloadData model: AudioBrowserViewModel) {

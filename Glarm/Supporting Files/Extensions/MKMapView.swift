@@ -10,12 +10,18 @@ import MapKit
 
 extension MKMapView {
     func showUserLocation(and coordinate: CLLocationCoordinate2D, animated: Bool) {
-        if let userCoordinate = CLLocationManager().location?.coordinate {
-            let rect = MKMapRect(coordinates: [userCoordinate, coordinate])
-            
-            setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 40, right: 40), animated: true)
-        } else {
-            setCenter(coordinate, animated: true)
+        let userCoordinate = LocationManager.shared.coordinate
+        
+        if userCoordinate == .zero {
+            setCenter(coordinate, animated: animated)
+            return
         }
+        let rect = MKMapRect(coordinates: [userCoordinate, coordinate])
+        
+        let insets = UIEdgeInsets(top: safeAreaInsets.top + 60,
+                                  left: safeAreaInsets.left + 60,
+                                  bottom: safeAreaInsets.bottom + 60,
+                                  right: safeAreaInsets.right + 60)
+        setVisibleMapRect(rect, edgePadding: insets, animated: true)
     }
 }

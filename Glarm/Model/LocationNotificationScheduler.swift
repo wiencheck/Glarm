@@ -70,8 +70,8 @@ final class AlarmsManager: NSObject {
     func schedule(alarm: AlarmEntry) {
         switch CLLocationManager.authorizationStatus() {
         case .notDetermined:
-            PermissionsManager.shared.requestLocationPermission { authorized in
-                guard authorized else {
+            PermissionsManager.shared.requestLocationPermission { status in
+                guard status == .authorized else {
                     self.delegate?.alarmsManager(locationPermissionDenied: self)
                     return
                 }
@@ -107,8 +107,8 @@ private extension AlarmsManager {
         guard CLLocationManager.locationServicesEnabled() else {
             return
         }
-        PermissionsManager.shared.requestNotificationsPermission { authorized in
-            guard authorized else {
+        PermissionsManager.shared.requestNotificationsPermission { status in
+            guard status == .authorized else {
                 self.delegate?.alarmsManager(notificationPermissionDenied: self)
                 return
             }

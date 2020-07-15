@@ -30,17 +30,17 @@ class BoldButtonViewController: UIViewController {
            }
        }
     
-    var isHighlighted: Bool {
+    var isSelected: Bool {
         get {
-            return button.isHighlighted
+            return button.isSelected
         } set {
-            button.isHighlighted = newValue
+            button.isSelected = newValue
         }
     }
     
     private lazy var button: BoldButton = {
         let b = BoldButton()
-        b.isHighlighted = true
+        b.isSelected = true
         b.pressHandler = { [weak self] sender in
             self?.delegate?.boldButtonPressed(sender)
         }

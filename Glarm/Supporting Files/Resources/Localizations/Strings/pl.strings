@@ -1,8 +1,8 @@
 /*
   English.strings
-  Plum 2
+  Glarm
 
-  Created by Adam Wienconek on 03.06.2018.
+  Created by Adam Wienconek on 03.06.2020.
   Copyright © 2018 Adam Wienconek. All rights reserved.
 */
 
@@ -54,15 +54,16 @@
 "openTips" = "Jak to działa?";
 "tipsDescription" = "Glarm tworzy alarmy oparte na twojej lokalizacji, która jest śledzona przez iOS w tle. W praktyce oznacza to, że możesz zamknąć Glarm, a mimo tego alarm zostanie dostarczony, oraz że zużycie baterii jest minimalne.\n\nKilka porad:\n• Przesuń w lewo którykolwiek alarm, aby odsłonić opcje\n• Oznacz swoje ulubione alarmy, żeby nie zniknęły po czasie (Glarm trzyma w pamięci jedynie 10 ostatnich nieoznaczonych alarmów)";
 "areYouEnjoyingTitle" = "Jak podoba Ci się Glarm?";
-"areYouEnjoyingMessage" = "Please consider writing a review, it really helps 😊";
+"areYouEnjoyingMessage" = "Jeśli spodobała Ci się aplikacja, rozważ napisanie recenzji lub wystawienie oceny. Każda z nich bardzo pomaga 😊";
 "errorOccurred" = "Wystąpił błąd";
 "errorUnknown" = "Nieznany, niesamowicie tajemniczy błąd.";
 
 "permissionLocation" = "Zezwól na odczytywanie położenia";
 "permissionNotifications" = "Zezwól na wyświetlanie powiadomień";
+"locationPermissionDeniedTitle" = "Śledzenie lokalizacji zablokowane";
+"locationPermissionDeniedMessage" = "Rozumiemy jak ważna jest prywatność użytkowników i rozumiemy wszelkie obawy związane z udostępnianiem lokalizacji aplikacjom, jednak głównym celem Glarm jest wyświetlanie alarmów opartych na lokalizacji, więc naprawdę, bardzo potrzebujemy Twojego pozwolenia, aby móc to robić. Glarm odczytuje Twoją lokalizację tylko i wyłącznie podczas użytkowania aplikacji, w tle, poza aplikacją położenie śledzone jest przez system iOS, więc Twoja prywatność pozostaje chroniona.";
+"notificationPermissionDeniedTitle" = "Powiadomienia zablokowane";
+"notificationPermissionDeniedMessage" = "Nikt nie lubi bezużytecznych powiadomień, jednak głównym celem Glarm jest wyświetlanie alarmów opartych na lokalizacji, więc naprawdę, bardzo potrzebujemy Twojego pozwolenia, aby móc to robić. Obiecujemy, żadnego spamu!";
+"openSettings" = "Otwórz ustawienia";
+"openApp" = "Przejdź do aplikacji";
 "permissionGreeting" = "Aby funkcjonować, Glarm potrzebuje zgody na odczytywanie Twojego położenia (tylko podczas używania aplikacji!) oraz wysyłanie powiadomień.\nNie zbieramy żadnych danych poufnych, oraz nie śledzimy położenia gdy aplikacja nie jest w użyciu.";
-
-"locationPermissionDeniedTitle" = "Location permission denied";
-"locationPermissionDeniedMessage" = "Glarm needs";
-"notificationPermissionDeniedTitle" = "Notification permission denied";
-"notificationPermissionDeniedMessage" = "";

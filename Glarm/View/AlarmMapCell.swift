@@ -12,6 +12,8 @@ import MapKit
 class AlarmMapCell: UITableViewCell {
     static let preferredHeight: CGFloat = 180
     
+    private var timer: Timer?
+    
     private lazy var mapView: MKMapView = {
         let m = MKMapView()
         m.delegate = self
@@ -53,7 +55,7 @@ class AlarmMapCell: UITableViewCell {
         return i
     }()
     
-    var locationInfo: LocationNotificationInfo? {
+    private var locationInfo: LocationNotificationInfo? {
         didSet {
             guard let info = locationInfo else {
                 return
@@ -65,6 +67,11 @@ class AlarmMapCell: UITableViewCell {
             if info.coordinate != oldValue?.coordinate || info.radius != oldValue?.radius {
                 circle = MKCircle(center: info.coordinate, radius: info.radius)
             }
+        }
+    }
+    private var radiusText: String? {
+        didSet {
+            detailLabel.text = radiusText
         }
     }
     
@@ -108,12 +115,7 @@ class AlarmMapCell: UITableViewCell {
             return
         }
         titleLabel.text = model.locationInfo.identifier
-        detailLabel.text = model.locationInfo.radius.readableRepresentation
-        if let location = CLLocationManager().location, let text = detailLabel.text {
-            let destination = CLLocation(coordinate: model.locationInfo.coordinate)
-            let distance = location.distance(from: destination)
-            detailLabel.text = text + ", \(LocalizedStringKey.youAre.localized) \(distance.readableRepresentation) \(LocalizedStringKey.awayFromDestination.localized)"
-        }
+        radiusText = model.locationInfo.radius.readableRepresentation
         rightDetailLabel.text = model.date
         locationInfo = model.locationInfo
         if let marked = model.marked {
@@ -122,13 +124,28 @@ class AlarmMapCell: UITableViewCell {
             markedView.isHidden = true
         }
     }
+    
+    private func updateDetailText() {
+        guard let text = radiusText,
+           let info = locationInfo else {
+            return
+        }
+        let destination = CLLocation(coordinate: info.coordinate)
+        let distance = LocationManager.shared.location.distance(from: destination)
+        detailLabel.text = text + ", \(LocalizedStringKey.youAre.localized) \(distance.readableRepresentation) \(LocalizedStringKey.awayFromDestination.localized)"
+    }
         
     func startDisplayingUserLocation() {
         mapView.showsUserLocation = true
+        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
+            self?.updateDetailText()
+        }
+        timer?.tolerance = 10
     }
     
     func endDisplayingUserLocation() {
         mapView.showsUserLocation = false
+        timer?.invalidate()
     }
 }
 
@@ -164,6 +181,7 @@ private extension AlarmMapCell {
         addSubview(rightDetailLabel)
         rightDetailLabel.snp.makeConstraints { make in
             make.centerY.equalTo(indicatorView)
+            make.leading.greaterThanOrEqualTo(titleLabel.snp.trailing).offset(4)
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
 

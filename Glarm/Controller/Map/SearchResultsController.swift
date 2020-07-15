@@ -72,8 +72,9 @@ final class SearchResultsController: UIViewController {
         if #available(iOS 13.0, *) {
             s.resultTypes = [.address, .pointOfInterest]
         }
-        if let location = CLLocationManager().location {
-            s.region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
+        let userCoordinate = LocationManager.shared.coordinate
+        if userCoordinate != .zero {
+            s.region = MKCoordinateRegion(center: userCoordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
         }
         return s
     }()
@@ -156,15 +157,14 @@ final class SearchResultsController: UIViewController {
     
     private func geocodeLocation(address: String, completion: @escaping (CLPlacemark) -> Void) {
         var region: CLCircularRegion?
-        if let location = CLLocationManager().location {
-            region = CLCircularRegion(center: location.coordinate, radius: regionRadius, identifier: address)
+        if LocationManager.shared.coordinate != .zero {
+            region = CLCircularRegion(center: LocationManager.shared.coordinate, radius: regionRadius, identifier: address)
         }
-        CLGeocoder().geocodeAddressString(address, in: region, preferredLocale: nil) { placemarks, error in
-            if let error = error {
-                
-            } else if let placemark = placemarks?.first {
-                completion(placemark)
+        CLGeocoder().geocodeAddressString(address, in: region, preferredLocale: nil) { placemarks, _ in
+            guard let placemark = placemarks?.first else {
+                return
             }
+            completion(placemark)
         }
     }
 }

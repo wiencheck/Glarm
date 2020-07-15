@@ -27,6 +27,15 @@ extension UIApplication {
         }
     }
     
+    func openSettings() {
+        guard let settingsURL = URL(string: UIApplication.openSettingsURLString),
+            UIApplication.shared.canOpenURL(settingsURL)
+            else {
+                return
+        }
+        UIApplication.shared.open(settingsURL)
+    }
+    
     func openReviewPage() {
         guard let url = URL(string: "https://apps.apple.com/app/id1523237367" + "?action=write-review"),
         canOpenURL(url) else {

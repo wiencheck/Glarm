@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 import BoldButton
 
 final class LaunchController: UIViewController, Drawerable {
@@ -15,6 +16,15 @@ final class LaunchController: UIViewController, Drawerable {
             updateDrawerContent(animated: true)
         }
     }
+    
+    private lazy var stack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [label1, label2, label3, label4])
+        stack.axis = .vertical
+        stack.alignment = .fill
+        stack.spacing = 2
+        stack.isHidden = true
+        return stack
+    }()
     
     /// Disclaimer first.
     private lazy var label1: UILabel = {
@@ -70,34 +80,36 @@ final class LaunchController: UIViewController, Drawerable {
         navigationItem.title = LocalizedStringKey.launchTitle.localized
         
         checkPermissions { location, notifications in
-            if location && notifications {
+            if location == .authorized && notifications == .authorized {
                 self.openApp()
             } else {
-                self.showPermissionsDrawer(shouldAskForLocation: !location, shouldAskForNotifications: !notifications)
+                self.showPermissionsDrawer(shouldAskForLocation: location != .authorized, shouldAskForNotifications: notifications != .authorized)
             }
         }
     }
     
     private func openApp() {
+        LocationManager.shared.start()
         let model = BrowseViewModel(manager: AlarmsManager())
         let vc = BrowseViewController(model: model)
         navigationController?.setViewControllers([vc], animated: true)
     }
     
-    private func checkPermissions(completion: @escaping (Bool, Bool) -> Void) {
+    /// Completion: Location, Notifications
+    private func checkPermissions(completion: @escaping (AuthorizationStatus, AuthorizationStatus) -> Void) {
         let group = DispatchGroup()
         
-        var location: Bool!
+        var location: AuthorizationStatus!
         group.enter()
-        PermissionsManager.shared.getLocationPermissionStatus { authorized in
-            location = authorized
+        PermissionsManager.shared.getLocationPermissionStatus { status in
+            location = status
             group.leave()
         }
         
-        var notifications: Bool!
+        var notifications: AuthorizationStatus!
         group.enter()
-        PermissionsManager.shared.getNotificationsPermissionStatus { authorized in
-            notifications = authorized
+        PermissionsManager.shared.getNotificationsPermissionStatus { status in
+            notifications = status
             group.leave()
         }
         
@@ -111,6 +123,7 @@ final class LaunchController: UIViewController, Drawerable {
         vc.delegate = self
         drawerContentViewController = vc
         
+        stack.isHidden = false
         label2.alpha = shouldAskForLocation ? 1 : 0.4
         label3.alpha = shouldAskForNotifications ? 1 : 0.4
     }
@@ -119,11 +132,6 @@ final class LaunchController: UIViewController, Drawerable {
 extension LaunchController {
     func setupView() {
         view.backgroundColor = .background
-        let stack = UIStackView(arrangedSubviews: [label1, label2, label3, label4])
-        stack.axis = .vertical
-        stack.alignment = .fill
-        stack.spacing = 2
-        
         view.addSubview(stack)
         stack.snp.makeConstraints { make in
             make.center.equalToSuperview()
@@ -133,19 +141,54 @@ extension LaunchController {
 }
 
 extension LaunchController: PermissionsControllerDelegate {
+    private var locationPermissionRestrictedAlert: UIAlertController {
+        let actions: [UIAlertAction] = [
+            UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+                UIApplication.shared.openSettings()
+            }),
+            .cancel(text: LocalizedStringKey.openApp.localized, action: {
+                self.openApp()
+            })
+        ]
+        let model = AlertViewModel(localizedTitle: .locationPermissionDeniedTitle, message: .locationPermissionDeniedMessage, actions: actions, style: .alert)
+        return AWAlertController(model: model)
+    }
+    
+    private var notificationsPermissionRestrictedAlert: UIAlertController {
+        let actions: [UIAlertAction] = [
+            UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+                UIApplication.shared.openSettings()
+            }),
+            .cancel(text: LocalizedStringKey.openApp.localized, action: {
+                self.openApp()
+            })
+        ]
+        let model = AlertViewModel(localizedTitle: .notificationPermissionDeniedTitle, message: .notificationPermissionDeniedMessage, actions: actions, style: .alert)
+        return AWAlertController(model: model)
+    }
+    
     func permissionsChanged() {
         checkPermissions { location, notifications in
-            guard location && notifications else {
-                self.showPermissionsDrawer(shouldAskForLocation: !location, shouldAskForNotifications: !notifications)
-                return
+            if location == .authorized && notifications == .authorized {
+                self.openApp()
+            } else if location == .resticted {
+                self.present(self.locationPermissionRestrictedAlert, animated: true, completion: nil)
+            } else if notifications == .resticted {
+                self.present(self.notificationsPermissionRestrictedAlert, animated: true, completion: nil)
+            } else {
+                self.showPermissionsDrawer(shouldAskForLocation: location != .authorized, shouldAskForNotifications: notifications != .authorized)
             }
-            self.openApp()
         }
+    }
+    
+    func continueButtonPressed() {
+        openApp()
     }
 }
 
 protocol PermissionsControllerDelegate: class {
     func permissionsChanged()
+    func continueButtonPressed()
 }
 
 fileprivate class PermissionsController: UIViewController {
@@ -190,7 +233,7 @@ fileprivate class PermissionsController: UIViewController {
     }()
     
     private lazy var buttonsStack: UIStackView = {
-        let s = UIStackView()
+        let s = UIStackView(arrangedSubviews: [locationButton, notificationsButton])
         s.axis = .vertical
         s.distribution = .fillEqually
         s.spacing = 12
@@ -205,14 +248,14 @@ fileprivate class PermissionsController: UIViewController {
 
 extension PermissionsController {
     internal func setupView() {
-        buttonsStack.addArrangedSubview(locationButton)
         locationButton.snp.makeConstraints { make in
             make.height.equalTo(48)
         }
-        buttonsStack.addArrangedSubview(notificationsButton)
+        
         notificationsButton.snp.makeConstraints { make in
             make.height.equalTo(48)
         }
+        
         view.addSubview(buttonsStack)
         buttonsStack.snp.makeConstraints { make in
             make.center.equalToSuperview()

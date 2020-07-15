@@ -36,7 +36,8 @@ extension UITableView {
         guard let emptyView = self.backgroundView as? EmptyBackgroundView else {
             return
         }
-        emptyView.isEmpty = self.isEmpty
+        isScrollEnabled = !isEmpty
+        emptyView.isEmpty = isEmpty
     }
     
     var isEmpty: Bool {

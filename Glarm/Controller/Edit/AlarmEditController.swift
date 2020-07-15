@@ -52,7 +52,7 @@ final class AlarmEditController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
-        buttonController.isHighlighted = viewModel.scheduleButtonEnabled
+        buttonController.isSelected = viewModel.scheduleButtonEnabled
         buttonController.isEnabled = viewModel.scheduleButtonEnabled
     }
     

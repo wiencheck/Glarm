@@ -20,7 +20,9 @@
 		2B0F753B24B59FEE00EE9876 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753A24B59FEE00EE9876 /* PermissionsManager.swift */; };
 		2B0F753D24B5A39200EE9876 /* LaunchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753C24B5A39200EE9876 /* LaunchController.swift */; };
 		2B0F753F24B5E06800EE9876 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753E24B5E06800EE9876 /* UIColor.swift */; };
+		2B24757E24BF591E00A1070D /* AuthorizationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */; };
 		2B6C7BA724B8E3B4000DEEDA /* RootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6C7BA624B8E3B4000DEEDA /* RootController.swift */; };
+		2B8815F724BE130A001DD905 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8815F624BE130A001DD905 /* LocationManager.swift */; };
 		2B88BFB524B32414003B96EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B88BFB424B32414003B96EE /* AppDelegate.swift */; };
 		2B88BFB724B32414003B96EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B88BFB624B32414003B96EE /* SceneDelegate.swift */; };
 		2B88BFBE24B32415003B96EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B88BFBD24B32415003B96EE /* Assets.xcassets */; };
@@ -29,7 +31,7 @@
 		2BB146E124BD18800076D547 /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB146E024BD18800076D547 /* UIDevice.swift */; };
 		2BBDE5D724B9A69E000AF05F /* BoldButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBDE5D624B9A69E000AF05F /* BoldButtonController.swift */; };
 		2BBDE5D924B9AB3D000AF05F /* AudioBrowserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBDE5D824B9AB3D000AF05F /* AudioBrowserViewModel.swift */; };
-		2BCA121024B333EE009965E4 /* BoldButton in Frameworks */ = {isa = PBXBuildFile; productRef = 2BCA120F24B333EE009965E4 /* BoldButton */; };
+		2BC647F824BF53C6009CEE6C /* BoldButton in Frameworks */ = {isa = PBXBuildFile; productRef = 2BC647F724BF53C6009CEE6C /* BoldButton */; };
 		2BCA121224B33A21009965E4 /* BrowseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCA121124B33A21009965E4 /* BrowseViewController.swift */; };
 		2BCA121424B33A3A009965E4 /* BrowseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCA121324B33A3A009965E4 /* BrowseViewModel.swift */; };
 		2BCA121C24B33A7E009965E4 /* AlarmEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCA121B24B33A7E009965E4 /* AlarmEntry.swift */; };
@@ -96,7 +98,9 @@
 		2B0F753A24B59FEE00EE9876 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
 		2B0F753C24B5A39200EE9876 /* LaunchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchController.swift; sourceTree = "<group>"; };
 		2B0F753E24B5E06800EE9876 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStatus.swift; sourceTree = "<group>"; };
 		2B6C7BA624B8E3B4000DEEDA /* RootController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootController.swift; sourceTree = "<group>"; };
+		2B8815F624BE130A001DD905 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		2B88BFB124B32414003B96EE /* Glarm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Glarm.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B88BFB424B32414003B96EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2B88BFB624B32414003B96EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -155,8 +159,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BCA121024B333EE009965E4 /* BoldButton in Frameworks */,
 				2BCA122424B34859009965E4 /* SnapKit in Frameworks */,
+				2BC647F824BF53C6009CEE6C /* BoldButton in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +262,7 @@
 				2BF4A69F24BBCF2300F52A4D /* AWError.swift */,
 				2BE2691624BDA692000299A3 /* AppRatingHelper.swift */,
 				2BE2691824BDA6F9000299A3 /* Config.swift */,
+				2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -268,6 +273,7 @@
 				2BCA121B24B33A7E009965E4 /* AlarmEntry.swift */,
 				2BCA121D24B33C36009965E4 /* LocationNotificationScheduler.swift */,
 				2B0F753A24B59FEE00EE9876 /* PermissionsManager.swift */,
+				2B8815F624BE130A001DD905 /* LocationManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -402,8 +408,8 @@
 			);
 			name = Glarm;
 			packageProductDependencies = (
-				2BCA120F24B333EE009965E4 /* BoldButton */,
 				2BCA122324B34859009965E4 /* SnapKit */,
+				2BC647F724BF53C6009CEE6C /* BoldButton */,
 			);
 			productName = WakeMeApp;
 			productReference = 2B88BFB124B32414003B96EE /* Glarm.app */;
@@ -456,8 +462,8 @@
 			);
 			mainGroup = 2B88BFA824B32414003B96EE;
 			packageReferences = (
-				2BCA120E24B333ED009965E4 /* XCRemoteSwiftPackageReference "BoldButton" */,
 				2BCA122224B34859009965E4 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				2BC647F624BF53C6009CEE6C /* XCRemoteSwiftPackageReference "BoldButton" */,
 			);
 			productRefGroup = 2B88BFB224B32414003B96EE /* Products */;
 			projectDirPath = "";
@@ -510,6 +516,7 @@
 				2BEDCCFF24BB5A45009EED08 /* LanguageTableKey.swift in Sources */,
 				2BEDCD0524BB5BB2009EED08 /* UITableView.swift in Sources */,
 				2B0DBDD224B355E6005B6A6A /* CaseIterable.swift in Sources */,
+				2B24757E24BF591E00A1070D /* AuthorizationStatus.swift in Sources */,
 				2B88BFB524B32414003B96EE /* AppDelegate.swift in Sources */,
 				2B0DBDDF24B38025005B6A6A /* AlarmMapController.swift in Sources */,
 				2BF13DC124B4BDD400B40D4E /* CLLocationDistance.swift in Sources */,
@@ -536,6 +543,7 @@
 				2B88BFB724B32414003B96EE /* SceneDelegate.swift in Sources */,
 				2BBDE5D724B9A69E000AF05F /* BoldButtonController.swift in Sources */,
 				2BF13DBB24B48A6500B40D4E /* UIButton.swift in Sources */,
+				2B8815F724BE130A001DD905 /* LocationManager.swift in Sources */,
 				2BF4A69424BBC9B300F52A4D /* AWAlertController.swift in Sources */,
 				2B0DBDDB24B37C7E005B6A6A /* UIImage+Assets.swift in Sources */,
 				2BE2691924BDA6F9000299A3 /* Config.swift in Sources */,
@@ -705,7 +713,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Glarm/Base/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -726,7 +734,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Glarm/Base/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -819,12 +827,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		2BCA120E24B333ED009965E4 /* XCRemoteSwiftPackageReference "BoldButton" */ = {
+		2BC647F624BF53C6009CEE6C /* XCRemoteSwiftPackageReference "BoldButton" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/wiencheck/BoldButton";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
 			};
 		};
 		2BCA122224B34859009965E4 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
@@ -838,9 +846,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2BCA120F24B333EE009965E4 /* BoldButton */ = {
+		2BC647F724BF53C6009CEE6C /* BoldButton */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2BCA120E24B333ED009965E4 /* XCRemoteSwiftPackageReference "BoldButton" */;
+			package = 2BC647F624BF53C6009CEE6C /* XCRemoteSwiftPackageReference "BoldButton" */;
 			productName = BoldButton;
 		};
 		2BCA122324B34859009965E4 /* SnapKit */ = {

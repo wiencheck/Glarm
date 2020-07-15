@@ -80,15 +80,16 @@ enum LocalizedStringKey: String, LocalizableString {
     
     case permissionLocation
     case permissionNotifications
-    case disclaimerFirst
-    case disclaimerSecond
-    case locationDisclaimer
-    case notificationDisclaimer
-    
     case locationPermissionDeniedTitle
     case locationPermissionDeniedMessage
     case notificationPermissionDeniedTitle
     case notificationPermissionDeniedMessage
+    case openSettings
+    case openApp
+    case disclaimerFirst
+    case disclaimerSecond
+    case locationDisclaimer
+    case notificationDisclaimer
 }
 
 extension LocalizedStringKey: CustomStringConvertible {

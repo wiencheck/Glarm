@@ -1,8 +1,8 @@
 /* 
   English.strings
-  Plum 2
+  Glarm
 
-  Created by Adam Wienconek on 03.06.2018.
+  Created by Adam Wienconek on 03.06.2020.
   Copyright © 2018 Adam Wienconek. All rights reserved.
 */
 
@@ -60,12 +60,13 @@
 
 "permissionLocation" = "Enable location tracking";
 "permissionNotifications" = "Allow notifications";
+"locationPermissionDeniedTitle" = "Location restricted";
+"locationPermissionDeniedMessage" = "We understand and value privacy, however Glarm'm main purpose is to present alerts based on location, so we really need your permission to be able to do that. Glarm only reads your location while using the app, system tracks your position in the background outside of Glarm so your privacy stays safe.";
+"notificationPermissionDeniedTitle" = "Notifications restricted";
+"notificationPermissionDeniedMessage" = "Nobody likes apps that spam useless notifications, however Glarm's main purpose is to present alerts based on location, so we really need your permission to be able to do that. We promise no spam!";
+"openSettings" = "Open Settings";
+"openApp" = "Go to the app";
 "disclaimerFirst" = "To work properly, Glarm needs permission to:";
 "disclaimerSecond" = "We don't gather any personal info or track your location outside of the app.";
 "locationDisclaimer" = "• Read your location (in-app only!)";
 "notificationDisclaimer" = "• Show notifications";
-
-"locationPermissionDeniedTitle" = "Location permission denied";
-"locationPermissionDeniedMessage" = "Glarm needs";
-"notificationPermissionDeniedTitle" = "Notification permission denied";
-"notificationPermissionDeniedMessage" = "";

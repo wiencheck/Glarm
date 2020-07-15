@@ -5,9 +5,9 @@
         "package": "BoldButton",
         "repositoryURL": "https://github.com/wiencheck/BoldButton",
         "state": {
-          "branch": "master",
-          "revision": "4e285cbc0e9aa89adda832f6c14157a16e3b608e",
-          "version": null
+          "branch": null,
+          "revision": "e76b50b60841dd9f4ed7fcc5759ba45842904b11",
+          "version": "0.3.2"
         }
       },
       {

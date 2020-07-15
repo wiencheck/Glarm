@@ -25,17 +25,18 @@ class MapController: UIViewController {
             }
             if locationInfo.coordinate != oldValue.coordinate || locationInfo.radius != oldValue.radius {
                 circle = MKCircle(center: locationInfo.coordinate, radius: locationInfo.radius)
-                if let userLocation = CLLocationManager().location {
-                    let location = CLLocation(coordinate: locationInfo.coordinate)
-                    let offset: CLLocationDistance = 500
-                    settingsController.maximumValue = min(userLocation.distance(from: location) - offset, 150 * 1000)
+                
+                let userLocation = LocationManager.shared.location
+                if userLocation.coordinate == .zero {
+                    return
                 }
+                let location = CLLocation(coordinate: locationInfo.coordinate)
+                let offset: CLLocationDistance = 500
+                settingsController.maximumValue = min(userLocation.distance(from: location) - offset, 150 * 1000)
             }
         }
     }
-    
-    private let locationManager = CLLocationManager()
-    
+        
     internal lazy var mapView: MKMapView = {
         let m = MKMapView()
         m.showsUserLocation = true
@@ -104,7 +105,7 @@ class MapController: UIViewController {
         settingsController.radius = locationInfo.radius
         setupView()
         
-        let region = MKCoordinateRegion(center: locationManager.location!.coordinate, latitudinalMeters: CLLocationDistance.default * 3, longitudinalMeters: CLLocationDistance.default * 3)
+        let region = MKCoordinateRegion(center: LocationManager.shared.coordinate, latitudinalMeters: CLLocationDistance.default * 3, longitudinalMeters: CLLocationDistance.default * 3)
         mapView.setRegion(region, animated: false)
         
         if locationInfo == .default {
@@ -114,8 +115,16 @@ class MapController: UIViewController {
         circle = MKCircle(center: locationInfo.coordinate, radius: locationInfo.radius)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        if locationInfo.coordinate == .zero {
+//            return
+//        }
+//        mapView.showUserLocation(and: locationInfo.coordinate, animated: false)
+//    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if locationInfo.coordinate == .zero {
             return
         }
@@ -133,7 +142,7 @@ class MapController: UIViewController {
         
         CLGeocoder().reverseGeocodeLocation(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { places, error in
             if let error = error {
-                
+                print("*** Couldn't geocode location: ", error.localizedDescription)
                 return
             }
             guard let place = places?.first else {
