@@ -11,7 +11,7 @@ import MapKit
 protocol SearchResultsControllerDelegate: class {
     func searchResultsWillAppear()
     func searchResultsWillDisappear()
-    func searchResults(didSelectLocation controller: SearchResultsController, name: String, coordinate: CLLocationCoordinate2D)
+    func searchResults(didSelectLocation controller: SearchResultsController, name: String, address: String?, coordinate: CLLocationCoordinate2D)
 }
 
 final class SearchResultsController: UIViewController {
@@ -40,7 +40,7 @@ final class SearchResultsController: UIViewController {
     
     private lazy var searchController: UISearchController = {
         let s = UISearchController()
-        s.searchBar.placeholder = location ?? LocalizedStringKey.searchLocationPlaceholder.localized
+        s.searchBar.placeholder = location ?? LocalizedStringKey.map_searchbarPlaceholder.localized
         s.obscuresBackgroundDuringPresentation = false
         s.hidesNavigationBarDuringPresentation = false
         s.searchBar.searchBarStyle = .minimal
@@ -236,7 +236,7 @@ extension SearchResultsController: UITableViewDelegate, UITableViewDataSource {
             guard let coordinate = placemark.location?.coordinate else {
                 return
             }
-            self.delegate?.searchResults(didSelectLocation: self, name: item.title, coordinate: coordinate)
+            self.delegate?.searchResults(didSelectLocation: self, name: item.title, address: placemark.locality, coordinate: coordinate)
         }
     }
 }

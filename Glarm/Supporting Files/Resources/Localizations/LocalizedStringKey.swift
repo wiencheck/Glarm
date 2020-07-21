@@ -9,7 +9,7 @@
 import Foundation
 
 extension String {
-    func localized(bundle: Bundle = .main, tableName: LanguageTableKey = .english) -> String {
+    func localized(bundle: Bundle = .main, tableName: LanguageTableKey) -> String {
         return NSLocalizedString(self, tableName: tableName.rawValue, value: "**\(self)**", comment: "")
     }
 }
@@ -20,77 +20,108 @@ protocol LocalizableString {
 
 extension LocalizableString where Self: RawRepresentable, Self.RawValue == String {
     var localized: String {
-        let table = LanguageTableKey(locale: Locale.current) ?? .english
-        return self.rawValue.localized(tableName: table)
+        return self.rawValue.localized(tableName: .preferred)
     }
 }
 
 enum LocalizedStringKey: String, LocalizableString {
-    case launchTitle
-    case browserTitle
-    case editTitle
-    case mapTitle
-    case audioTitle
+    // MARK: Screen titles
+    case title_launch
+    case title_browser
+    case title_edit
+    case title_map
+    case title_audio
     
-    case activeSection
-    case markedSection
-    case pastSection
+    // MARK: Browse screen
+    case browse_activeSection
+    case browse_markedSection
+    case browse_pastSection
+    case browse_createButtonTitle
+    case browse_backButton
+    case browse_showNote
     
-    case createButtonTitle
-    case playButtonTitle
-    case pauseButtonTitle
-    case toneBrowserFooter
-    case searchLocationPlaceholder
-    case choosePlacemark
-    case setDistance
-    case location
-    case tone
+    // MARK: Browse edit actions.
+    case browse_markAction
+    case browse_unmarkAction
+    case browse_scheduleAction
+    case browse_deleteAction
+    case browse_cancelAction
     
-    case markActionTitle
-    case unmarkActionTitle
-    case scheduleActionTitle
-    case schedule
-    case update
+    // MARK: Edit screen
+    case edit_locationHeader
+    case edit_noteHeader
+    case edit_clearNoteButton
+    case edit_notePlaceholder
+    case edit_toneCell
+    case edit_scheduleButton
+    case edit_updateButton
+    case edit_backButton
+    
+    // MARK: Audio screen
+    case audio_playButtonTitle
+    case audio_pauseButtonTitle
+    case audio_toneBrowserFooter
+    case audio_downloadMoreSounds
+    case audio_downloadSoundsFooter
+    
+    // MARK: Empty cell
+    case emptyCell_title
+    case emptyCell_detail
+    case emptyView_title
+    case emptyView_detail
+    
+    // MARK: Notification
+    case notification_title
+    case notification_messageIsLessThan
+    case notification_messageAway
+    case notification_youAre
+    case notification_awayFromDestination
+    
+    // MARK: Map screen
+    case map_searchbarPlaceholder
+    case map_chooseDestination
+    case map_setRadius
+    
+    // MARK: Info alert
+    case about_title
+    case about_detail
+    case about_leaveReview
+    case about_messageMe
+    
+    // MARK: Tips
+    case tips_title
+    case tips_description
+    
+    // MARK: Review
+    case review_areYouEnjoyingTitle
+    case review_areYouEnjoyingMessage
+    
+    // MARK: Messages
+    case message_errorOccurred
+    case message_errorUnknown
+    
+    // MARK: Permissions
+    case permission_locationDeniedTitle
+    case permission_locationDeniedMessage
+    case permission_notificationDeniedTitle
+    case permission_notificationDeniedMessage
+    case permission_openSettingsAction
+    case permission_openAppAction
+    
+    // MARK: Donate
+    case donate_small
+    case donate_big
+    case donate_enormous
+    case donate_action
+    case donate_title
+    case donate_message
+    case donate_thankYouTitle
+    case donate_thankYouMessage
+    
+    // MARK: Other
     case cancel
-    case alarm
-    case alarms
-    
-    case emptyCellTitle
-    case emptyCellDetail
-    case emptyViewTitle
-    case emptyViewDetail
-    
-    case notificationTitle
-    case notificationMessageIsLessThan
-    case notificationMessageAway
-    case youAre
-    case awayFromDestination
-    
-    case infoTitle
-    case infoDetail
-    case leaveReview
-    case messageMe
     case dismiss
     case `continue`
-    case openTips
-    case tipsDescription
-    case areYouEnjoyingTitle
-    case areYouEnjoyingMessage
-    case errorOccurred
-    case errorUnknown
-    
-    case permissionLocation
-    case permissionNotifications
-    case locationPermissionDeniedTitle
-    case locationPermissionDeniedMessage
-    case notificationPermissionDeniedTitle
-    case notificationPermissionDeniedMessage
-    case openSettings
-    case openApp
-    case disclaimerFirst
-    case disclaimerSecond
-    case locationDisclaimer
-    case notificationDisclaimer
 }
 
 extension LocalizedStringKey: CustomStringConvertible {

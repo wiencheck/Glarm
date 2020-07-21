@@ -12,7 +12,7 @@ enum IAPHandlerAlertType {
     case purchased
     case failed(Error)
     
-    func message() -> String{
+    func message() -> String {
         switch self {
         case .purchased: return "You've successfully bought this purchase!"
         case .failed(let error):
@@ -26,13 +26,11 @@ final class IAPHandler: NSObject {
     
     static let fullVersionPurchasedNotification = Notification.Name("fullVersionPurchasedNotification")
     
-    static let TINY_TIP_PRODUCT_ID = "tiny.tip"
-    static let SMALL_TIP_PRODUCT_ID = "small.tip"
-    static let MEDIUM_TIP_PRODUCT_ID = "medium.tip"
-    static let BIG_TIP_PRODUCT_ID = "big.tip"
-    static let ENOURMOUS_TIP_PRODUCT_ID = "enourmous.tip"
-    static let FULL_VERSION_PRODUCT_ID = "full.version.unlock"
-    static let purchasedProductsKey = "purchasedProducts"
+    static let SMALL_TIP_PRODUCT_ID = "glarm.small.tip"
+    static let BIG_TIP_PRODUCT_ID = "glarm.big.tip"
+    static let ENOURMOUS_TIP_PRODUCT_ID = "glarm.enourmous.tip"
+    static let FULL_VERSION_PRODUCT_ID = "glarm.full.version.unlock"
+    static let purchasedProductsKey = "glarm.purchasedProducts"
     
     fileprivate var productID = ""
     fileprivate var productsRequest = SKProductsRequest()
@@ -48,7 +46,6 @@ final class IAPHandler: NSObject {
             let arr = [String](newValue)
             UserDefaults.standard.set(arr, forKey: IAPHandler.purchasedProductsKey)
             NotificationCenter.default.post(name: IAPHandler.fullVersionPurchasedNotification, object: didPurchaseFullVersion)
-
         }
     }
     
@@ -112,7 +109,7 @@ final class IAPHandler: NSObject {
         
         onProductsFetch = completion
         // Put here your IAP Products ID's
-        let productIdentifiers = NSSet(objects: IAPHandler.SMALL_TIP_PRODUCT_ID,IAPHandler.TINY_TIP_PRODUCT_ID, IAPHandler.MEDIUM_TIP_PRODUCT_ID, IAPHandler.BIG_TIP_PRODUCT_ID, IAPHandler.ENOURMOUS_TIP_PRODUCT_ID, IAPHandler.FULL_VERSION_PRODUCT_ID)
+        let productIdentifiers = NSSet(objects: IAPHandler.SMALL_TIP_PRODUCT_ID, IAPHandler.BIG_TIP_PRODUCT_ID, IAPHandler.ENOURMOUS_TIP_PRODUCT_ID)
         
         productsRequest = SKProductsRequest(productIdentifiers: productIdentifiers as! Set<String>)
         productsRequest.delegate = self

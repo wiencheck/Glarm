@@ -6,65 +6,100 @@
   Copyright © 2018 Adam Wienconek. All rights reserved.
 */
 
-"launchTitle" = "Glarm";
-"browserTitle" = "Alarmy";
-"editTitle" = "Edytuj alarm";
-"mapTitle" = "Lokalizacja";
-"audioTitle" = "Dźwięk";
+// MARK: Screen titles
+"title_launch" = "Glarm";
+"title_browser" = "Alarmy";
+"title_edit" = "Edytuj alarm";
+"title_map" = "Lokalizacja";
+"title_audio" = "Dźwięk";
 
-"activeSection" = "Aktywne Alarmy";
-"markedSection" = "Oznaczone Alarmy";
-"pastSection" = "Poprzednie Alarmy";
+// MARK: Browse screen
+"browse_activeSection" = "Aktywne Alarmy";
+"browse_markedSection" = "Oznaczone Alarmy";
+"browse_pastSection" = "Poprzednie Alarmy";
+"browse_createButtonTitle" = "Utwórz Alarm";
+"browse_backButton" = "Alarmy";
+"browse_showNote" = "Zobacz notatkę";
 
-"createButtonTitle" = "Utwórz Alarm";
-"playButtonTitle" = "Odtwarzaj";
-"pauseButtonTitle" = "Pauza";
-"toneBrowserFooter" = "Wybierz dźwięk, który będzie odtwarzany po dotarciu do wyznaczonego regionu. Dźwięki alarmu mogą być odtwarzane przez maksymalnie 30 sekund.";
-"searchLocationPlaceholder" = "Wyszukaj lokalizację";
-"choosePlacemark" = "Wybierz lokalizację";
-"setDistance" = "Ustaw zasięg regionu";
-"location" = "Lokacja";
-"tone" = "Dźwięk";
+// MARK: Browse edit actions.
+"browse_markAction" = "Oznacz";
+"browse_unmarkAction" = "Odznacz";
+"browse_scheduleAction" = "Aktywuj";
+"browse_deleteAction" = "Usuń";
+"browse_cancelAction" = "Anuluj";
 
-"markActionTitle" = "Oznacz";
-"unmarkActionTitle" = "Usuń oznaczenie";
-"scheduleActionTitle" = "Aktywuj";
-"schedule" = "Zaplanuj Alarm";
-"update" = "Zachowaj zmiany";
+// MARK: Edit screen
+"edit_updateButton" = "Zachowaj zmiany";
+"edit_backButton" = "Alarm";
+"edit_locationHeader" = "Lokacja";
+"edit_toneCell" = "Dźwięk";
+"edit_scheduleButton" = "Zaplanuj Alarm";
+"edit_clearNoteButton" = "Wyczyść";
+"edit_noteHeader" = "Notatka";
+"edit_notePlaceholder" = "Dodaj notatkę";
+
+// MARK: Audio screen
+"audio_playButtonTitle" = "Odtwarzaj";
+"audio_pauseButtonTitle" = "Pauza";
+"audio_toneBrowserFooter" = "Wybierz dźwięk, który będzie odtwarzany po dotarciu do wyznaczonego regionu. Dźwięki alarmu mogą być odtwarzane przez maksymalnie 30 sekund.";
+"audio_downloadMoreSounds" = "Pobierz więcej dźwięków";
+"audio_downloadSoundsFooter" = "Sugerujemy, aby pobierać dźwięki tylko będąc podłączonym do sieci Wi-Fi";
+
+// MARK: Empty cell
+"emptyCell_title" = "Brak lokalizacji";
+"emptyCell_detail" = "Naciśnij, aby wybrać lokalizację i zasięg regionu";
+"emptyView_title" = "Nie utworzono żadnych alarmów";
+"emptyView_detail" = "Naciśnij przycisk poniżej aby utworzyć alarm.";
+
+// MARK: Notification
+"notification_title" = "Jesteś już prawie na miejscu!";
+"notification_messageIsLessThan" = "jest niecałe";
+"notification_messageAway" = "stąd.";
+"notification_youAre" = "Jesteś";
+"notification_awayFromDestination" = "od celu.";
+
+// MARK: Map screen
+"map_searchbarPlaceholder" = "Wyszukaj lokalizację";
+"map_chooseDestination" = "Wybierz lokalizację";
+"map_setRadius" = "Ustaw zasięg regionu";
+
+// MARK: Info alert
+"about_title" = "Glarm";
+"about_detail" = "Proste alarmy oparte na lokalizacji\nAdam Wienconek 🇵🇱\n\nJeżeli polubiłeś/aś moją aplikację, rozważ napisanie krótkiej recenzji w App Store, każda z nich bardzo pomaga.\nNatrafiłeś na problem, lub masz pytanie? Wyślij mi maila!";
+"about_leaveReview" = "Napisz recenzję";
+"about_messageMe" = "Napisz do mnie";
+
+// MARK: Tips
+"tips_title" = "Jak to działa?";
+"tips_description" = "Glarm tworzy alarmy oparte na twojej lokalizacji, która jest śledzona przez iOS w tle. W praktyce oznacza to, że możesz zamknąć Glarm, a mimo tego alarm zostanie dostarczony, oraz że zużycie baterii jest minimalne.\n\nKilka porad:\n• Przesuń w lewo którykolwiek alarm, aby odsłonić opcje\n• Oznacz swoje ulubione alarmy, żeby nie zniknęły po czasie (Glarm trzyma w pamięci jedynie 10 ostatnich nieoznaczonych alarmów)";
+
+// MARK: Review
+"review_areYouEnjoyingTitle" = "Jak podoba Ci się Glarm?";
+"review_areYouEnjoyingMessage" = "Jeśli spodobała Ci się aplikacja, rozważ napisanie recenzji lub wystawienie oceny. Każda z nich bardzo pomaga 😊";
+
+// MARK: Messages
+"message_errorOccurred" = "Wystąpił błąd";
+"message_errorUnknown" = "Nieznany, niesamowicie tajemniczy błąd.";
+
+// MARK: Permissions
+"permission_locationDeniedTitle" = "Śledzenie lokalizacji zablokowane";
+"permission_locationDeniedMessage" = "Twoja lokalizacja jest używana jedynie w celu wyświetlania dokładniejszych wyników wyszukiwania, oraz aby pokazać Twoją pozycję na mapie. Glarm odczytuje Twoją lokalizację tylko i wyłącznie podczas użytkowania aplikacji. Poza aplikacją położenie śledzone jest przez system iOS, więc Twoja prywatność pozostaje chroniona.";
+"permission_notificationDeniedTitle" = "Powiadomienia zablokowane";
+"permission_notificationDeniedMessage" = "Nikt nie lubi bezużytecznych powiadomień, jednak głównym celem Glarm jest wyświetlanie alarmów opartych na lokalizacji, więc naprawdę, bardzo potrzebujemy Twojego pozwolenia, aby móc to robić. Obiecujemy, żadnego spamu!";
+"permission_openSettingsAction" = "Otwórz ustawienia";
+"permission_openAppAction" = "Przejdź do aplikacji";
+
+// MARK: Donate
+"donate_thankYouTitle" = "Napiwek przyjęty!";
+"donate_thankYouMessage" = "Dziękuję, że wspierasz rozwój Glarm! 🎉";
+"donateSmall" = "Mała kawa ☕️";
+"donateBig" = "Sałatka z awokado 🥑";
+"donateEnormous" = "Jedna kolejka dla przyjaciół 🍻";
+"donate_action" = "Napiwek 💎👀";
+"donate_title" = "Napiwek";
+"donate_message" = "Glarm to projekt, nad którym pracuję po zajęciach na uczelni, każdy napiwek bardzo pomaga mi kontynuować nad nim pracę. Proszę, wybierz co chciałbyś mi ufundować";
+
+// MARK: Other
 "cancel" = "Anuluj";
-"alarm" = "Alarm";
-"alarms" = "Alarmy";
-
-"emptyCellTitle" = "Brak lokalizacji";
-"emptyCellDetail" = "Naciśnij, aby wybrać lokalizację i zasięg regionu";
-"emptyViewTitle" = "Nie utworzono żadnych alarmów";
-"emptyViewDetail" = "Naciśnij przycisk poniżej aby utworzyć alarm.";
-
-"notificationTitle" = "Jesteś już prawie na miejscu!";
-"notificationMessageIsLessThan" = "jest niecałe";
-"notificationMessageAway" = "stąd.";
-"youAre" = "Jesteś";
-"awayFromDestination" = "od celu.";
-
-"infoTitle" = "Glarm";
-"infoDetail" = "Proste alarmy oparte na lokalizacji\nAdam Wienconek 🇵🇱\n\nJeżeli polubiłeś/aś moją aplikację, rozważ napisanie krótkiej recenzji w App Store, każda z nich bardzo pomaga.\nNatrafiłeś na problem, lub masz pytanie? Wyślij mi maila!";
-"leaveReview" = "Napisz recenzję";
-"messageMe" = "Napisz do mnie";
 "dismiss" = "Zamknij";
 "continue" = "Kontynuuj";
-"openTips" = "Jak to działa?";
-"tipsDescription" = "Glarm tworzy alarmy oparte na twojej lokalizacji, która jest śledzona przez iOS w tle. W praktyce oznacza to, że możesz zamknąć Glarm, a mimo tego alarm zostanie dostarczony, oraz że zużycie baterii jest minimalne.\n\nKilka porad:\n• Przesuń w lewo którykolwiek alarm, aby odsłonić opcje\n• Oznacz swoje ulubione alarmy, żeby nie zniknęły po czasie (Glarm trzyma w pamięci jedynie 10 ostatnich nieoznaczonych alarmów)";
-"areYouEnjoyingTitle" = "Jak podoba Ci się Glarm?";
-"areYouEnjoyingMessage" = "Jeśli spodobała Ci się aplikacja, rozważ napisanie recenzji lub wystawienie oceny. Każda z nich bardzo pomaga 😊";
-"errorOccurred" = "Wystąpił błąd";
-"errorUnknown" = "Nieznany, niesamowicie tajemniczy błąd.";
-
-"permissionLocation" = "Zezwól na odczytywanie położenia";
-"permissionNotifications" = "Zezwól na wyświetlanie powiadomień";
-"locationPermissionDeniedTitle" = "Śledzenie lokalizacji zablokowane";
-"locationPermissionDeniedMessage" = "Twoja lokalizacja jest używana jedynie w celu wyświetlania dokładniejszych wyników wyszukiwania, oraz aby pokazać Twoją pozycję na mapie. Glarm odczytuje Twoją lokalizację tylko i wyłącznie podczas użytkowania aplikacji, w tle, poza aplikacją położenie śledzone jest przez system iOS, więc Twoja prywatność pozostaje chroniona.";
-"notificationPermissionDeniedTitle" = "Powiadomienia zablokowane";
-"notificationPermissionDeniedMessage" = "Nikt nie lubi bezużytecznych powiadomień, jednak głównym celem Glarm jest wyświetlanie alarmów opartych na lokalizacji, więc naprawdę, bardzo potrzebujemy Twojego pozwolenia, aby móc to robić. Obiecujemy, żadnego spamu!";
-"openSettings" = "Otwórz ustawienia";
-"openApp" = "Przejdź do aplikacji";
-"permissionGreeting" = "Aby funkcjonować, Glarm potrzebuje zgody na odczytywanie Twojego położenia (tylko podczas używania aplikacji!) oraz wysyłanie powiadomień.\nNie zbieramy żadnych danych poufnych, oraz nie śledzimy położenia gdy aplikacja nie jest w użyciu.";

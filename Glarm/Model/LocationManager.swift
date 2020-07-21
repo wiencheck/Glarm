@@ -46,6 +46,16 @@ final class LocationManager: NSObject {
         manager.stopUpdatingLocation()
     }
     
+    func distance(from location: CLLocation) -> CLLocationDistance {
+        let distance = self.location.distance(from: location)
+        return distance
+    }
+    
+    func distance(from coordinate: CLLocationCoordinate2D) -> CLLocationDistance {
+        let distance = self.location.distance(from: CLLocation(coordinate: coordinate))
+        return distance
+    }
+    
     private var onLocationAuthorizationStatusChange: ((AuthorizationStatus) -> Void)?
     func requestAuthorization(completion: @escaping (AuthorizationStatus) -> Void) {
         switch CLLocationManager.authorizationStatus() {

@@ -11,15 +11,16 @@ import Foundation
 enum LanguageTableKey: String {
     case english = "en"
     case polish = "pl"
-//    case german = "German"
+//    case german = "de"
 //    case italian = "Italian"
 //    case spanish = "Spanish"
 //    case portuguese = "Portuguese"
 //    case russian = "Russian"
 //    case french = "French"
     
-    init?(locale: Locale) {
+    static var preferred: LanguageTableKey {
+        let locale = Locale.preferred
         let code = locale.languageCode ?? "en"
-        self.init(rawValue: code)
+        return LanguageTableKey(rawValue: code) ?? .english
     }
 }

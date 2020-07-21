@@ -15,11 +15,19 @@ final class AlarmEditController: UIViewController {
     internal var tableView: UITableView! {
         didSet {
             tableView.register(EmptyLocationCell.self, forCellReuseIdentifier: "empty")
+            tableView.register(NoteCell.self, forCellReuseIdentifier: "note")
             tableView.register(AlarmMapCell.self, forCellReuseIdentifier: "location")
+            tableView.register(TableHeaderView.self, forHeaderFooterViewReuseIdentifier: "header")
             tableView.dataSource = self
             tableView.delegate = self
             tableView.estimatedSectionFooterHeight = 0
             tableView.estimatedSectionHeaderHeight = 0
+            tableView.backgroundView = {
+                let b = BackgroundTapView()
+                b.backgroundColor = .clear
+                b.delegate = self
+                return b
+            }()
         }
     }
     
@@ -42,9 +50,9 @@ final class AlarmEditController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
-        navigationItem.title = LocalizedStringKey.editTitle.localized
-        navigationItem.backBarButtonItem?.title = LocalizedStringKey.alarm.localized
-
+        navigationItem.title = LocalizedStringKey.title_edit.localized
+        navigationItem.backBarButtonItem?.title = LocalizedStringKey.edit_backButton.localized
+        
         setupView()
         viewModel.delegate = self
     }
@@ -59,17 +67,26 @@ final class AlarmEditController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         for cell in tableView.visibleCells {
+            cell.endEditing(true)
             guard let map = cell as? AlarmMapCell else {
                 continue
             }
             map.endDisplayingUserLocation()
         }
     }
+    
+    private weak var noteHeader: TableHeaderView? {
+        return tableView.headerView(forSection: AlarmEditViewModel.Section.note.rawValue) as? TableHeaderView
+    }
 }
 
 extension AlarmEditController: Drawerable {
     var drawerContentViewController: UIViewController? {
         return buttonController
+    }
+    
+    var shouldAdjustDrawerContentToKeyboard: Bool {
+        return true
     }
 }
 
@@ -80,21 +97,34 @@ extension AlarmEditController: BoldButtonViewControllerDelegate {
 }
 
 extension AlarmEditController: AlarmEditViewModelDelegate {
+    func model(didChangeButton model: AlarmEditViewModel) {
+        DispatchQueue.main.async {
+            self.buttonController.isSelected = model.scheduleButtonEnabled
+            self.buttonController.isEnabled = model.scheduleButtonEnabled
+        }
+    }
+    
     func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo) {
         let vc = MapController(info: locationInfo)
         vc.delegate = viewModel
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func model(didSelectAudio model: AlarmEditViewModel, tone: AlarmTone) {
-        let vc = AudioBrowserViewController(tone: tone)
+    func model(didSelectAudio model: AlarmEditViewModel, sound: Sound) {
+        let vc = AudioBrowserViewController(sound: sound)
         vc.delegate = viewModel
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    func model(didReloadSection model: AlarmEditViewModel, section: Int) {
+        DispatchQueue.main.async {
+            self.tableView.reloadSections([section], with: .fade)
+        }
+    }
+    
     func model(didReloadRow model: AlarmEditViewModel, at indexPath: IndexPath) {
         DispatchQueue.main.async {
-            self.tableView.reloadRows(at: [indexPath], with: .none)
+            self.tableView.reloadRows(at: [indexPath], with: .fade)
         }
     }
     
@@ -128,12 +158,17 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "location", for: indexPath) as! AlarmMapCell
             cell.configure(with: model)
             return cell
+        case .note:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "note") as! NoteCell
+            cell.delegate = self
+            cell.noteText = viewModel.alarmNoteText
+            return cell
         case .audio:
             var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "audio")
             if cell == nil {
                 cell = UITableViewCell(style: .value1, reuseIdentifier: "audio")
             }
-            cell.textLabel?.text = LocalizedStringKey.tone.localized
+            cell.textLabel?.text = LocalizedStringKey.edit_toneCell.localized
             cell.detailTextLabel?.text = viewModel.alarmToneName
             cell.accessoryType = .disclosureIndicator
             return cell
@@ -149,11 +184,32 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 34
+        switch AlarmEditViewModel.Section(rawValue: section)! {
+        case .note:
+            return TableHeaderView.preferredHeight + 10
+        default:
+            return TableHeaderView.preferredHeight
+        }
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return viewModel.headerTitle(in: section)
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? TableHeaderView
+        header?.configure(with: viewModel.headerModel(in: section))
+        header?.pressHandler = { _ in
+            guard let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as? NoteCell else {
+                return
+            }
+            cell.clearText()
+        }
+        
+        return header
+    }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        guard let noteCell = tableView.visibleCells.first(where: { $0 is NoteCell }) as? NoteCell else {
+            return
+        }
+        noteCell.endEditing(true)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -169,10 +225,40 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.endEditing(true)
         guard let mapCell = cell as? AlarmMapCell else {
             return
         }
         mapCell.endDisplayingUserLocation()
+    }
+}
+
+extension AlarmEditController: NoteCellDelegate {
+    func noteCell(willBeginEditingTextIn cell: NoteCell) {
+        DispatchQueue.main.async {
+            guard let path = self.tableView.indexPath(for: cell) else {
+                return
+            }
+            self.tableView.scrollToRow(at: path, at: .middle, animated: true)
+        }
+    }
+    
+    func noteCell(didChangeTextIn cell: NoteCell) {
+        viewModel.updateAlarmNote(text: cell.noteText)
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.endUpdates()
+            self.noteHeader?.buttonTitle = self.viewModel.noteClearButtonText
+        }
+    }
+}
+
+extension AlarmEditController: BackgroundTapViewDelegate {
+    fileprivate func backgroundView(didReceiveTouch view: BackgroundTapView) {
+        guard let noteCell = tableView.visibleCells.first(where: { $0 is NoteCell }) as? NoteCell else {
+            return
+        }
+        noteCell.endEditing(true)
     }
 }
 
@@ -184,5 +270,18 @@ extension AlarmEditController {
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+}
+
+fileprivate protocol BackgroundTapViewDelegate: class {
+    func backgroundView(didReceiveTouch view: BackgroundTapView)
+}
+
+fileprivate class BackgroundTapView: UIView {
+    weak var delegate: BackgroundTapViewDelegate?
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        delegate?.backgroundView(didReceiveTouch: self)
     }
 }

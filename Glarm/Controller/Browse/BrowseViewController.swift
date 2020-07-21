@@ -15,8 +15,9 @@ final class BrowseViewController: UIViewController {
     internal var tableView: UITableView! {
         didSet {
             tableView.register(AlarmMapCell.self, forCellReuseIdentifier: "map")
-            tableView.register(AlarmCell.self, forCellReuseIdentifier: "cell")
-            tableView.backgroundView = EmptyBackgroundView(image: nil, top: LocalizedStringKey.emptyViewTitle.localized, bottom: LocalizedStringKey.emptyViewDetail.localized)
+            tableView.register(AlarmCell.self, forCellReuseIdentifier: "alarm")
+            tableView.register(TableHeaderView.self, forHeaderFooterViewReuseIdentifier: "header")
+            tableView.backgroundView = EmptyBackgroundView(image: nil, top: LocalizedStringKey.emptyView_title.localized, bottom: LocalizedStringKey.emptyView_detail.localized)
             tableView.dataSource = self
             tableView.delegate = self
             tableView.estimatedSectionFooterHeight = 0
@@ -26,7 +27,7 @@ final class BrowseViewController: UIViewController {
     
     private lazy var buttonController: BoldButtonViewController = {
         let b = BoldButtonViewController()
-        b.text = LocalizedStringKey.createButtonTitle.localized
+        b.text = LocalizedStringKey.browse_createButtonTitle.localized
         b.delegate = self
         return b
     }()
@@ -47,8 +48,8 @@ final class BrowseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = LocalizedStringKey.browserTitle.localized
-        navigationItem.backBarButtonItem?.title = LocalizedStringKey.alarms.localized
+        navigationItem.title = LocalizedStringKey.title_browser.localized
+        navigationItem.backBarButtonItem?.title = LocalizedStringKey.browse_backButton.localized
 
         navigationItem.setRightBarButton(barButtonItem, animated: false)
         
@@ -61,6 +62,18 @@ final class BrowseViewController: UIViewController {
         super.viewWillAppear(animated)
         viewModel.loadData()
     }
+        
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Every 5 launches
+        guard !didShowSwipeHint || UIApplication.shared.launchCount % 6 == 0, !tableView.isEmpty else {
+            return
+        }
+        didShowSwipeHint = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.tableView.presentSwipeHint()
+        }
+    }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -70,16 +83,6 @@ final class BrowseViewController: UIViewController {
             }
             map.endDisplayingUserLocation()
         }
-    }
-    
-//    override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        print(view.safeAreaInsets.bottom)
-//    }
-    
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        print(view.safeAreaInsets.bottom)
     }
     
     private func openEditView(alarm: AlarmEntry?) {
@@ -99,19 +102,22 @@ final class BrowseViewController: UIViewController {
     
     @objc private func barButtonPressed(_ sender: UIBarButtonItem) {
         let actions: [UIAlertAction] = [
-            UIAlertAction(localizedTitle: .leaveReview, style: .default, handler: { _ in
+        UIAlertAction(localizedTitle: .donate_action, style: .default, handler: { _ in
+            AWAlertController.presentDonationController()
+        }),
+            UIAlertAction(localizedTitle: .about_leaveReview, style: .default, handler: { _ in
                 UIApplication.shared.openReviewPage()
             }),
-            UIAlertAction(localizedTitle: .messageMe, style: .default, handler: { _ in
+            UIAlertAction(localizedTitle: .about_messageMe, style: .default, handler: { _ in
                 UIApplication.shared.openMail()
             }),
-            UIAlertAction(localizedTitle: .openTips, style: .default, handler: { _ in
-                let model = AlertViewModel(localizedTitle: .openTips, message: .tipsDescription, actions: [.cancel(text: LocalizedStringKey.dismiss.localized)], style: .alert)
+            UIAlertAction(localizedTitle: .tips_title, style: .default, handler: { _ in
+                let model = AlertViewModel(localizedTitle: .tips_title, message: .tips_description, actions: [.cancel(text: LocalizedStringKey.dismiss.localized)], style: .alert)
                 self.present(AWAlertController(model: model), animated: true, completion: nil)
             }),
             .cancel(text: LocalizedStringKey.dismiss.localized)
         ]
-        let model = AlertViewModel(localizedTitle: .infoTitle, message: .infoDetail, actions: actions, style: .alert)
+        let model = AlertViewModel(localizedTitle: .about_title, message: .about_detail, actions: actions, style: .alert)
         present(AWAlertController(model: model), animated: true, completion: nil)
     }
 }
@@ -163,22 +169,12 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        let identifier = BrowseViewModel.Section(rawValue: indexPath.section)! == .active ? "map" : "alarm"
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! AlarmCell
         let model = viewModel.cellModel(for: indexPath)
-        switch BrowseViewModel.Section(rawValue: indexPath.section)! {
-        case .active:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "map", for: indexPath) as! AlarmMapCell
-            cell.configure(with: model)
-            return cell
-        default:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! AlarmCell
-            let model = viewModel.cellModel(for: indexPath)
-            cell.configure(with: model)
-            return cell
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.tableView(tableView, numberOfRowsInSection: section) > 0 ? viewModel.headerTitle(in: section) : nil
+        cell.configure(with: model)
+        cell.delegate = self
+        return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -194,8 +190,17 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
         return .leastNormalMagnitude
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard self.tableView(tableView, numberOfRowsInSection: section) > 0 else {
+            return nil
+        }
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? TableHeaderView
+        header?.title = viewModel.headerTitle(in: section)
+        return header
+    }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return viewModel.numberOfRows(in: section) > 0 ? 34 : .leastNormalMagnitude
+        return viewModel.numberOfRows(in: section) > 0 ? TableHeaderView.preferredHeight : .leastNormalMagnitude
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -224,6 +229,28 @@ extension BrowseViewController {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+    }
+}
+
+extension BrowseViewController: AlarmCellDelegate {
+    func alarmCell(didPressShowNote cell: AlarmCell) {
+        guard let path = tableView.indexPath(for: cell),
+            let model = viewModel.cellModel(for: path),
+            let note = model.note else {
+                return
+        }
+        let alertModel = AlertViewModel(title: model.locationInfo.name, message: note, actions: [.dismiss], style: .alert)
+        present(AWAlertController(model: alertModel), animated: true, completion: nil)
+    }
+}
+
+private extension BrowseViewController {
+    var didShowSwipeHint: Bool {
+        get {
+            return UserDefaults.standard.bool(forKey: "didShowSwipeHint")
+        } set {
+            UserDefaults.standard.set(newValue, forKey: "didShowSwipeHint")
         }
     }
 }

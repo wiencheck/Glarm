@@ -9,9 +9,7 @@
 import UIKit
 import MapKit
 
-class AlarmMapCell: UITableViewCell {
-    static let preferredHeight: CGFloat = 180
-    
+final class AlarmMapCell: AlarmCell {
     private var timer: Timer!
     
     private lazy var mapView: MKMapView = {
@@ -19,41 +17,6 @@ class AlarmMapCell: UITableViewCell {
         m.delegate = self
         m.isUserInteractionEnabled = false
         return m
-    }()
-    private lazy var titleLabel: UILabel = {
-        let l = UILabel()
-        l.textColor = .label()
-        l.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        return l
-    }()
-    
-    private lazy var detailLabel: UILabel = {
-        let l = UILabel()
-        l.textColor = .secondaryLabel()
-        l.font = .systemFont(ofSize: 14, weight: .regular)
-        return l
-    }()
-    
-    private lazy var rightDetailLabel: UILabel = {
-        let l = UILabel()
-        l.textColor = .secondaryLabel()
-        l.setContentHuggingPriority(.required, for: .vertical)
-        l.font = .systemFont(ofSize: 14, weight: .regular)
-        return l
-    }()
-    
-    private lazy var indicatorView: UIImageView = {
-        let i = UIImageView(image: .disclosure)
-        i.alpha = 0.66
-        i.tintColor = .gray
-        i.contentMode = .scaleAspectFit
-        return i
-    }()
-    
-    private lazy var markedView: UIImageView = {
-        let i = UIImageView(image: .star)
-        i.contentMode = .scaleAspectFit
-        return i
     }()
     
     private var locationInfo: LocationNotificationInfo? {
@@ -96,34 +59,19 @@ class AlarmMapCell: UITableViewCell {
            }
        }
     
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         mapView.showsUserLocation = false
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupView()
-    }
-    
-    func configure(with model: AlarmCellViewModel?) {
+    override func configure(with model: AlarmCell.Model?) {
+        super.configure(with: model)
         guard let model = model else {
             return
         }
-        titleLabel.text = model.locationInfo.identifier
-        radiusText = model.locationInfo.radius.readableRepresentation
-        rightDetailLabel.text = model.date
+        radiusText = model.locationInfo.radius.readableRepresentation()
         locationInfo = model.locationInfo
-        if let marked = model.marked {
-            markedView.isHidden = !marked
-        } else {
-            markedView.isHidden = true
-        }
     }
     
     private func updateDetailText() {
@@ -134,7 +82,7 @@ class AlarmMapCell: UITableViewCell {
         }
         let destination = CLLocation(coordinate: info.coordinate)
         let distance = LocationManager.shared.location.distance(from: destination)
-        detailLabel.text = text + ", \(LocalizedStringKey.youAre.localized) \(distance.readableRepresentation) \(LocalizedStringKey.awayFromDestination.localized)"
+        detailLabel.text = text + ", \(LocalizedStringKey.notification_youAre.localized) \(distance.readableRepresentation()) \(LocalizedStringKey.notification_awayFromDestination.localized)"
     }
         
     func startDisplayingUserLocation() {
@@ -150,27 +98,22 @@ class AlarmMapCell: UITableViewCell {
         mapView.showsUserLocation = false
         timer?.invalidate()
     }
-}
-
-private extension AlarmMapCell {
-    func setupView() {
+    
+    override func setupView() {
         addSubview(mapView)
         mapView.snp.makeConstraints { make in
             make.leading.top.trailing.equalToSuperview()
             make.height.equalTo(mapView.snp.width).multipliedBy(0.44)
         }
         
-        addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
+        let labelStack = UIStackView(arrangedSubviews: [titleLabel, detailLabel, noteButton])
+        labelStack.axis = .vertical
+        labelStack.spacing = 4
+        addSubview(labelStack)
+        labelStack.snp.makeConstraints { make in
             make.top.equalTo(mapView.snp.bottom).offset(6)
             make.leading.equalTo(layoutMarginsGuide)
-        }
-        
-        addSubview(detailLabel)
-        detailLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(4)
-            make.bottom.equalTo(layoutMarginsGuide)
-            make.leading.equalTo(titleLabel)
+            make.bottom.equalTo(layoutMarginsGuide).offset(6)
         }
         
         addSubview(indicatorView)
@@ -184,7 +127,7 @@ private extension AlarmMapCell {
         addSubview(rightDetailLabel)
         rightDetailLabel.snp.makeConstraints { make in
             make.centerY.equalTo(indicatorView)
-            make.leading.greaterThanOrEqualTo(titleLabel.snp.trailing).offset(4)
+            make.leading.greaterThanOrEqualTo(labelStack.snp.trailing).offset(4)
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
 

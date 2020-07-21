@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Cosmic</key>
+	<string>https://glarmsounds.imfast.io/Cosmic.caf</string>
+	<key>Constellation</key>
+	<string>https://glarmsounds.imfast.io/Constellation.caf</string>
+	<key>Ripples</key>
+	<string>https://glarmsounds.imfast.io/Ripples.caf</string>
+	<key>Slow Rise</key>
+	<string>https://glarmsounds.imfast.io/Slow%20Rise.caf</string>
+</dict>
+</plist>

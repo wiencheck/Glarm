@@ -12,77 +12,164 @@ import AVFoundation
 protocol AudioBrowserViewModelDelegate: class {
     func model(playerDidChangeStatus model: AudioBrowserViewModel, playing: Bool)
     func model(didReloadData model: AudioBrowserViewModel)
+    func model(_ model: AudioBrowserViewModel, didChangeLoadingStatus loading: Bool, at indexPath: IndexPath)
 }
 
 class AudioBrowserViewModel: NSObject {
-    private var player: AVAudioPlayer? {
-        didSet {
-            oldValue?.stop()
-            player?.delegate = self
-        }
-    }
+    private let player: AVPlayer
     
-    private let tones = AlarmTone.allCases
-    var selectedTone: AlarmTone {
+    private(set)var selectedSound: Sound {
         didSet {
-            AlarmTone.default = selectedTone
+            manager.setSound(selectedSound)
         }
     }
     
     weak var delegate: AudioBrowserViewModelDelegate?
     
-    init(tone: AlarmTone) {
-        selectedTone = tone
+    private let manager: SoundsManager
+    
+    private var downloadedSounds: [Sound]!
+    private var availableSounds: [Sound]!
+    private var timeControlObservation: NSKeyValueObservation!
+    
+    init(sound: Sound) {
+        selectedSound = sound
+        let item = AVPlayerItem(url: sound.playbackUrl)
+        player = AVPlayer(playerItem: item)
+        player.rate = 0
+        manager = SoundsManager()
+        super.init()
+        loadSounds()
     }
     
     func playbackButtonPressed() {
-        if let player = player {
-            player.togglePlayback()
-        } else if loadTone(selectedTone) {
-            player?.play()
+        if player.isPlaying {
+            self.pause()
+        } else {
+            play()
         }
-        delegate?.model(playerDidChangeStatus: self, playing: player?.isPlaying ?? false)
+        delegate?.model(playerDidChangeStatus: self, playing: player.isPlaying)
     }
     
-    private func loadTone(_ tone: AlarmTone) -> Bool {
-        do {
-            let url = URL(fileURLWithPath: Bundle.main.path(forResource: tone.rawValue, ofType: "caf")!)
-            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.caf.rawValue)
-            return true
-        } catch let error {
-            print(error)
-            return false
+    private func loadSounds() {
+        downloadedSounds = manager.downloadedSounds.sorted {
+            $0.name < $1.name
         }
+        availableSounds = manager.availableSounds.sorted {
+            $0.name < $1.name
+        }
+    }
+    
+    private func loadSound(url: URL) {
+        let item = AVPlayerItem(url: url)
+        player.replaceCurrentItem(with: item)
+    }
+    
+    func downloadSound(at path: IndexPath) {
+        guard let sound = sound(at: path) else {
+            return
+        }
+        manager.delegate = self
+        manager.downloadSound(sound)
+    }
+    
+    func play() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true, options: [])
+        } catch let error {
+            print(error.localizedDescription)
+        }
+        player.play()
+        delegate?.model(playerDidChangeStatus: self, playing: true)
+    }
+    
+    func pause() {
+        player.pause()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            do {
+                try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            } catch let error {
+                print(error.localizedDescription)
+            }
+        }
+        self.delegate?.model(playerDidChangeStatus: self, playing: false)
     }
     
 }
 
 extension AudioBrowserViewModel {
+    private func sound(at path: IndexPath) -> Sound? {
+        switch Section(rawValue: path.section)! {
+        case .sounds:
+            return downloadedSounds.at(path.row)
+        case .downloads:
+            return availableSounds.at(path.row)
+        }
+    }
+    
     var numberOfSections: Int {
-        return 1
+        if manager.didDownloadAllSounds {
+            return 1
+        }
+        return Section.count
     }
     
-    var numberOfRows: Int {
-        return tones.count
+    func numberOfRows(in section: Int) -> Int {
+        switch Section(rawValue: section)! {
+        case .sounds:
+            return downloadedSounds.count
+        case .downloads:
+            return availableSounds.count
+        }
     }
     
-    func cellDetails(at path: IndexPath) -> (String, Bool) {
-        let tone = tones[path.row]
-        return (tone.rawValue, tone == selectedTone)
+    func cellModel(at path: IndexPath) -> SoundCell.Model? {
+        guard let sound = sound(at: path) else {
+            return nil
+        }
+        return SoundCell.Model(sound: sound)
+    }
+    
+    func footer(in section: Int) -> String? {
+        switch Section(rawValue: section)! {
+        case .sounds:
+            return LocalizedStringKey.audio_toneBrowserFooter.localized
+        case .downloads:
+            return LocalizedStringKey.audio_downloadSoundsFooter.localized
+        }
     }
     
     func didSelectRow(at path: IndexPath) {
-        let tone = tones[path.row]
-        defer {
-            delegate?.model(playerDidChangeStatus: self, playing: player?.isPlaying ?? false)
-            delegate?.model(didReloadData: self)
-        }
-        guard loadTone(tone) else {
+        guard let sound = sound(at: path) else {
             return
         }
-        player!.play()
+        defer {
+            delegate?.model(playerDidChangeStatus: self, playing: player.isPlaying)
+        }
+        loadSound(url: sound.playbackUrl)
+        if path.section == Section.sounds.rawValue {
+            selectedSound = sound
+            delegate?.model(didReloadData: self)
+        }
+        play()
+    }
+}
+
+extension AudioBrowserViewModel: SoundsManagerDelegate {
+    func soundsManager(_ manager: SoundsManager, didBeginDownloading sound: Sound) {
         
-        selectedTone = tone
+    }
+    
+    func soundsManager(_ manager: SoundsManager, didDownload sound: Sound) {
+        loadSounds()
+        delegate?.model(didReloadData: self)
+    }
+    
+    func soundsManager(_ manager: SoundsManager, didEncounter error: Error) {
+        DispatchQueue.main.async {
+            //self.delegate
+        }
     }
 }
 
@@ -92,7 +179,18 @@ extension AudioBrowserViewModel: AVAudioPlayerDelegate {
     }
 }
 
-fileprivate extension AVAudioPlayer {
+extension AudioBrowserViewModel {
+    enum Section: Int, CaseIterable {
+        case sounds
+        case downloads
+    }
+}
+
+fileprivate extension AVPlayer {
+    var isPlaying: Bool {
+        return rate > 0
+    }
+    
     func togglePlayback() {
         if isPlaying {
             pause()

@@ -10,7 +10,7 @@ import UIKit
 import BoldButton
 
 protocol AudioBrowserViewControllerDelegate: class {
-    func audio(didReturnTone controller: AudioBrowserViewController, tone: AlarmTone)
+    func audio(didReturnTone controller: AudioBrowserViewController, sound: Sound)
 }
 
 class AudioBrowserViewController: UIViewController {
@@ -21,6 +21,7 @@ class AudioBrowserViewController: UIViewController {
     
     internal var tableView: UITableView! {
         didSet {
+            tableView.register(SoundCell.self, forCellReuseIdentifier: "cell")
             tableView.dataSource = self
             tableView.delegate = self
         }
@@ -28,13 +29,13 @@ class AudioBrowserViewController: UIViewController {
     
     private lazy var buttonController: BoldButtonViewController = {
         let b = BoldButtonViewController()
-        b.text = LocalizedStringKey.playButtonTitle.localized
+        b.text = LocalizedStringKey.audio_playButtonTitle.localized
         b.delegate = self
         return b
     }()
     
-    init(tone: AlarmTone) {
-        viewModel = AudioBrowserViewModel(tone: tone)
+    init(sound: Sound) {
+        viewModel = AudioBrowserViewModel(sound: sound)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -44,25 +45,34 @@ class AudioBrowserViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = LocalizedStringKey.audioTitle.localized
+        navigationItem.title = LocalizedStringKey.title_audio.localized
         setupView()
         viewModel.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        delegate?.audio(didReturnTone: self, tone: viewModel.selectedTone)
+        delegate?.audio(didReturnTone: self, sound: viewModel.selectedSound)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        viewModel.pause()
     }
 }
 
 extension AudioBrowserViewController: AudioBrowserViewModelDelegate {
     func model(playerDidChangeStatus model: AudioBrowserViewModel, playing: Bool) {
-        buttonController.text = (playing ? LocalizedStringKey.pauseButtonTitle : .playButtonTitle).localized
+        buttonController.text = (playing ? LocalizedStringKey.audio_pauseButtonTitle : .audio_playButtonTitle).localized
         buttonController.isSelected = !playing
     }
     
     func model(didReloadData model: AudioBrowserViewModel) {
         tableView.reloadData()
+    }
+    
+    func model(_ model: AudioBrowserViewModel, didChangeLoadingStatus loading: Bool, at indexPath: IndexPath) {
+        
     }
 }
 
@@ -84,31 +94,43 @@ extension AudioBrowserViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.numberOfRows
+        return viewModel.numberOfRows(in: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "cell")
-        if cell == nil {
-            cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
-        }
-        let details = viewModel.cellDetails(at: indexPath)
-        cell.textLabel?.text = details.0
-        cell.accessoryType = details.1 ? .checkmark : .none
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! SoundCell
+        let model = viewModel.cellModel(at: indexPath)
+        cell.configure(with: model)
+        cell.delegate = self
         return cell
     }
     
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return LocalizedStringKey.toneBrowserFooter.localized
+        return viewModel.footer(in: section)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        switch AudioBrowserViewModel.Section(rawValue: indexPath.section)! {
+        case .sounds:
+            tableView.reloadRows(at: [indexPath], with: .none)
+        case .downloads:
+            break
+        }
         viewModel.didSelectRow(at: indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 10
+    }
+}
+
+extension AudioBrowserViewController: SoundCellDelegate {
+    func soundCell(didPressDownloadButtonIn cell: SoundCell) {
+        guard let path = tableView.indexPath(for: cell) else {
+            return
+        }
+        cell.setLoading(true)
+        viewModel.downloadSound(at: path)
     }
 }
 

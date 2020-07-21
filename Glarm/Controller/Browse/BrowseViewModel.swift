@@ -90,6 +90,14 @@ final class BrowseViewModel {
         loadData()
     }
     
+    private func deleteAlarm(at path: IndexPath) {
+        guard let alarm = alarm(at: path),
+        manager.delete(alarm: alarm) else {
+            return
+        }
+        loadData()
+    }
+    
     func createPressed() {
         PermissionsManager.shared.requestLocationPermission { status in
             switch status {
@@ -97,14 +105,14 @@ final class BrowseViewModel {
                 self.delegate?.model(didSelectEditAlarm: self, alarm: nil)
             case .resticted:
                 let actions: [UIAlertAction] = [
-                    UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+                    UIAlertAction(localizedTitle: .permission_openSettingsAction, style: .default, handler: { _ in
                         UIApplication.shared.openSettings()
                     }),
                     .cancel(text: LocalizedStringKey.continue.localized) {
                         self.delegate?.model(didSelectEditAlarm: self, alarm: nil)
                     }
                 ]
-                let model = AlertViewModel(localizedTitle: .locationPermissionDeniedTitle, message: .locationPermissionDeniedMessage, actions: actions, style: .alert)
+                let model = AlertViewModel(localizedTitle: .permission_locationDeniedTitle, message: .permission_locationDeniedMessage, actions: actions, style: .alert)
                 self.delegate?.didReceiveAlert(model: model)
             case .notDetermined:
                 break
@@ -140,12 +148,12 @@ extension BrowseViewModel {
         return count
     }
     
-    func cellModel(for path: IndexPath) -> AlarmCellViewModel? {
+    func cellModel(for path: IndexPath) -> AlarmCell.Model? {
         guard let section = Section(rawValue: path.section),
             let alarm = alarms[section]?[path.row] else {
                 return nil
         }
-        return AlarmCellViewModel(locationInfo: alarm.locationInfo, date: DateFormatter.localizedString(from: alarm.date, dateStyle: .short, timeStyle: .none), marked: alarm.isMarked)
+        return AlarmCell.Model(alarm: alarm)
     }
     
     func headerTitle(in section: Int) -> String? {
@@ -155,11 +163,11 @@ extension BrowseViewModel {
         }
         switch sec {
         case .active:
-            return LocalizedStringKey.activeSection.localized
+            return LocalizedStringKey.browse_activeSection.localized
         case .marked:
-            return LocalizedStringKey.markedSection.localized
+            return LocalizedStringKey.browse_markedSection.localized
         case .past:
-            return LocalizedStringKey.pastSection.localized
+            return LocalizedStringKey.browse_pastSection.localized
         }
     }
     
@@ -187,20 +195,25 @@ extension BrowseViewModel {
             cancel.backgroundColor = .systemRed
             actions.append(cancel)
         } else {
-            let schedule = UITableViewRowAction(style: .default, title: LocalizedStringKey.scheduleActionTitle.localized, handler: { _, path in
+            let delete = UITableViewRowAction(style: .destructive, title: LocalizedStringKey.browse_deleteAction.localized) { _, path in
+                self.deleteAlarm(at: path)
+            }
+            actions.append(delete)
+            
+            let schedule = UITableViewRowAction(style: .default, title: LocalizedStringKey.browse_scheduleAction.localized, handler: { _, path in
                 self.scheduleAlarm(at: path)
             })
             schedule.backgroundColor = .purple
             actions.append(schedule)
         }
         if alarm.isMarked {
-            let unmark = UITableViewRowAction(style: .default, title: LocalizedStringKey.unmarkActionTitle.localized, handler: { _, path in
+            let unmark = UITableViewRowAction(style: .default, title: LocalizedStringKey.browse_unmarkAction.localized, handler: { _, path in
                 self.unmarkAlarm(at: path)
             })
             unmark.backgroundColor = .tint
             actions.append(unmark)
         } else {
-            let mark = UITableViewRowAction(style: .default, title: LocalizedStringKey.markActionTitle.localized, handler: { _, path in
+            let mark = UITableViewRowAction(style: .default, title: LocalizedStringKey.browse_markAction.localized, handler: { _, path in
                 self.markAlarm(at: path)
             })
             mark.backgroundColor = .tint

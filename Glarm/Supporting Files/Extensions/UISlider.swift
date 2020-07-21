@@ -43,4 +43,16 @@ extension UISlider {
     @objc private func _handleSlide() {
         slideHandler?(self)
     }
+    
+    var doubleValue: Double {
+        get {
+            return Double(value)
+        } set {
+            value = Float(newValue)
+        }
+    }
+    
+    func setDoubleValue(_ value: Double, animated: Bool) {
+        setValue(Float(value), animated: animated)
+    }
 }

@@ -33,6 +33,12 @@ class RootController: UIViewController {
         navigation.navigationBar.prefersLargeTitles = true
         add(child: navigation, duration: 0)
         setupView()
+        startObservingKeyboard()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        endObservingKeyboard()
     }
     
     override func viewDidLayoutSubviews() {
@@ -55,7 +61,8 @@ class RootController: UIViewController {
         contentContainer.backgroundColor = .clear
         drawer.addSubview(contentContainer)
         contentContainer.snp.makeConstraints { make in
-            make.edges.equalTo(drawer.safeAreaLayoutGuide)
+            make.edges.equalTo(drawer.safeAreaLayoutGuide).priority(.high)
+            make.bottom.equalTo(drawer.safeAreaLayoutGuide).priority(.required)
         }
     }
     
@@ -80,6 +87,56 @@ class RootController: UIViewController {
     }
 }
 
+extension RootController {
+    func startObservingKeyboard() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { [weak self] notification in
+            guard let self = self,
+                let info = notification.userInfo,
+                let value = info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue,
+                let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber else {
+                return
+            }
+            let converted = self.view.convert(value.cgRectValue, from: nil)
+            let corrected = CGRect(origin: converted.origin, size: CGSize(width: converted.width, height: converted.height - self.view.safeAreaInsets.bottom))
+            self.keyboardWillAppear(in: corrected, duration: duration.doubleValue)
+        }
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) { [weak self] notification in
+            guard let self = self,
+                let info = notification.userInfo,
+                let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber else {
+                return
+            }
+            self.keyboardWillDisappear(duration: duration.doubleValue)
+        }
+    }
+    
+    func endObservingKeyboard() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func keyboardWillAppear(in frame: CGRect, duration: TimeInterval) {
+        guard let drawerable = navigation.topViewController as? Drawerable, drawerable.shouldAdjustDrawerContentToKeyboard else {
+            return
+        }
+        UIView.animate(withDuration: duration) {
+            self.contentContainer.snp.updateConstraints { make in
+                make.bottom.equalTo(self.drawer.safeAreaLayoutGuide).offset(-frame.height)
+            }
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    internal func keyboardWillDisappear(duration: TimeInterval) {
+        UIView.animate(withDuration: duration) {
+            self.contentContainer.snp.updateConstraints { make in
+                make.bottom.equalTo(self.drawer.safeAreaLayoutGuide)
+            }
+            self.view.layoutIfNeeded()
+        }
+    }
+}
+
 fileprivate class RootNavigationController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,14 +147,19 @@ fileprivate class RootNavigationController: UINavigationController {
 extension RootNavigationController: UINavigationControllerDelegate {
         
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-        if let root = parent as? RootController {
-            root.setDrawerContentViewController((viewController as? Drawerable)?.drawerContentViewController, animated: animated)
+        guard let root = parent as? RootController,
+        let drawerable = viewController as? Drawerable else {
+            return
         }
+        root.setDrawerContentViewController(drawerable.drawerContentViewController, animated: animated)
+        root.drawer.isUserInteractionEnabled = true
     }
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if let root = parent as? RootController {
-            root.setDrawerContentViewController((viewController as? Drawerable)?.drawerContentViewController, animated: animated)
+        if let root = parent as? RootController,
+            let drawerable = viewController as? Drawerable {
+            root.setDrawerContentViewController(drawerable.drawerContentViewController, animated: animated)
+            root.drawer.isUserInteractionEnabled = false
         }
         
         transitionCoordinator?.notifyWhenInteractionChanges { context in
@@ -113,6 +175,7 @@ extension RootNavigationController: UINavigationControllerDelegate {
 
 protocol Drawerable: UIViewController {
     var drawerContentViewController: UIViewController? { get }
+    var shouldAdjustDrawerContentToKeyboard: Bool { get }
 }
 
 extension Drawerable {
@@ -121,6 +184,10 @@ extension Drawerable {
             return nil
         }
         return root.drawer
+    }
+    
+    var shouldAdjustDrawerContentToKeyboard: Bool {
+        return false
     }
     
     func updateDrawerContent(animated: Bool) {

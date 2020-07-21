@@ -19,4 +19,12 @@ extension UIImage {
         }
     }
     static let glarm = UIImage(named: "Glarm")!
+    
+    class var download: UIImage {
+        if #available(iOS 13.0, *) {
+            return UIImage(systemName: "arrow.down.circle")!
+        } else {
+            return UIImage(named: "Download")!
+        }
+    }
 }

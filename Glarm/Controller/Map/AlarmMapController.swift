@@ -14,29 +14,43 @@ protocol AlarmMapControllerDelegate: class {
 }
 
 class MapController: UIViewController {
-    private var locationInfo: LocationNotificationInfo {
-        didSet {
-            if locationInfo.identifier != oldValue.identifier {
-                settingsController.text = locationInfo.identifier
-            }
-            if locationInfo.coordinate != oldValue.coordinate {
-                annotation = MKPointAnnotation(coordinate: locationInfo.coordinate)
-                annotation.title = locationInfo.identifier
-            }
-            if locationInfo.coordinate != oldValue.coordinate || locationInfo.radius != oldValue.radius {
-                circle = MKCircle(center: locationInfo.coordinate, radius: locationInfo.radius)
-                
-                let userLocation = LocationManager.shared.location
-                if userLocation.coordinate == .zero {
-                    return
-                }
-                let location = CLLocation(coordinate: locationInfo.coordinate)
-                let offset: CLLocationDistance = 500
-                settingsController.maximumValue = min(userLocation.distance(from: location) - offset, 150 * 1000)
-            }
+    
+    /// Name, City
+    private lazy var locationFullAddress = locationName
+    func updateLocationName(name: String, city: String?, distance: CLLocationDistance) {
+        // Avoid addresses like "Warszawa Centralna, Warszawa"
+        if let city = city, !name.lowercased().contains(city.lowercased()) {
+            locationFullAddress = [name, city].joined(separator: ", ")
+        } else {
+            locationFullAddress = name
+        }
+        if distance > 10*1000 {
+            locationName = locationFullAddress
+        } else {
+            locationName = name
         }
     }
-        
+    
+    var locationName: String {
+        didSet {
+            settingsController.locationName = locationName
+        }
+    }
+    
+    var coordinate: CLLocationCoordinate2D {
+        didSet {
+            annotation = MKPointAnnotation(coordinate: coordinate)
+            annotation.title = locationName
+            circle = MKCircle(center: coordinate, radius: radius)
+        }
+    }
+    
+    var radius: CLLocationDistance {
+        didSet {
+            circle = MKCircle(center: coordinate, radius: radius)
+        }
+    }
+    
     internal lazy var mapView: MKMapView = {
         let m = MKMapView()
         m.showsUserLocation = true
@@ -52,7 +66,7 @@ class MapController: UIViewController {
         l.minimumPressDuration = 0.5
         return l
     }()
-        
+    
     private lazy var resultsController: SearchResultsController = {
         let s = SearchResultsController()
         s.delegate = self
@@ -60,7 +74,7 @@ class MapController: UIViewController {
     }()
     
     private lazy var settingsController: LocationSettingsController = {
-        let s = LocationSettingsController()
+        let s = LocationSettingsController(location: locationName, radius: radius)
         s.delegate = self
         return s
     }()
@@ -76,19 +90,23 @@ class MapController: UIViewController {
     }
     
     private var circle: MKCircle! {
-           didSet {
-               if let old = oldValue {
-                   mapView.removeOverlay(old)
-               }
-               guard let new = circle else { return }
-               mapView.addOverlay(new)
-           }
-       }
+        didSet {
+            if let old = oldValue {
+                mapView.removeOverlay(old)
+            }
+            guard let new = circle else { return }
+            mapView.addOverlay(new)
+        }
+    }
+    
+    private var maximumDistanceWork: DispatchWorkItem?
     
     weak var delegate: AlarmMapControllerDelegate?
     
     init(info: LocationNotificationInfo?) {
-        locationInfo = info ?? LocationNotificationInfo()
+        locationName = info?.name ?? ""
+        coordinate = info?.coordinate ?? .zero
+        radius = info?.radius ?? .default
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -98,48 +116,45 @@ class MapController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = LocalizedStringKey.mapTitle.localized
+        navigationItem.title = LocalizedStringKey.title_map.localized
         navigationItem.largeTitleDisplayMode = .never
-
-        settingsController.text = locationInfo.identifier
-        settingsController.radius = locationInfo.radius
+        
         setupView()
         
-        let region = MKCoordinateRegion(center: LocationManager.shared.coordinate, latitudinalMeters: CLLocationDistance.default * 3, longitudinalMeters: CLLocationDistance.default * 3)
+        let region = MKCoordinateRegion(center: LocationManager.shared.coordinate, latitudinalMeters: radius * 3, longitudinalMeters: radius * 3)
         mapView.setRegion(region, animated: false)
         
-        if locationInfo == .default {
+        if coordinate == .zero {
             return
         }
-        annotation = MKPointAnnotation(coordinate: locationInfo.coordinate)
-        circle = MKCircle(center: locationInfo.coordinate, radius: locationInfo.radius)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        mapView.showUserLocation(and: locationInfo.coordinate, animated: false)
+        annotation = MKPointAnnotation(coordinate: coordinate)
+        circle = MKCircle(center: coordinate, radius: radius)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        delegate?.map(didReturnLocationInfo: self, locationInfo: locationInfo)
+        let info = LocationNotificationInfo(name: locationName, coordinate: coordinate, radius: radius)
+        delegate?.map(didReturnLocationInfo: self, locationInfo: info)
     }
     
     @objc private func handleLongPress(_ sender: UILongPressGestureRecognizer) {
         let point = sender.location(in: mapView)
         let coordinate = mapView.convert(point, toCoordinateFrom: mapView)
-        
-        CLGeocoder().reverseGeocodeLocation(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)) { places, error in
+        geocode(coordinate: coordinate)
+    }
+    
+    func geocode(coordinate: CLLocationCoordinate2D) {
+        CLGeocoder().reverseGeocodeLocation(CLLocation(coordinate: coordinate)) { places, error in
             if let error = error {
                 print("*** Couldn't geocode location: ", error.localizedDescription)
                 return
             }
             guard let place = places?.first else {
-                
                 return
             }
-            self.locationInfo.identifier = place.locality ?? "Unknown"
-            self.locationInfo.coordinate = coordinate
+            let name = place.name ?? "Unknown place"
+            self.updateLocationName(name: name, city: place.locality, distance: self.radius)
+            self.coordinate = coordinate
         }
     }
 }
@@ -160,6 +175,44 @@ extension MapController: MKMapViewDelegate {
         renderer.alpha = 0.4
         return renderer
     }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation {
+            return nil
+        }
+        
+        let reuseId = "pin"
+        var pav = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKMarkerAnnotationView
+        if pav == nil {
+            pav = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pav?.isDraggable = false
+            pav?.canShowCallout = true
+        } else {
+            pav?.annotation = annotation
+        }
+        
+        return pav
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationView.DragState, fromOldState oldState: MKAnnotationView.DragState) {
+        if (newState == .starting) {
+            view.setDragState(.starting, animated: true)
+        } else if newState == .ending || newState == .canceling {
+            view.setDragState(.none, animated: true)
+        }
+        guard newState == .ending,
+            let droppedCoordinate = view.annotation?.coordinate else { return }
+        geocode(coordinate: droppedCoordinate)
+    }
+    
+        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+            maximumDistanceWork?.cancel()
+            maximumDistanceWork = DispatchWorkItem {
+                self.updateLocationName(name: self.locationFullAddress, city: nil, distance: mapView.visibleDistance)
+                self.settingsController.updateDistanceFromLocation(mapView.visibleDistance)
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: maximumDistanceWork!)
+        }
 }
 
 extension MapController: LocationSettingsControllerDelegate {
@@ -174,15 +227,17 @@ extension MapController: LocationSettingsControllerDelegate {
         
     }
     
-    func sliderChanged(value: Double) {
-        locationInfo.radius = value
+    func radiusChanged(_ radius: CLLocationDistance) {
+        self.radius = radius
+        //setRadius(radius, interactive: true)
     }
 }
 
 extension MapController: SearchResultsControllerDelegate {
-    func searchResults(didSelectLocation controller: SearchResultsController, name: String, coordinate: CLLocationCoordinate2D) {
-        locationInfo.identifier = name
-        locationInfo.coordinate = coordinate
+    func searchResults(didSelectLocation controller: SearchResultsController, name: String, address: String?, coordinate: CLLocationCoordinate2D) {
+        
+        updateLocationName(name: name, city: address, distance: radius)
+        self.coordinate = coordinate
         controller.dismiss(animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.mapView.showUserLocation(and: coordinate, animated: true)
@@ -213,179 +268,9 @@ extension MapController {
     }
 }
 
-extension LocationSettingsController: UISearchBarDelegate {
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        delegate?.searchBarPressed()
-        return false
-    }
-}
-
 extension MKPointAnnotation {
     convenience init(coordinate: CLLocationCoordinate2D) {
         self.init()
         self.coordinate = coordinate
-    }
-}
-
-fileprivate protocol LocationSettingsControllerDelegate: class {
-    func sliderChanged(value: Double)
-    func searchBarPressed()
-    func searchButtonPressed()
-}
-
-fileprivate class LocationSettingsController: UIViewController {
-    private lazy var searchbarContainer = UIView()
-    
-    private lazy var sliderContainer = UIView()
-    
-    weak var delegate: LocationSettingsControllerDelegate?
-    
-    /// Radius in kilometers.
-    var radius: CLLocationDistance = .default {
-        didSet {
-            slider.value = Float(radius)
-            slider.isEnabled = true
-        }
-    }
-    
-    private let minimumValue: CLLocationDistance = 500
-    var maximumValue: CLLocationDistance = 150 * 1000 {
-        didSet {
-            slider.maximumValue = Float(maximumValue)
-        }
-    }
-    
-    
-    private lazy var radiusLabel: UILabel = {
-        let l = UILabel()
-        l.textColor = .label()
-        l.textAlignment = .center
-        l.font = .systemFont(ofSize: 14, weight: .regular)
-        l.text = Double(slider.value).readableRepresentation
-        l.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-        return l
-    }()
-    
-    lazy var slider: UISlider = {
-        let s = UISlider()
-        s.minimumValue = Float(minimumValue)
-        s.maximumValue = Float(maximumValue)
-        s.value = Float(radius)
-        s.isEnabled = false
-        s.minimumTrackTintColor = .tint
-        s.slideHandler = { [weak self] sender in
-            self?.handleRadiusChanged(value: sender.value)
-        }
-        return s
-    }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupView()
-    }
-    
-    private func handleRadiusChanged(value: Float) {
-        let d = Double(value)
-        delegate?.sliderChanged(value: d)
-        radiusLabel.text = d.readableRepresentation
-    }
-    
-    private func setupView() {
-        let searchContainer = SettingView()
-        searchContainer.title = LocalizedStringKey.choosePlacemark.localized
-        
-        searchContainer.addSubview(searchBar)
-        searchBar.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.leading.equalTo(searchContainer.titleLabel.snp.leading).offset(8)
-            make.top.equalTo(searchContainer.titleLabel.snp.bottom).offset(4).priority(.low)
-            make.bottom.equalToSuperview().inset(8)
-        }
-        
-        let sliderContainer = SettingView()
-        sliderContainer.title = LocalizedStringKey.setDistance.localized
-        
-        sliderContainer.addSubview(slider)
-        slider.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.leading.equalTo(sliderContainer.titleLabel.snp.leading).offset(8)
-            make.top.equalTo(sliderContainer.titleLabel.snp.bottom).offset(4).priority(.low)
-        }
-        
-        sliderContainer.snp.makeConstraints { make in
-            make.height.equalTo(100)
-        }
-        
-        sliderContainer.addSubview(radiusLabel)
-        radiusLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(slider.snp.bottom).offset(4)
-        }
-        
-        let line = UIView()
-        line.backgroundColor = UIColor.label().withAlphaComponent(0.07)
-        line.snp.makeConstraints { make in
-            make.height.equalTo(1)
-        }
-    
-        let stack = UIStackView(arrangedSubviews: [searchContainer, line, sliderContainer])
-        stack.axis = .vertical
-        view.addSubview(stack)
-        stack.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
-        }
-    }
-    
-      var text: String? {
-          get {
-              return searchBar.text
-          } set {
-              searchBar.text = newValue
-          }
-      }
-      
-      private lazy var searchBar: UISearchBar = {
-          let s = UISearchBar()
-        s.placeholder = LocalizedStringKey.searchLocationPlaceholder.localized
-          s.searchBarStyle = .minimal
-          s.delegate = self
-          return s
-      }()
-}
-
-fileprivate class SettingView: UIView {
-    var title: String? {
-        get {
-            return titleLabel.text
-        } set {
-            titleLabel.text = newValue
-        }
-    }
-    
-    lazy var titleLabel: UILabel = {
-        let l = UILabel()
-        l.setContentCompressionResistancePriority(.required, for: .vertical)
-        l.setContentHuggingPriority(.required, for: .vertical)
-        l.textColor = .secondaryLabel()
-        l.font = UIFont.systemFont(ofSize: 12, weight: .medium)
-        return l
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupView()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupView()
-    }
-    
-    private func setupView() {
-        backgroundColor = .clear
-        addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview().offset(8).priority(.required)
-        }
     }
 }

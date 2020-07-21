@@ -1,32 +1,49 @@
 //
 //  AlarmCell.swift
-//  WakeMeApp
+//  Glarm
 //
-//  Created by Adam Wienconek on 06/07/2020.
+//  Created by Adam Wienconek on 19/07/2020.
 //  Copyright © 2020 Adam Wienconek. All rights reserved.
 //
 
 import UIKit
 import SnapKit
 
-final class AlarmCell: UITableViewCell {
+protocol AlarmCellDelegate: class {
+    func alarmCell(didPressShowNote cell: AlarmCell)
+}
+
+class AlarmCell: UITableViewCell {
     static let preferredHeight: CGFloat = 114
     
-    private lazy var titleLabel: UILabel = {
+    internal lazy var titleLabel: UILabel = {
         let l = UILabel()
         l.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         l.textColor = .label()
         return l
     }()
     
-    private lazy var detailLabel: UILabel = {
+    internal lazy var detailLabel: UILabel = {
         let l = UILabel()
         l.font = .systemFont(ofSize: 14, weight: .regular)
         l.textColor = .secondaryLabel()
         return l
     }()
     
-    private lazy var rightDetailLabel: UILabel = {
+    internal lazy var noteButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.text = LocalizedStringKey.browse_showNote.localized
+        b.textColor = .tint
+        b.pressHandler = { [weak self] _ in
+            guard let self = self else { return }
+            self.delegate?.alarmCell(didPressShowNote: self)
+        }
+        b.contentHorizontalAlignment = .leading
+        b.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
+        return b
+    }()
+    
+    internal lazy var rightDetailLabel: UILabel = {
         let l = UILabel()
         l.textColor = .secondaryLabel()
         l.setContentHuggingPriority(.required, for: .vertical)
@@ -34,18 +51,20 @@ final class AlarmCell: UITableViewCell {
         return l
     }()
     
-    private lazy var markedView: UIImageView = {
+    internal lazy var markedView: UIImageView = {
         let i = UIImageView(image: .star)
         i.contentMode = .scaleAspectFit
         return i
     }()
     
-    private lazy var indicatorView: UIImageView = {
+    internal lazy var indicatorView: UIImageView = {
         let i = UIImageView(image: .disclosure)
         i.tintColor = .gray
         i.contentMode = .scaleAspectFit
         return i
     }()
+    
+    weak var delegate: AlarmCellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -64,12 +83,13 @@ final class AlarmCell: UITableViewCell {
         rightDetailLabel.text = nil
     }
     
-    func configure(with model: AlarmCellViewModel?) {
+    func configure(with model: AlarmCell.Model?) {
         guard let model = model else {
             return
         }
-        titleLabel.text = model.locationInfo.identifier
-        detailLabel.text = model.locationInfo.radius.readableRepresentation
+        titleLabel.text = model.locationInfo.name
+        noteButton.isHidden = model.note == nil || model.note?.isEmpty == true
+        detailLabel.text = model.locationInfo.radius.readableRepresentation()
         rightDetailLabel.text = model.date
         if let marked = model.marked {
             markedView.isHidden = !marked
@@ -78,23 +98,20 @@ final class AlarmCell: UITableViewCell {
         }
     }
     
-    private func commonInit() {
+    internal func commonInit() {
         setupView()
     }
-}
-
-private extension AlarmCell {
-    func setupView() {
-        addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
-            make.top.leading.equalTo(layoutMarginsGuide)
-        }
+    
+    /// This method should be completely overwritten by subclasses.
+    internal func setupView() {
+        let stack = UIStackView(arrangedSubviews: [titleLabel, detailLabel, noteButton])
+        stack.axis = .vertical
+        stack.spacing = 4
+        addSubview(stack)
         
-        addSubview(detailLabel)
-        detailLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(4)
-            make.bottom.equalTo(layoutMarginsGuide)
-            make.leading.equalTo(titleLabel)
+        stack.snp.makeConstraints { make in
+            make.top.leading.equalTo(layoutMarginsGuide)
+            make.bottom.equalTo(layoutMarginsGuide).offset(6)
         }
         
         addSubview(indicatorView)
@@ -118,5 +135,25 @@ private extension AlarmCell {
             make.height.equalTo(markedView.snp.width)
             make.height.equalTo(12)
         }
+    }
+}
+
+extension AlarmCell {
+    struct Model {
+        init(locationInfo: LocationNotificationInfo, note: String?, date: String? = nil, marked: Bool? = nil) {
+            self.locationInfo = locationInfo
+            self.note = note
+            self.date = date
+            self.marked = marked
+        }
+        
+        init(alarm: AlarmEntry) {
+            self.init(locationInfo: alarm.locationInfo, note: alarm.note, date: DateFormatter.localizedString(from: alarm.date, dateStyle: .short, timeStyle: .none), marked: alarm.isMarked)
+        }
+        
+        let locationInfo: LocationNotificationInfo
+        let note: String?
+        let date: String?
+        let marked: Bool?
     }
 }

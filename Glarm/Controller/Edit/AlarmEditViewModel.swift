@@ -11,9 +11,11 @@ import UIKit
 
 protocol AlarmEditViewModelDelegate: Alertable {
     func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo)
-    func model(didSelectAudio model: AlarmEditViewModel, tone: AlarmTone)
+    func model(didSelectAudio model: AlarmEditViewModel, sound: Sound)
     func model(didReloadRow model: AlarmEditViewModel, at indexPath: IndexPath)
+    func model(didReloadSection model: AlarmEditViewModel, section: Int)
     func model(didScheduleAlert model: AlarmEditViewModel, error: Error?)
+    func model(didChangeButton model: AlarmEditViewModel)
 }
 
 final class AlarmEditViewModel {
@@ -24,7 +26,11 @@ final class AlarmEditViewModel {
     
     private var alarm: AlarmEntry
     
-    private var edited = false
+    private var edited = false {
+        didSet {
+            delegate?.model(didChangeButton: self)
+        }
+    }
     
     weak var delegate: AlarmEditViewModelDelegate?
     
@@ -32,10 +38,14 @@ final class AlarmEditViewModel {
         self.manager = manager
         self.alarm = alarm ?? AlarmEntry()
         if let alarm = alarm {
-            scheduleButtonTitle = alarm.isActive ? LocalizedStringKey.update.localized : LocalizedStringKey.schedule.localized
+            scheduleButtonTitle = alarm.isActive ? LocalizedStringKey.edit_updateButton.localized : LocalizedStringKey.edit_scheduleButton.localized
         } else {
-            scheduleButtonTitle = LocalizedStringKey.schedule.localized
+            scheduleButtonTitle = LocalizedStringKey.edit_scheduleButton.localized
         }
+    }
+    
+    var noteClearButtonText: String? {
+        return alarmNoteText.isEmpty ? nil : LocalizedStringKey.edit_clearNoteButton.localized
     }
     
     var scheduleButtonEnabled: Bool {
@@ -50,6 +60,13 @@ final class AlarmEditViewModel {
         manager.schedule(alarm: alarm)
     }
     
+    func updateAlarmNote(text: String) {
+        if text == alarm.note {
+            return
+        }
+        edited = true
+        alarm.note = text
+    }
 }
 
 extension AlarmEditViewModel: AlarmsManagerDelegate {
@@ -74,16 +91,16 @@ extension AlarmEditViewModel: AlarmMapControllerDelegate {
 }
 
 extension AlarmEditViewModel: AudioBrowserViewControllerDelegate {
-    func audio(didReturnTone controller: AudioBrowserViewController, tone: AlarmTone) {
-        if alarm.tone == tone {
+    func audio(didReturnTone controller: AudioBrowserViewController, sound: Sound) {
+        if alarm.sound == sound {
             return
         }
-        updateAudio(tone: tone)
+        updateAudio(sound: sound)
     }
     
-    func updateAudio(tone: AlarmTone) {
+    func updateAudio(sound: Sound) {
         edited = true
-        alarm.tone = tone
+        alarm.sound = sound
         delegate?.model(didReloadRow: self, at: IndexPath(row: 0, section: Section.audio.rawValue))
     }
 }
@@ -91,6 +108,7 @@ extension AlarmEditViewModel: AudioBrowserViewControllerDelegate {
 extension AlarmEditViewModel {
     enum Section: Int, CaseIterable {
         case location
+        case note
         case audio
     }
     
@@ -111,44 +129,59 @@ extension AlarmEditViewModel {
                     self.delegate?.model(didSelectMap: self, locationInfo: self.alarm.locationInfo)
                 case .resticted:
                     let actions: [UIAlertAction] = [
-                        UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+                        UIAlertAction(localizedTitle: .permission_openSettingsAction, style: .default, handler: { _ in
                             UIApplication.shared.openSettings()
                         }),
                         .cancel(text: LocalizedStringKey.continue.localized) {
                             self.delegate?.model(didSelectMap: self, locationInfo: self.alarm.locationInfo)
                         }
                     ]
-                    let model = AlertViewModel(localizedTitle: .locationPermissionDeniedTitle, message: .locationPermissionDeniedMessage, actions: actions, style: .alert)
+                    let model = AlertViewModel(localizedTitle: .permission_locationDeniedTitle, message: .permission_locationDeniedMessage, actions: actions, style: .alert)
                     self.delegate?.didReceiveAlert(model: model)
                 case .notDetermined:
                     break
                 }
             }
+        case .note:
+            break
         case .audio:
-            delegate?.model(didSelectAudio: self, tone: alarm.tone)
+            delegate?.model(didSelectAudio: self, sound: alarm.sound)
         }
     }
     
-    func cellModel(for path: IndexPath) -> AlarmCellViewModel? {
+    func cellModel(for path: IndexPath) -> AlarmCell.Model? {
         if alarm.locationInfo == .default {
             return nil
         }
-        return AlarmCellViewModel(locationInfo: alarm.locationInfo)
+        return AlarmCell.Model(locationInfo: alarm.locationInfo, note: nil)
     }
     
-    var alarmToneName: String {
-        return alarm.tone.rawValue
-    }
-    
-    func headerTitle(in section: Int) -> String? {
+    func headerModel(in section: Int) -> TableHeaderView.Model? {
         guard let sec = Section(rawValue: section) else {
                 return nil
         }
         switch sec {
         case .location:
-            return LocalizedStringKey.location.localized
+            return .init(title: LocalizedStringKey.edit_locationHeader.localized)
+        case .note:
+            return .init(title: LocalizedStringKey.edit_noteHeader.localized,
+                buttonTitle: noteClearButtonText)
         case .audio:
             return nil
         }
+    }
+}
+
+extension AlarmEditViewModel {
+    var alarmLocationInfo: LocationNotificationInfo {
+        return alarm.locationInfo
+    }
+    
+    var alarmToneName: String {
+        return alarm.sound.name
+    }
+    
+    var alarmNoteText: String {
+        return alarm.note
     }
 }

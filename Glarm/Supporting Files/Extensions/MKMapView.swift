@@ -19,11 +19,17 @@ extension MKMapView {
         } else {
             let rect = MKMapRect(coordinates: [userCoordinate, coordinate])
             
-            let insets = UIEdgeInsets(top: safeAreaInsets.top + 60,
-                                      left: safeAreaInsets.left + 60,
-                                      bottom: safeAreaInsets.bottom + 60,
-                                      right: safeAreaInsets.right + 60)
-            setVisibleMapRect(rect, edgePadding: insets, animated: true)
+            let insets = UIEdgeInsets(top: safeAreaInsets.top + 100,
+                                      left: safeAreaInsets.left + 100,
+                                      bottom: safeAreaInsets.bottom + 100,
+                                      right: safeAreaInsets.right + 100)
+            setVisibleMapRect(rect, edgePadding: insets, animated: animated)
         }
+    }
+    
+    var visibleDistance: CLLocationDistance {
+        let westMapPoint = MKMapPoint(x: visibleMapRect.minX, y: visibleMapRect.midY)
+        let eastMapPoint = MKMapPoint(x: visibleMapRect.maxX, y: visibleMapRect.midY)
+        return westMapPoint.distance(to: eastMapPoint)
     }
 }

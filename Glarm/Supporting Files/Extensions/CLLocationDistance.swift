@@ -9,28 +9,55 @@
 import CoreLocation
 
 extension CLLocationDistance {
-    var readableRepresentation: String {
-        if Locale.current.usesMetricSystem {
-            // Meters
-            if self < 1000 {
-                return String(format: "%.0f m", self)
-            } else {
-                let format = self.remainder(dividingBy: 1000) == 0 ? "%.0f km" : "%.1f km"
-                let kms = String(format: format, self / 1000)
-                return kms
+    func readableRepresentation(usingSpaces: Bool = false) -> String {
+        
+        var formatter: NumberFormatter! = Cacher.object(key: "CLLocationDistanceFormatter") as? NumberFormatter
+        if formatter == nil {
+            formatter = NumberFormatter()
+            formatter!.minimumFractionDigits = 0
+            Cacher.set(object: formatter, at: "CLLocationDistanceFormatter")
+        }
+        
+        switch Locale.preferredUnitLength {
+        case .miles:
+            formatter.maximumFractionDigits = 1
+            guard let representation = formatter.string(from: self.in(.miles) as NSNumber) else {
+                return "n/a"
             }
-        } else {
-            // Miles
-            let yards = self * 1.0936
-            if yards < 1760 {
-                return String(format: "%.0f yd", yards)
-            } else {
-                let format = self.remainder(dividingBy: 1760) == 0 ? "%.0f mi" : "%.1f mi"
-                let mis = String(format: format, yards / 1760)
-                return mis
+            if usingSpaces {
+                return representation + " mi"
             }
+            return representation + "mi"
+            default:
+                if self < 1000 {
+                    formatter.maximumFractionDigits = 0
+                    guard let representation = formatter.string(from: self as NSNumber) else {
+                        return "n/a"
+                    }
+                    if usingSpaces {
+                        return representation + " m"
+                    }
+                    return representation + "m"
+                } else {
+                    formatter.maximumFractionDigits = 1
+                    guard let representation = formatter.string(from: self/1000 as NSNumber) else {
+                        return "n/a"
+                    }
+                    if usingSpaces {
+                        return representation + " km"
+                    }
+                    return representation + "km"
+                }
         }
     }
     
     static var `default`: CLLocationDistance = 20 * 1000
+    
+    func convert(from originalUnit: UnitLength, to convertedUnit: UnitLength) -> Double {
+      return Measurement(value: self, unit: originalUnit).converted(to: convertedUnit).value
+    }
+    
+    func `in`(_ unit: UnitLength) -> CLLocationDistance {
+        return convert(from: .meters, to: unit)
+    }
 }

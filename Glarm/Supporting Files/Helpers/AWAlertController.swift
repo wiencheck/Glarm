@@ -12,27 +12,6 @@ class AWAlertController: UIAlertController {
     
     var onTextFieldChange: ((UITextField) -> Void)?
     
-    private lazy var alertWindow: UIWindow = {
-        let window = UIWindow()
-        window.rootViewController = UIViewController()
-        window.backgroundColor = .clear
-        window.tintColor = .tint
-        window.windowLevel = UIWindow.Level.alert
-        return window
-    }()
-    
-    public func show(animated flag: Bool = true, completion: (() -> Void)? = nil) {
-        if let rootViewController = alertWindow.rootViewController {
-            alertWindow.makeKeyAndVisible()
-            if let popoverController = self.popoverPresentationController {
-              popoverController.sourceView = alertWindow
-              popoverController.sourceRect = CGRect(x: alertWindow.bounds.midX, y: alertWindow.bounds.midY, width: 0, height: 0)
-              popoverController.permittedArrowDirections = []
-            }
-            rootViewController.present(self, animated: flag, completion: completion)
-        }
-    }
-    
     convenience init(model: AlertViewModel) {
         self.init(title: model.title, message: model.message, preferredStyle: model.style)
         model.actions.forEach({ self.addAction($0) })
@@ -54,12 +33,58 @@ extension AWAlertController {
 extension AWAlertController {
     class var notificationsPermissionRestrictedAlert: UIAlertController {
         let actions: [UIAlertAction] = [
-            UIAlertAction(localizedTitle: .openSettings, style: .default, handler: { _ in
+            UIAlertAction(localizedTitle: .permission_openSettingsAction, style: .default, handler: { _ in
                 UIApplication.shared.openSettings()
             }),
             .cancel()
         ]
-        let model = AlertViewModel(localizedTitle: .notificationPermissionDeniedTitle, message: .notificationPermissionDeniedMessage, actions: actions, style: .alert)
+        let model = AlertViewModel(localizedTitle: .permission_notificationDeniedTitle, message: .permission_notificationDeniedMessage, actions: actions, style: .alert)
         return AWAlertController(model: model)
+    }
+    
+    class func presentDonationController() {
+        IAPHandler.shared.purchaseStatusBlock = { type in
+            let model: AlertViewModel
+            switch type {
+            case .purchased:
+                model = AlertViewModel(localizedTitle: .donate_thankYouTitle, message: .donate_thankYouMessage, actions: [.dismiss], style: .alert)
+            case .failed(let error):
+                model = AlertViewModel(title: LocalizedStringKey.message_errorOccurred.localized, message: "Couldn't complete purchase, error: " + error.localizedDescription, actions: [.dismiss], style: .alert)
+            }
+            let alert = AWAlertController(model: model)
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow()?.rootViewController?.present(alert, animated: true, completion: nil)
+            }
+
+            IAPHandler.shared.purchaseStatusBlock = nil
+        }
+        IAPHandler.shared.fetchAvailableProducts { products in
+            var actions = [UIAlertAction.cancel()]
+            let filtered = products.filter({ $0.productIdentifier.contains("tip") })
+            let sorted = filtered.sorted { pro1, pro2 in
+                return Int(pro1.productIdentifier.replacingOccurrences(of: ",", with: ".")) ?? 0 < Int(pro2.productIdentifier.replacingOccurrences(of: ",", with: ".")) ?? 0
+            }
+            for product in sorted {
+                var title: String
+                switch product.productIdentifier {
+                case IAPHandler.SMALL_TIP_PRODUCT_ID:
+                    title = "\(LocalizedStringKey.donate_small.localized): "
+                case IAPHandler.BIG_TIP_PRODUCT_ID:
+                    title = "\(LocalizedStringKey.donate_big.localized): "
+                case IAPHandler.ENOURMOUS_TIP_PRODUCT_ID:
+                    title = "\(LocalizedStringKey.donate_enormous.localized): "
+                default:
+                    return
+                }
+                title += product.priceString ?? ""
+                actions.append(UIAlertAction(title: title, style: .default, handler: { _ in
+                    IAPHandler.shared.purchaseMyProduct(with: product.productIdentifier)
+                }))
+            }
+            let model = AlertViewModel(title: LocalizedStringKey.donate_title.localized, message: LocalizedStringKey.donate_message.localized, actions: actions, style: .actionSheet)
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow()?.rootViewController?.present(AWAlertController(model: model), animated: true, completion: nil)
+            }
+        }
     }
 }

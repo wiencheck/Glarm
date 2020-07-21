@@ -6,68 +6,100 @@
   Copyright © 2018 Adam Wienconek. All rights reserved.
 */
 
-"launchTitle" = "Glarm";
-"browserTitle" = "Alarms";
-"editTitle" = "Edit Alarm";
-"mapTitle" = "Choose Location";
-"audioTitle" = "Sound";
+// MARK: Screen titles
+"title_launch" = "Glarm";
+"title_browser" = "Alarms";
+"title_edit" = "Edit Alarm";
+"title_map" = "Choose Location";
+"title_audio" = "Sound";
 
-"activeSection" = "Active Alarms";
-"markedSection" = "Marked Alarms";
-"pastSection" = "Previous Alarms";
+// MARK: Browse screen
+"browse_activeSection" = "Active Alarms";
+"browse_markedSection" = "Marked Alarms";
+"browse_pastSection" = "Previous Alarms";
+"browse_createButtonTitle" = "Create New Alarm";
+"browse_backButton" = "Alarms";
+"browse_showNote" = "Read note";
 
-"createButtonTitle" = "Create New Alarm";
-"playButtonTitle" = "Play";
-"pauseButtonTitle" = "Pause";
-"toneBrowserFooter" = "Choose sound to be played when you reach the chosen region. Note that alarm sounds can only play for 30 seconds.";
-"searchLocationPlaceholder" = "Search for location";
-"choosePlacemark" = "Choose destination";
-"setDistance" = "Set region's radius";
-"location" = "Location";
-"tone" = "Sound";
+// MARK: Browse edit actions.
+"browse_markAction" = "Mark";
+"browse_unmarkAction" = "Unmark";
+"browse_scheduleAction" = "Schedule";
+"browse_deleteAction" = "Delete";
+"browse_cancelAction" = "Cancel";
 
-"markActionTitle" = "Mark";
-"unmarkActionTitle" = "Unmark";
-"scheduleActionTitle" = "Schedule";
-"schedule" = "Schedule Alarm";
-"update" = "Save changes";
+// MARK: Edit screen
+"edit_locationHeader" = "Location";
+"edit_toneCell" = "Sound";
+"edit_scheduleButton" = "Schedule Alarm";
+"edit_updateButton" = "Save changes";
+"edit_backButton" = "Alarm";
+"edit_clearNoteButton" = "Clear";
+"edit_noteHeader" = "Note";
+"edit_notePlaceholder" = "Add note";
+
+// MARK: Audio screen
+"audio_playButtonTitle" = "Play";
+"audio_pauseButtonTitle" = "Pause";
+"audio_toneBrowserFooter" = "Choose sound to be played when you reach the chosen region. Note that alarm sounds can only play for 30 seconds.";
+"audio_downloadMoreSounds" = "Download more tones";
+"audio_downloadSoundsFooter" = "It is recommended to download additional tones on Wi-Fi connection";
+
+// MARK: Empty cell
+"emptyCell_title" = "No location set";
+"emptyCell_detail" = "Click here to choose destination region";
+"emptyView_title" = "No alarms created yet";
+"emptyView_detail" = "Press the button below to create one.";
+
+// MARK: Notification
+"notification_title" = "You're almost there!";
+"notification_messageIsLessThan" = "is less than";
+"notification_messageAway" = "away.";
+"notification_youAre" = "You are";
+"notification_awayFromDestination" = "away.";
+
+// MARK: Map screen
+"map_searchbarPlaceholder" = "Search for location";
+"map_chooseDestination" = "Choose destination";
+"map_setRadius" = "Set region's radius";
+
+// MARK: Info alert
+"about_title" = "Glarm";
+"about_detail" = "Simple location-based alarms\nMade by Adam Wienconek 🇵🇱\n\nConsider leaving a review in the App Store, each one really helps!\nHaving a problem or question? Send me a message!";
+"about_leaveReview" = "Leave a review";
+"about_messageMe" = "Message me";
+
+// MARK: Tips
+"tips_title" = "How does it work?";
+"tips_description" = "Glarm creates and schedules alarms based on your location, which is tracked by iOS in the background. What that means is you can close Glarm and still receive the alarm after entering region and battery consumption is minimal.\n\nFew tips:\n• Swipe left on any alarm to show options for it\n• Mark your favourite alarms so they are easily accessed and don't disappear after time (Glarm keeps track of last 10 non-marked alarms)";
+
+// MARK: Review
+"review_areYouEnjoyingTitle" = "Are You enjoying Glarm?";
+"review_areYouEnjoyingMessage" = "Please consider writing a review, it really helps 😊";
+
+// MARK: Messages
+"message_errorOccurred" = "Error occurred";
+"message_errorUnknown" = "Unknown, really mysterious error.";
+
+// MARK: Permissions
+"permission_locationDeniedTitle" = "Location restricted";
+"permission_locationDeniedMessage" = "We use your location to provide better search results and show your position on the map. Glarm only reads your location while using the app, system tracks your position in the background outside of Glarm so your privacy stays safe.";
+"permission_notificationDeniedTitle" = "Notifications restricted";
+"permission_notificationDeniedMessage" = "Nobody likes apps that spam useless notifications, however Glarm's main purpose is to present alerts based on location, so we really need your permission to be able to do that. We promise no spam!";
+"permission_openSettingsAction" = "Open Settings";
+"permission_openAppAction" = "Go to the app";
+
+// MARK: Donate
+"donate_thankYouTitle" = "Purchase successful";
+"donate_thankYouMessage" = "Thank You for supporting Glarm's development! 🎉";
+"donateSmall" = "Coffee ☕️";
+"donateBig" = "Avocado salad 🥑";
+"donateEnormous" = "One round for my friends 🍻";
+"donate_action" = "Tip me 💎👀";
+"donate_title" = "Tip me";
+"donate_message" = "Glarm is a hobby project, which I work on after classes, every donation and purchase greatly helps and allows me to continue working on it. Please, choose what would you like to buy me";
+
+// MARK: Other
 "cancel" = "Cancel";
-"alarm" = "Alarm";
-"alarms" = "Alarms";
-
-"emptyCellTitle" = "No location set";
-"emptyCellDetail" = "Click here to choose destination region";
-"emptyViewTitle" = "No alarms created yet";
-"emptyViewDetail" = "Press the button below to create one.";
-
-"notificationTitle" = "You're almost there!";
-"notificationMessageIsLessThan" = "is less than";
-"notificationMessageAway" = "away.";
-"youAre" = "You are";
-"awayFromDestination" = "away.";
-
-"infoTitle" = "Glarm";
-"infoDetail" = "Simple location-based alarms\nMade by Adam Wienconek 🇵🇱\n\nConsider leaving a review in the App Store, each one really helps!\nHaving a problem or question? Send me a message!";
-"leaveReview" = "Leave a review";
-"messageMe" = "Message me";
 "dismiss" = "Dismiss";
 "continue" = "Continue";
-"openTips" = "How does it work?";
-"tipsDescription" = "Glarm creates and schedules alarms based on your location, which is tracked by iOS in the background. What that means is you can close Glarm and still receive the alarm after entering region and battery consumption is minimal.\n\nFew tips:\n• Swipe left on any alarm to show options for it\n• Mark your favourite alarms so they are easily accessed and don't disappear after time (Glarm keeps track of last 10 non-marked alarms)";
-"areYouEnjoyingTitle" = "Are You enjoying Glarm?";
-"areYouEnjoyingMessage" = "Please consider writing a review, it really helps 😊";
-"errorOccurred" = "Error occurred";
-"errorUnknown" = "Unknown, really mysterious error.";
-
-"permissionLocation" = "Enable location tracking";
-"permissionNotifications" = "Allow notifications";
-"locationPermissionDeniedTitle" = "Location restricted";
-"locationPermissionDeniedMessage" = "We use your location to provide better search results and show your position on the map. Glarm only reads your location while using the app, system tracks your position in the background outside of Glarm so your privacy stays safe.";
-"notificationPermissionDeniedTitle" = "Notifications restricted";
-"notificationPermissionDeniedMessage" = "Nobody likes apps that spam useless notifications, however Glarm's main purpose is to present alerts based on location, so we really need your permission to be able to do that. We promise no spam!";
-"openSettings" = "Open Settings";
-"openApp" = "Go to the app";
-"disclaimerFirst" = "To work properly, Glarm needs permission to:";
-"disclaimerSecond" = "We don't gather any personal info or track your location outside of the app.";
-"locationDisclaimer" = "• Read your location (in-app only!)";
-"notificationDisclaimer" = "• Show notifications";

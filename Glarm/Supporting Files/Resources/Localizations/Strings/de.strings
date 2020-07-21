@@ -1,0 +1,91 @@
+/* 
+ de.strings
+ Glarm
+ 
+ Created by Adam Wienconek on 20/07/2020.
+ Copyright © 2020 Adam Wienconek. All rights reserved.
+ */
+
+// MARK: Screen titles
+"title_launch" = "Glarm";
+"title_browser" = "Wecker";
+"title_edit" = "Wecker bearbeiten";
+"title_map" = "Standort";
+"title_audio" = "Ton";
+
+// MARK: Browse screen
+"browse_activeSection" = "aktive Wecker";
+"browse_markedSection" = "markierte Wecker";
+"browse_pastSection" = "letzte Wecker";
+"browse_createButtonTitle" = "Wecker erstellen";
+"browse_backButton" = "Wecker";
+
+// MARK: Browse edit actions.
+"browse_markAction" = "Markieren";
+"browse_unmarkAction" = "Markierung löschen";
+"browse_scheduleAction" = "Aktivieren";
+"browse_cancelAction" = "Abbrechen";
+
+// MARK: Edit screen
+"edit_updateButton" = "Veränderungen speichern";
+"edit_backButton" = "Wecker";
+"edit_locationHeader" = "Standort";
+"edit_toneCell" = "Ton";
+"edit_scheduleButton" = "Wecker planen";
+
+// MARK: Audio screen
+"audio_playButtonTitle" = "Wiedergeben";
+"audio_pauseButtonTitle" = "Pause";
+"audio_toneBrowserFooter" = "Wähle Ton, der nachdem du am angewiesenen Region angekommen bist, wiedergegeben wird. Tone des Weckers können maximal durch 30 Sekunden wiedergegeben werden";
+
+// MARK: Empty cell
+"emptyCell_title" = "Keiner Standort";
+"emptyCell_detail" = "Tippen, um Standort und Reichweite der Region auszuwählen";
+"emptyView_title" = "keine Wecker wurden erstellt";
+"emptyView_detail" = "Tippen Taste unten, um Wecker zu erstellen";
+
+// MARK: Notification
+"notification_title" = "Du bist fast da!";
+"notification_messageIsLessThan" = "ist fast";
+"notification_messageAway" = "von hier.";
+"notification_youAre" = "Du bist";
+"notification_awayFromDestination" = "vom Ziel.";
+
+// MARK: Map screen
+"map_searchbarPlaceholder" = "Standort finden";
+"map_chooseDestination" = "Standort auswählen";
+"map_setRadius" = "Reichweite der Region einstellen";
+
+// MARK: Info alert
+"about_title" = "Glarm";
+"about_detail" = "einfache Wecker, die auf Standort basieren\nAdam Wienconek 🇵🇱\n\nGefällt dir meine App, erwäge auch eine Rezension in App Store zu schreiben, jede von ihnen hilft mir sehr. \nBist du auf Problem gestoßen oder hast du Frage? Schreib mich an!";
+"about_leaveReview" = "Rezension schreiben";
+"about_messageMe" = "Schreib mich an";
+
+// MARK: Tips
+"tips_title" = "Wie funktioniert das?";
+"tips_description" = "Glarm erstellt Wecker, die auf deine Standtort basieren, die durch iOS im Hintergrund gefolgt wird. In der Praxis bedeutet das, dass du Glarm schließen kannst und trotzdem Wecker wird geliefert und Batterieverbrauch ist minimal.\n\nEin paar Tipps:\n• Wische irgendwelchen Wecker nach links, um Einstellungen zu öffnen\n• Markiere deine beliebte Wecker, damit sie nach Zeit nicht verschwinden (Glarm behält im Speicher nur letzte 10 unmarkierte Wecker)";
+
+// MARK: Review
+"review_areYouEnjoyingTitle" = "Wie gefällt Dir Glarm?";
+"review_areYouEnjoyingMessage" = "Gefällt dir diese App, erwäge eine Rezension zu schreiben oder zu benoten. Jede von ihnen hilft mir sehr. 😊 ";
+
+// MARK: Messages
+"message_errorOccurred" = "ein Fehler ist aufgetreten";
+"message_errorUnknown" = "Unbekannter, geheimnisvoller Fehler";
+
+// MARK: Permissions
+"permission_locationDeniedTitle" = "Standort zu folgen blockiert";
+"permission_locationDeniedMessage" = "Deine Standort wird nur verwendet, um genauere Suchergebnisse anzuzeigen und um deine Position auf der Landkarte zu ermitteln. Glarm liest deine Standort nur dann, wenn die App genutzt wird. Außer der App wird deine Standort durch iOS-System gefolgt, so deine Privatsphäre bleibt geschützt.";
+"permission_notificationDeniedTitle" = "Benachrichtigungen blockiert";
+"permission_notificationDeniedMessage" = "Niemand mag unnötige Benachrichtigungen, aber Hauptziel von Glarm ist Wecker, die auf Standort basieren, anzuzeigen, deswegen brauchen wir wirklich deine Erlaubnis, um es zu machen. Wir versprechen, kein SPAM!";
+"permission_openSettingsAction" = "öffnen Einstellungen";
+"permission_openAppAction" = "zu App gehen";
+
+// MARK: Donate
+
+// MARK: Other
+"dismiss" = "Schließen";
+"cancel" = "Abbrechen";
+
+"permissionGreeting" = "Um zu funktionieren, Glarm benötigt Erlaubnis deine Standort zu lesen (nur während App wird benutzt!) und Benachrichtigungen zu schicken. Wir sammeln keine vertraulichen Daten und wir folgen deine Standort nicht, wenn App nicht genutzt wird.";
