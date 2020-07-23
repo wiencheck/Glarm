@@ -14,7 +14,7 @@ enum IAPHandlerAlertType {
     
     func message() -> String {
         switch self {
-        case .purchased: return "You've successfully bought this purchase!"
+        case .purchased: return "You've successfully purchased protduct!"
         case .failed(let error):
             return error.localizedDescription
         }
@@ -24,19 +24,24 @@ enum IAPHandlerAlertType {
 final class IAPHandler: NSObject {
     static let shared = IAPHandler()
     
-    static let fullVersionPurchasedNotification = Notification.Name("fullVersionPurchasedNotification")
-    
     static let SMALL_TIP_PRODUCT_ID = "glarm.small.tip"
+    static let MEDIUM_TIP_PRODUCT_ID = "glarm.medium.tip"
     static let BIG_TIP_PRODUCT_ID = "glarm.big.tip"
-    static let ENOURMOUS_TIP_PRODUCT_ID = "glarm.enourmous.tip"
     static let FULL_VERSION_PRODUCT_ID = "glarm.full.version.unlock"
     static let purchasedProductsKey = "glarm.purchasedProducts"
+    
+    class var consumableProductIdentifiers: [String] {
+        return [SMALL_TIP_PRODUCT_ID, MEDIUM_TIP_PRODUCT_ID, BIG_TIP_PRODUCT_ID]
+    }
     
     fileprivate var productID = ""
     fileprivate var productsRequest = SKProductsRequest()
     public var iapProducts = [SKProduct]()
     
-    public class var purchasedProductsIdentifiers: Set<String> {
+    public static let purchasedProductIdentifiersChangedNotification = Notification.Name("purchasedProductIdentifiersChangedNotification")
+    public static let PurchasedProductIdentifiersKey = "PurchasedProductIdentifiersKey"
+    
+    public var purchasedProductsIdentifiers: Set<String> {
         get {
             let arr = UserDefaults.standard.stringArray(forKey: IAPHandler.purchasedProductsKey) ?? []
             return Set(arr)
@@ -45,15 +50,15 @@ final class IAPHandler: NSObject {
             print("Purchased products: ", newValue)
             let arr = [String](newValue)
             UserDefaults.standard.set(arr, forKey: IAPHandler.purchasedProductsKey)
-            NotificationCenter.default.post(name: IAPHandler.fullVersionPurchasedNotification, object: didPurchaseFullVersion)
+            NotificationCenter.default.post(name: IAPHandler.purchasedProductIdentifiersChangedNotification, object: self, userInfo: [IAPHandler.PurchasedProductIdentifiersKey: purchasedProductsIdentifiers])
         }
     }
     
-    public class var didPurchaseFullVersion: Bool {
+    public var didPurchaseFullVersion: Bool {
         return purchasedProductsIdentifiers.contains(IAPHandler.FULL_VERSION_PRODUCT_ID)
     }
     
-    private var currentProduct: SKProduct?
+    //private var currentProduct: SKProduct?
     
     var purchaseStatusBlock: ((IAPHandlerAlertType) -> Void)?
     private var onProductsFetch: (([SKProduct]) -> Void)?
@@ -67,14 +72,14 @@ final class IAPHandler: NSObject {
     }
     
     func purchaseMyProduct(index: Int) {
-        if iapProducts.isEmpty { return }
-        
         guard canMakePurchases() else {
             let error = AWError(description: "Purchases are disabled for this device")
             purchaseStatusBlock?(.failed(error))
             return
         }
-        let product = iapProducts[index]
+        guard let product = iapProducts.at(index) else {
+            return
+        }
         let payment = SKPayment(product: product)
         SKPaymentQueue.default().add(payment)
         
@@ -83,15 +88,14 @@ final class IAPHandler: NSObject {
     }
     
     func purchaseMyProduct(with identifier: String) {
-        if iapProducts.count == 0 { return }
-        
         guard canMakePurchases() else {
             let error = AWError(description: "Purchases are disabled for this device")
             purchaseStatusBlock?(.failed(error))
             return
         }
-        guard let product = iapProducts.first(where: { $0.productIdentifier == identifier }) else { return }
-        currentProduct = product
+        guard let product = iapProducts.first(where: { $0.productIdentifier == identifier }) else {
+            return
+        }
         let payment = SKPayment(product: product)
         SKPaymentQueue.default().add(payment)
         
@@ -109,9 +113,10 @@ final class IAPHandler: NSObject {
         
         onProductsFetch = completion
         // Put here your IAP Products ID's
-        let productIdentifiers = NSSet(objects: IAPHandler.SMALL_TIP_PRODUCT_ID, IAPHandler.BIG_TIP_PRODUCT_ID, IAPHandler.ENOURMOUS_TIP_PRODUCT_ID)
+        let productIdentifiers = Set([ IAPHandler.SMALL_TIP_PRODUCT_ID, IAPHandler.BIG_TIP_PRODUCT_ID, IAPHandler.MEDIUM_TIP_PRODUCT_ID,
+            IAPHandler.FULL_VERSION_PRODUCT_ID])
         
-        productsRequest = SKProductsRequest(productIdentifiers: productIdentifiers as! Set<String>)
+        productsRequest = SKProductsRequest(productIdentifiers: productIdentifiers)
         productsRequest.delegate = self
         productsRequest.start()
     }
@@ -119,41 +124,45 @@ final class IAPHandler: NSObject {
 
 extension IAPHandler: SKProductsRequestDelegate, SKPaymentTransactionObserver {
     // MARK: - REQUEST IAP PRODUCTS
-    func productsRequest (_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
+    internal func productsRequest (_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         iapProducts = response.products
         onProductsFetch?(response.products)
     }
     
-    func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
+    internal func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
         if queue.transactions.isEmpty {
             let error = AWError(description: "No purchases were available to restore")
             purchaseStatusBlock?(.failed(error))
             return
         }
-        for transcation in queue.transactions {
-            let identifier = transcation.payment.productIdentifier
-            IAPHandler.purchasedProductsIdentifiers.insert(identifier)
-        }
-        if IAPHandler.didPurchaseFullVersion {
-            NotificationCenter.default.post(name: IAPHandler.fullVersionPurchasedNotification, object: IAPHandler.shared)
-        }
-        purchaseStatusBlock?(.purchased)
+        handleTransactions(queue.transactions, queue: queue)
     }
     
     // MARK:- IAP PAYMENT QUEUE
-    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+    internal func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        handleTransactions(transactions, queue: queue)
+    }
+    
+    private func handleTransactions(_ transactions: [SKPaymentTransaction], queue: SKPaymentQueue) {
+        
         for transaction in transactions {
             switch transaction.transactionState {
-            case .purchased:
-            IAPHandler.purchasedProductsIdentifiers.insert(transaction.payment.productIdentifier)
+            case .purchasing, .deferred:
+                continue // do nothing
+            case .purchased, .restored:
+                let identifier = transaction.payment.productIdentifier
+                // Don't add consumable products.
+                if !IAPHandler.consumableProductIdentifiers.contains(identifier) {
+                    purchasedProductsIdentifiers.insert(identifier)
+                }
                 purchaseStatusBlock?(.purchased)
             case .failed:
                 let error = AWError(description: "Purchase failed")
                 purchaseStatusBlock?(.failed(error))
-            default: break
+            default:
+                break
             }
-            if transaction.transactionState == .purchasing { continue }
-            SKPaymentQueue.default().finishTransaction(transaction)
+            queue.finishTransaction(transaction)
         }
     }
 }

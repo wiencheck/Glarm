@@ -18,6 +18,7 @@
 		2B0F753B24B59FEE00EE9876 /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753A24B59FEE00EE9876 /* PermissionsManager.swift */; };
 		2B0F753F24B5E06800EE9876 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753E24B5E06800EE9876 /* UIColor.swift */; };
 		2B24757E24BF591E00A1070D /* AuthorizationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */; };
+		2B2DDA1424C9A95400A8791E /* Notification.Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2DDA1324C9A95400A8791E /* Notification.Name.swift */; };
 		2B4E9DA224C5B82A00A2D5EC /* Cacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E9DA124C5B82A00A2D5EC /* Cacher.swift */; };
 		2B6C7BA724B8E3B4000DEEDA /* RootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6C7BA624B8E3B4000DEEDA /* RootController.swift */; };
 		2B81B1CF24C592E8007CB1D6 /* TableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B81B1CE24C592E8007CB1D6 /* TableHeaderView.swift */; };
@@ -107,6 +108,7 @@
 		2B0F753A24B59FEE00EE9876 /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
 		2B0F753E24B5E06800EE9876 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStatus.swift; sourceTree = "<group>"; };
+		2B2DDA1324C9A95400A8791E /* Notification.Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.Name.swift; sourceTree = "<group>"; };
 		2B4E9DA124C5B82A00A2D5EC /* Cacher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cacher.swift; sourceTree = "<group>"; };
 		2B6C7BA624B8E3B4000DEEDA /* RootController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootController.swift; sourceTree = "<group>"; };
 		2B81B1CE24C592E8007CB1D6 /* TableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderView.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				2BAF05EB24C5F83900AB7FF4 /* UITableViewCell.swift */,
 				2BF6112024B72FA300D01007 /* UIView.swift */,
 				2BF13DB824B3B3DA00B40D4E /* UIViewController.swift */,
+				2B2DDA1324C9A95400A8791E /* Notification.Name.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -288,21 +291,21 @@
 		2BBDE5D524B9A62A000AF05F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				2BF13DBE24B4905D00B40D4E /* DrawerNavigationController.swift */,
-				2BBDE5D624B9A69E000AF05F /* BoldButtonController.swift */,
-				2BEDCD0624BB5BD3009EED08 /* EmptyBackgroundView.swift */,
-				2BF4A69324BBC9B300F52A4D /* AWAlertController.swift */,
-				2BF4A69524BBC9DC00F52A4D /* AlertViewModel.swift */,
-				2BF4A69924BBCC3800F52A4D /* UnlockManager.swift */,
-				2BF4A69D24BBCEC500F52A4D /* IAPHandler.swift */,
-				2BF4A69F24BBCF2300F52A4D /* AWError.swift */,
-				2BE2691624BDA692000299A3 /* AppRatingHelper.swift */,
-				2BE2691824BDA6F9000299A3 /* Config.swift */,
-				2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */,
 				2B8C807824BF894C009EBBAE /* Alertable.swift */,
+				2BF4A69524BBC9DC00F52A4D /* AlertViewModel.swift */,
+				2BE2691624BDA692000299A3 /* AppRatingHelper.swift */,
+				2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */,
+				2BF4A69324BBC9B300F52A4D /* AWAlertController.swift */,
+				2BF4A69F24BBCF2300F52A4D /* AWError.swift */,
+				2BBDE5D624B9A69E000AF05F /* BoldButtonController.swift */,
+				2B4E9DA124C5B82A00A2D5EC /* Cacher.swift */,
+				2BE2691824BDA6F9000299A3 /* Config.swift */,
+				2BF13DBE24B4905D00B40D4E /* DrawerNavigationController.swift */,
+				2BEDCD0624BB5BD3009EED08 /* EmptyBackgroundView.swift */,
+				2BF4A69D24BBCEC500F52A4D /* IAPHandler.swift */,
 				2BDAD7AD24C2478C00BA4AF9 /* ImageLoader.swift */,
 				2BFD602E24C3745100D03C7A /* PlistReader.swift */,
-				2B4E9DA124C5B82A00A2D5EC /* Cacher.swift */,
+				2BF4A69924BBCC3800F52A4D /* UnlockManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -546,6 +549,7 @@
 				2B0F753F24B5E06800EE9876 /* UIColor.swift in Sources */,
 				2BCA121424B33A3A009965E4 /* BrowseViewModel.swift in Sources */,
 				2BEDCCFF24BB5A45009EED08 /* LanguageTableKey.swift in Sources */,
+				2B2DDA1424C9A95400A8791E /* Notification.Name.swift in Sources */,
 				2BDAD7A924C245B500BA4AF9 /* Sound.swift in Sources */,
 				2BEDCD0524BB5BB2009EED08 /* UITableView.swift in Sources */,
 				2B0DBDD224B355E6005B6A6A /* CaseIterable.swift in Sources */,
@@ -757,7 +761,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Glarm/Base/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -778,7 +782,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Glarm/Base/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

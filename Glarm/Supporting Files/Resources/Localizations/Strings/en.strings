@@ -41,6 +41,7 @@
 // MARK: Audio screen
 "audio_playButtonTitle" = "Play";
 "audio_pauseButtonTitle" = "Pause";
+"audio_moreSoundsHeader" = "More sounds";
 "audio_toneBrowserFooter" = "Choose sound to be played when you reach the chosen region. Note that alarm sounds can only play for 30 seconds.";
 "audio_downloadMoreSounds" = "Download more tones";
 "audio_downloadSoundsFooter" = "It is recommended to download additional tones on Wi-Fi connection";
@@ -92,14 +93,25 @@
 // MARK: Donate
 "donate_thankYouTitle" = "Purchase successful";
 "donate_thankYouMessage" = "Thank You for supporting Glarm's development! 🎉";
-"donateSmall" = "Coffee ☕️";
-"donateBig" = "Avocado salad 🥑";
-"donateEnormous" = "One round for my friends 🍻";
-"donate_action" = "Tip me 💎👀";
-"donate_title" = "Tip me";
+"donate_small" = "Coffee ☕️";
+"donate_medium" = "Avocado salad 🥑";
+"donate_big" = "One round for my friends 🍻";
+"donate_action" = "Donate 💎👀";
+"donate_title" = "Donate";
 "donate_message" = "Glarm is a hobby project, which I work on after classes, every donation and purchase greatly helps and allows me to continue working on it. Please, choose what would you like to buy me";
+
+// MARK: Unlock
+"unlock_thankYouTitle" = "Purchase successful! 🎉";
+"unlock_thankYouMessage" = "Thank You for supporting Glarm's development\nYou can now freely use all features the app has to offer.";
+"unlock_eligibleTitle" = "Thanks for using Glarm!";
+"unlock_eligibleMessage" = "Glarm has transitioned into a freemium app, but what does it mean? It is free to download, however some features are locked by default and require purchase.\nBut I decided that it would be unfaird to charge users who already downloaded the app, and because you're one of such users all features will stay unlocked for you!\nIf you like the app and would like to support its development nonetheless, please consider making a donation.\nYou're awesome!";
+"unlock_purchaseTitle" = "Unlock all features";
+"unlock_purchaseMessage" = "Purchase full version to unlock features like:\n• Notes\n• Favourite alerts\n• Smart distance suggestions\n• More sounds available to download";
+"unlock_purchaseAction" = "Unlock";
+"unlock_restoreAction" = "Restore purchase";
 
 // MARK: Other
 "cancel" = "Cancel";
 "dismiss" = "Dismiss";
 "continue" = "Continue";
+"unlock" = "Unlock";

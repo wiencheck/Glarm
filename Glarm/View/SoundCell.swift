@@ -107,8 +107,8 @@ extension SoundCell {
             self.isSelected = isSelected
         }
         
-        init(sound: Sound) {
-            self.init(name: sound.name, isLocal: sound.isLocal, isSelected: sound.name == SoundsManager.selectedSound.name)
+        init(sound: Sound, isSelected: Bool) {
+            self.init(name: sound.name, isLocal: sound.isLocal, isSelected: isSelected)
         }
         
         let name: String

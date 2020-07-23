@@ -64,6 +64,8 @@ final class AlarmsManager: NSObject {
     
     weak var delegate: AlarmsManagerDelegate?
     
+    static let alarmsDataDefaultsKey = "alarmsDataDefaultsKey"
+    
     // MARK: - Private Properties
     
     private lazy var notificationCenter: UNUserNotificationCenter = {
@@ -199,7 +201,7 @@ extension AlarmsManager {
     
     fileprivate(set) var alarms: Set<AlarmEntry> {
         get {
-            guard let data = UserDefaults.standard.data(forKey: "alarms"),
+            guard let data = UserDefaults.standard.data(forKey: AlarmsManager.alarmsDataDefaultsKey),
                 let arr = try? JSONDecoder().decode(Set<AlarmEntry>.self, from: data) else {
                 return []
             }
@@ -213,7 +215,7 @@ extension AlarmsManager {
             guard let data = try? JSONEncoder().encode(marked.union(unmarked)) else {
                 return
             }
-            UserDefaults.standard.set(data, forKey: "alarms")
+            UserDefaults.standard.set(data, forKey: AlarmsManager.alarmsDataDefaultsKey)
         }
     }
 }

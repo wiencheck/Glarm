@@ -49,7 +49,7 @@ class AlarmEntry: Codable {
     }
     
     convenience init() {
-        self.init(info: LocationNotificationInfo(), sound: .default, note: "")
+        self.init(info: LocationNotificationInfo(), sound: SoundsManager.selectedSound, note: "")
     }
 }
 

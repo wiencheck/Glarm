@@ -15,6 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        UnlockManager.determineFullAccess(application: application)
+        IAPHandler.shared.fetchAvailableProducts(completion: nil)
         LocationManager.shared.start()
         
         if #available(iOS 13.0, *) {
@@ -23,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             configureWindow()
         }
         customizeColors()
-        window?.tintColor = .tint
         
         application.launchCount += 1
         return true
@@ -33,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow()
         window!.rootViewController = RootController()
         window!.makeKeyAndVisible()
+        window!.tintColor = .tint
     }
     
     private func customizeColors() {

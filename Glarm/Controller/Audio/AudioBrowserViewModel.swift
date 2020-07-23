@@ -13,6 +13,7 @@ protocol AudioBrowserViewModelDelegate: class {
     func model(playerDidChangeStatus model: AudioBrowserViewModel, playing: Bool)
     func model(didReloadData model: AudioBrowserViewModel)
     func model(_ model: AudioBrowserViewModel, didChangeLoadingStatus loading: Bool, at indexPath: IndexPath)
+    func model(_ model: AudioBrowserViewModel, didChangeButtonLoadingStatus loading: Bool)
 }
 
 class AudioBrowserViewModel: NSObject {
@@ -36,9 +37,11 @@ class AudioBrowserViewModel: NSObject {
         selectedSound = sound
         let item = AVPlayerItem(url: sound.playbackUrl)
         player = AVPlayer(playerItem: item)
-        player.rate = 0
+        //player.rate = 0
         manager = SoundsManager()
         super.init()
+        player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
+
         loadSounds()
     }
     
@@ -96,6 +99,22 @@ class AudioBrowserViewModel: NSObject {
         self.delegate?.model(playerDidChangeStatus: self, playing: false)
     }
     
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "timeControlStatus", let change = change, let newValue = change[NSKeyValueChangeKey.newKey] as? Int, let oldValue = change[NSKeyValueChangeKey.oldKey] as? Int {
+            let oldStatus = AVPlayer.TimeControlStatus(rawValue: oldValue)
+            let newStatus = AVPlayer.TimeControlStatus(rawValue: newValue)
+            if newStatus != oldStatus {
+                DispatchQueue.main.async {
+                    if newStatus == .playing || newStatus == .paused {
+                        self.delegate?.model(self, didChangeButtonLoadingStatus: false)
+                    } else {
+                        self.delegate?.model(self, didChangeButtonLoadingStatus: true)
+                    }
+                }
+            }
+        }
+    }
+    
 }
 
 extension AudioBrowserViewModel {
@@ -128,7 +147,20 @@ extension AudioBrowserViewModel {
         guard let sound = sound(at: path) else {
             return nil
         }
-        return SoundCell.Model(sound: sound)
+        return SoundCell.Model(sound: sound, isSelected: sound == selectedSound)
+    }
+    
+    func headerModel(in section: Int) -> TableHeaderView.Model? {
+        guard let sec = Section(rawValue: section) else {
+                return nil
+        }
+        switch sec {
+        case .sounds:
+            return nil
+        case .downloads:
+            return .init(title: LocalizedStringKey.audio_moreSoundsHeader.localized,
+                         buttonTitle: UnlockManager.unlocked ? nil : LocalizedStringKey.unlock.localized)
+        }
     }
     
     func footer(in section: Int) -> String? {
@@ -137,6 +169,15 @@ extension AudioBrowserViewModel {
             return LocalizedStringKey.audio_toneBrowserFooter.localized
         case .downloads:
             return LocalizedStringKey.audio_downloadSoundsFooter.localized
+        }
+    }
+    
+    func shouldEnableCell(at path: IndexPath) -> Bool {
+        switch Section(rawValue: path.section)! {
+        case .sounds:
+            return true
+        case .downloads:
+            return UnlockManager.unlocked
         }
     }
     

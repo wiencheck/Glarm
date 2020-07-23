@@ -32,7 +32,9 @@ final class BrowseViewController: UIViewController {
         return b
     }()
     
-    private lazy var barButtonItem = UIBarButtonItem(image: .info, style: .plain, target: self, action: #selector(barButtonPressed(_:)))
+    private lazy var unlockBarButtonItem = UIBarButtonItem(title: LocalizedStringKey.unlock_purchaseAction.localized, style: .plain, target: self, action: #selector(unlockBarButtonPressed(_:)))
+
+    private lazy var aboutBarButtonItem = UIBarButtonItem(image: .info, style: .plain, target: self, action: #selector(aboutBarButtonPressed(_:)))
     
     let viewModel: BrowseViewModel
     
@@ -51,7 +53,16 @@ final class BrowseViewController: UIViewController {
         navigationItem.title = LocalizedStringKey.title_browser.localized
         navigationItem.backBarButtonItem?.title = LocalizedStringKey.browse_backButton.localized
 
-        navigationItem.setRightBarButton(barButtonItem, animated: false)
+        if !UnlockManager.unlocked {
+            navigationItem.setLeftBarButton(unlockBarButtonItem, animated: false)
+            IAPHandler.purchasedProductIdentifiersChangedNotification.observe { sender in
+                guard let iap = sender.object as? IAPHandler, iap.didPurchaseFullVersion else {
+                    return
+                }
+                self.navigationItem.setLeftBarButton(nil, animated: true)
+            }
+        }
+        navigationItem.setRightBarButton(aboutBarButtonItem, animated: false)
         
         setupView()
         
@@ -65,13 +76,12 @@ final class BrowseViewController: UIViewController {
         
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // Every 5 launches
-        guard !didShowSwipeHint || UIApplication.shared.launchCount % 6 == 0, !tableView.isEmpty else {
+        guard shouldShowSwipeHint else {
             return
         }
         didShowSwipeHint = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
-            self.tableView.presentSwipeHint()
+            self.tableView.presentTrailingSwipeHint()
         }
     }
     
@@ -83,6 +93,17 @@ final class BrowseViewController: UIViewController {
             }
             map.endDisplayingUserLocation()
         }
+    }
+    
+    private var didShowSwipeHint = false
+    
+    private var shouldShowSwipeHint: Bool {
+        if didShowSwipeHint ||
+            tableView.isEmpty ||
+            Self.swipeActionsUseCounter > 4 {
+            return false
+        }
+        return UIApplication.shared.launchCount % 3 == 0
     }
     
     private func openEditView(alarm: AlarmEntry?) {
@@ -100,10 +121,14 @@ final class BrowseViewController: UIViewController {
         navigationController?.setViewControllers(vcs, animated: true)
     }
     
-    @objc private func barButtonPressed(_ sender: UIBarButtonItem) {
+    @objc private func unlockBarButtonPressed(_ sender: UIBarButtonItem) {
+        AWAlertController.presentUnlockController(in: self)
+    }
+    
+    @objc private func aboutBarButtonPressed(_ sender: UIBarButtonItem) {
         let actions: [UIAlertAction] = [
-        UIAlertAction(localizedTitle: .donate_action, style: .default, handler: { _ in
-            AWAlertController.presentDonationController()
+        UIAlertAction(localizedTitle: .donate_action, style: .default, handler: { [weak self] _ in
+            AWAlertController.presentDonationController(in: self)
         }),
             UIAlertAction(localizedTitle: .about_leaveReview, style: .default, handler: { _ in
                 UIApplication.shared.openReviewPage()
@@ -111,9 +136,9 @@ final class BrowseViewController: UIViewController {
             UIAlertAction(localizedTitle: .about_messageMe, style: .default, handler: { _ in
                 UIApplication.shared.openMail()
             }),
-            UIAlertAction(localizedTitle: .tips_title, style: .default, handler: { _ in
+            UIAlertAction(localizedTitle: .tips_title, style: .default, handler: { [weak self] _ in
                 let model = AlertViewModel(localizedTitle: .tips_title, message: .tips_description, actions: [.cancel(text: LocalizedStringKey.dismiss.localized)], style: .alert)
-                self.present(AWAlertController(model: model), animated: true, completion: nil)
+                self?.present(AWAlertController(model: model), animated: true, completion: nil)
             }),
             .cancel(text: LocalizedStringKey.dismiss.localized)
         ]
@@ -217,8 +242,17 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
         mapCell.endDisplayingUserLocation()
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return viewModel.editingActions(at: indexPath)
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let actions = viewModel.editingActions(at: indexPath) else {
+            return nil
+        }
+        let configuration = UISwipeActionsConfiguration(actions: actions)
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
     }
 }
 
@@ -245,12 +279,12 @@ extension BrowseViewController: AlarmCellDelegate {
     }
 }
 
-private extension BrowseViewController {
-    var didShowSwipeHint: Bool {
+extension BrowseViewController {
+    class var swipeActionsUseCounter: Int {
         get {
-            return UserDefaults.standard.bool(forKey: "didShowSwipeHint")
+            return UserDefaults.standard.integer(forKey: "swipeActionsUseCounter")
         } set {
-            UserDefaults.standard.set(newValue, forKey: "didShowSwipeHint")
+            UserDefaults.standard.set(newValue, forKey: "swipeActionsUseCounter")
         }
     }
 }

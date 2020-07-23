@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 
 protocol NoteCellDelegate: class {
-    func noteCell(willBeginEditingTextIn cell: NoteCell)
+    func noteCell(shouldBeginEditingTextIn cell: NoteCell) -> Bool
     func noteCell(didChangeTextIn cell: NoteCell)
 }
 
@@ -70,8 +70,7 @@ final class NoteCell: UITableViewCell {
 
 extension NoteCell: UITextViewDelegate {
     internal func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        delegate?.noteCell(willBeginEditingTextIn: self)
-        return true
+        return delegate?.noteCell(shouldBeginEditingTextIn: self) ?? true
     }
     
     internal func textViewDidChange(_ textView: UITextView) {

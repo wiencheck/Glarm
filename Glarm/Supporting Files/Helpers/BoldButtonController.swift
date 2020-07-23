@@ -38,6 +38,14 @@ class BoldButtonViewController: UIViewController {
         }
     }
     
+    var isLoading: Bool {
+        get {
+            return button.isLoading
+        } set {
+            button.isLoading = newValue
+        }
+    }
+    
     private lazy var button: BoldButton = {
         let b = BoldButton()
         b.isSelected = true

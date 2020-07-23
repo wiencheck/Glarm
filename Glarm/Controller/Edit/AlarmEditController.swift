@@ -10,7 +10,10 @@ import UIKit
 import BoldButton
 
 final class AlarmEditController: UIViewController {
-    let viewModel: AlarmEditViewModel
+
+    typealias ViewModel = AlarmEditViewModel
+    
+    private let viewModel: ViewModel
     
     internal var tableView: UITableView! {
         didSet {
@@ -38,7 +41,7 @@ final class AlarmEditController: UIViewController {
         return b
     }()
     
-    init(model: AlarmEditViewModel) {
+    init(model: ViewModel) {
         viewModel = model
         super.init(nibName: nil, bundle: nil)
     }
@@ -76,7 +79,7 @@ final class AlarmEditController: UIViewController {
     }
     
     private weak var noteHeader: TableHeaderView? {
-        return tableView.headerView(forSection: AlarmEditViewModel.Section.note.rawValue) as? TableHeaderView
+        return tableView.headerView(forSection: ViewModel.Section.note.rawValue) as? TableHeaderView
     }
 }
 
@@ -150,7 +153,7 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch AlarmEditViewModel.Section(rawValue: indexPath.section)! {
+        switch ViewModel.Section(rawValue: indexPath.section)! {
         case .location:
             guard let model = viewModel.cellModel(for: indexPath) else {
                 return tableView.dequeueReusableCell(withIdentifier: "empty", for: indexPath)
@@ -184,7 +187,7 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch AlarmEditViewModel.Section(rawValue: section)! {
+        switch ViewModel.Section(rawValue: section)! {
         case .note:
             return TableHeaderView.preferredHeight + 10
         default:
@@ -194,12 +197,23 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? TableHeaderView
-        header?.configure(with: viewModel.headerModel(in: section))
+        
+        let model = viewModel.headerModel(in: section)
+        header?.configure(with: model)
         header?.pressHandler = { _ in
-            guard let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as? NoteCell else {
-                return
+            if model?.buttonTitle == LocalizedStringKey.unlock.localized {
+                AWAlertController.presentUnlockController(in: self) { unlocked in
+                    guard unlocked else { return }
+                    DispatchQueue.main.async {
+                        tableView.reloadSection(section, with: .fade)
+                    }
+                }
+            } else {
+                guard let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as? NoteCell else {
+                    return
+                }
+                cell.clearText()
             }
-            cell.clearText()
         }
         
         return header
@@ -234,13 +248,18 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension AlarmEditController: NoteCellDelegate {
-    func noteCell(willBeginEditingTextIn cell: NoteCell) {
+    func noteCell(shouldBeginEditingTextIn cell: NoteCell) -> Bool {
+        guard UnlockManager.unlocked else {
+            AWAlertController.presentUnlockController(in: self)
+            return false
+        }
+        guard let path = self.tableView.indexPath(for: cell) else {
+            return false
+        }
         DispatchQueue.main.async {
-            guard let path = self.tableView.indexPath(for: cell) else {
-                return
-            }
             self.tableView.scrollToRow(at: path, at: .middle, animated: true)
         }
+        return true
     }
     
     func noteCell(didChangeTextIn cell: NoteCell) {

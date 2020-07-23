@@ -43,11 +43,11 @@ extension Sound {
 }
 
 extension Sound {
-    static let `default`: Sound = {
+    static var `default`: Sound {
         let name = "Bulletin"
         let url = URL(fileURLWithPath: Bundle.main.path(forResource: "Bulletin", ofType: ".caf")!)
         return Sound(name: name, url: url)
-    }()
+    }
 }
 
 extension Sound: Equatable {}

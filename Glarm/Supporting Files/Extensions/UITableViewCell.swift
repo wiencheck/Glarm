@@ -15,23 +15,35 @@ extension UITableView {
         - width: Width of hint.
         - duration: Duration of animation (in seconds)
      */
-    func presentSwipeHint(width: CGFloat = 20, duration: TimeInterval = 0.8) {
+    func presentTrailingSwipeHint(width: CGFloat = 20, duration: TimeInterval = 0.8) {
         var actionPath: IndexPath?
-        var firstAction: UITableViewRowAction?
-        for path in indexPathsForVisibleRows ?? [] {
-            if let actions = delegate?.tableView?(self, editActionsForRowAt: path), let first = actions.first {
-                actionPath = path
-                firstAction = first
-                break
+        var actionColor: UIColor?
+        
+        if #available(iOS 13.0, *) {
+            // Use new API, UIContextualAction
+            for path in indexPathsForVisibleRows ?? [] {
+                if let config = delegate?.tableView?(self, trailingSwipeActionsConfigurationForRowAt: path), let action = config.actions.first {
+                    actionPath = path
+                    actionColor = action.backgroundColor
+                    break
+                }
+            }
+        } else {
+            for path in indexPathsForVisibleRows ?? [] {
+                if let actions = delegate?.tableView?(self, editActionsForRowAt: path), let action = actions.first {
+                    actionPath = path
+                    actionColor = action.backgroundColor
+                    break
+                }
             }
         }
-        guard let path = actionPath, let action = firstAction, let cell = cellForRow(at: path) else { return }
-        cell.presentSwipeHint(actionColor: action.backgroundColor ?? tintColor)
+        guard let path = actionPath, let cell = cellForRow(at: path) else { return }
+        cell.presentTrailingSwipeHint(actionColor: actionColor ?? tintColor)
     }
 }
 
 fileprivate extension UITableViewCell {
-    func presentSwipeHint(actionColor: UIColor, hintWidth: CGFloat = 20, hintDuration: TimeInterval = 0.8) {
+    func presentTrailingSwipeHint(actionColor: UIColor, hintWidth: CGFloat = 20, hintDuration: TimeInterval = 0.8) {
         // Create fake action view
         let dummyView = UIView()
         dummyView.backgroundColor = actionColor

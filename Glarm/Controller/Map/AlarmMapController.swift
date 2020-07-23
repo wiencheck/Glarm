@@ -121,14 +121,17 @@ class MapController: UIViewController {
         
         setupView()
         
-        let region = MKCoordinateRegion(center: LocationManager.shared.coordinate, latitudinalMeters: radius * 3, longitudinalMeters: radius * 3)
-        mapView.setRegion(region, animated: false)
-        
         if coordinate == .zero {
             return
         }
         annotation = MKPointAnnotation(coordinate: coordinate)
         circle = MKCircle(center: coordinate, radius: radius)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        mapView.showUserLocation(and: coordinate, animated: false)
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {

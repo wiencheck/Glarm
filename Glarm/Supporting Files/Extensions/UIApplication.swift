@@ -18,6 +18,13 @@ extension UIApplication {
         return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
     }
     
+    var lastInstalledAppVersion: String? {
+        defer {
+            UserDefaults.standard.set(appVersion, forKey: "lastInstalledAppVersion")
+        }
+        return UserDefaults.standard.string(forKey: "lastInstalledAppVersion")
+    }
+    
     /// Number indicating how many times the app was launched.
     var launchCount: Int {
         get {

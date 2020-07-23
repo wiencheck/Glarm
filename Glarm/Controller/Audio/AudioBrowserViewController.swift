@@ -15,12 +15,15 @@ protocol AudioBrowserViewControllerDelegate: class {
 
 class AudioBrowserViewController: UIViewController {
     
-    private let viewModel: AudioBrowserViewModel
+    typealias ViewModel = AudioBrowserViewModel
+    
+    private let viewModel: ViewModel
     
     weak var delegate: AudioBrowserViewControllerDelegate?
     
     internal var tableView: UITableView! {
         didSet {
+            tableView.register(TableHeaderView.self, forHeaderFooterViewReuseIdentifier: "header")
             tableView.register(SoundCell.self, forCellReuseIdentifier: "cell")
             tableView.dataSource = self
             tableView.delegate = self
@@ -35,7 +38,7 @@ class AudioBrowserViewController: UIViewController {
     }()
     
     init(sound: Sound) {
-        viewModel = AudioBrowserViewModel(sound: sound)
+        viewModel = ViewModel(sound: sound)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -62,6 +65,10 @@ class AudioBrowserViewController: UIViewController {
 }
 
 extension AudioBrowserViewController: AudioBrowserViewModelDelegate {
+    func model(_ model: AudioBrowserViewModel, didChangeButtonLoadingStatus loading: Bool) {
+        buttonController.isLoading = loading
+    }
+    
     func model(playerDidChangeStatus model: AudioBrowserViewModel, playing: Bool) {
         buttonController.text = (playing ? LocalizedStringKey.audio_pauseButtonTitle : .audio_playButtonTitle).localized
         buttonController.isSelected = !playing
@@ -105,12 +112,18 @@ extension AudioBrowserViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let enable = viewModel.shouldEnableCell(at: indexPath)
+        cell.alpha = enable ? 1 : 0.4
+        cell.isUserInteractionEnabled = enable
+    }
+    
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
         return viewModel.footer(in: section)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch AudioBrowserViewModel.Section(rawValue: indexPath.section)! {
+        switch ViewModel.Section(rawValue: indexPath.section)! {
         case .sounds:
             tableView.reloadRows(at: [indexPath], with: .none)
         case .downloads:
@@ -120,7 +133,35 @@ extension AudioBrowserViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 10
+        switch ViewModel.Section(rawValue: section)! {
+        case .downloads:
+            return TableHeaderView.preferredHeight + 10
+        case .sounds:
+            return TableHeaderView.preferredHeight
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? TableHeaderView
+        
+        let model = viewModel.headerModel(in: section)
+        header?.configure(with: model)
+        header?.pressHandler = { _ in
+            if model?.buttonTitle == LocalizedStringKey.unlock.localized {
+                AWAlertController.presentUnlockController(in: self) { _ in
+                    DispatchQueue.main.async {
+                        tableView.reloadSection(section, with: .fade)
+                    }
+                }
+            } else {
+                guard let cell = tableView.cellForRow(at: IndexPath(row: 0, section: section)) as? NoteCell else {
+                    return
+                }
+                cell.clearText()
+            }
+        }
+        
+        return header
     }
 }
 

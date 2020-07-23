@@ -55,9 +55,10 @@ final class LocationSettingsController: UIViewController {
         return s
     }()
     
-    lazy var segment: UISegmentedControl = {
+    lazy var distanceSegment: UISegmentedControl = {
         let s = UISegmentedControl(items: segmentTitles)
-        s.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
+        s.addTarget(self, action: #selector(distanceSegmentChanged(_:)), for: .valueChanged)
+        s.isEnabled = UnlockManager.unlocked
         return s
     }()
     
@@ -87,6 +88,24 @@ final class LocationSettingsController: UIViewController {
         return s
     }()
     
+    private lazy var unlockButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.isHidden = UnlockManager.unlocked
+        b.text = LocalizedStringKey.unlock.localized
+        b.backgroundColor = .tint
+        b.textColor = .white
+        b.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        b.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
+        b.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        b.pressHandler = { [weak self] sender in
+            AWAlertController.presentUnlockController(in: self) { unlocked in
+                sender.isHidden = unlocked
+                self?.distanceSegment.isEnabled = unlocked
+            }
+        }
+        return b
+    }()
+    
     init(location: String?, radius: CLLocationDistance = .default) {
         self.locationName = location
         self.radius = radius
@@ -102,15 +121,21 @@ final class LocationSettingsController: UIViewController {
         setupView()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        unlockButton.layer.cornerRadius = 12
+    }
+    
     @objc private func sliderChanged(_ sender: UISlider) {
-        //segment.isSelected = false
-        segment.selectedSegmentIndex = UISegmentedControl.noSegment
+        if distanceSegment.isEnabled {
+            distanceSegment.selectedSegmentIndex = UISegmentedControl.noSegment
+        }
         radius = (sender.doubleValue * maximumDistance)
         radiusLabel.text = radius.readableRepresentation()
         delegate?.radiusChanged(radius)
     }
     
-    @objc private func segmentChanged(_ sender: UISegmentedControl) {
+    @objc private func distanceSegmentChanged(_ sender: UISegmentedControl) {
         guard let selectedTitle = sender.titleForSegment(at: sender.selectedSegmentIndex),
         let index = segmentTitles.firstIndex(of: selectedTitle) else {
             return
@@ -151,7 +176,7 @@ extension LocationSettingsController {
     
     func updateDistanceFromLocation(_ distance: CLLocationDistance) {
         // Ensure it's at least 5km
-        let adjustedDistance = max(5*1000, min(150*1000, distance.floor(nearest: 1)))
+        let adjustedDistance = max(5*1000, min(250*1000, distance.floor(nearest: 1)))
         segmentDistances = spitOutRadiusSuggestions(basedOn: adjustedDistance, floor: 5000)
         
         // Avoid updating titles with same values
@@ -163,14 +188,15 @@ extension LocationSettingsController {
     }
     
     private func updateSegmentTitles() {
-        UIView.transition(with: segment, duration: 0.2, options: .transitionCrossDissolve, animations: {
-            self.segment.removeAllSegments()
+        UIView.transition(with: distanceSegment, duration: 0.2, options: .transitionCrossDissolve, animations: {
+            self.distanceSegment.removeAllSegments()
             self.segmentTitles.reversed().forEach { title in
-                self.segment.insertSegment(withTitle: title, at: 0, animated: false)
+                self.distanceSegment.insertSegment(withTitle: title, at: 0, animated: false)
             }
         }, completion: { _ in
+            guard self.distanceSegment.isEnabled else { return }
             if let index = self.segmentDistances.firstIndex(where: { $0 == self.radius }) {
-                self.segment.selectedSegmentIndex = index
+                self.distanceSegment.selectedSegmentIndex = index
             }
         })
     }
@@ -228,7 +254,7 @@ private extension LocationSettingsController {
         }
         
         let sliderStack: UIStackView = {
-            let s = UIStackView(arrangedSubviews: [segment, slider, radiusContainer])
+            let s = UIStackView(arrangedSubviews: [distanceSegment, slider, radiusContainer])
             s.axis = .vertical
             s.alignment = .center
             s.spacing = 12
@@ -246,11 +272,18 @@ private extension LocationSettingsController {
             make.top.equalTo(sliderContainer.titleLabel.snp.bottom).offset(12)
             make.bottom.equalToSuperview().inset(10)
         }
-        segment.snp.makeConstraints { make in
+        distanceSegment.snp.makeConstraints { make in
             make.width.equalToSuperview()
         }
         slider.snp.makeConstraints { make in
             make.width.equalToSuperview().multipliedBy(0.98)
+        }
+        
+        sliderContainer.addSubview(unlockButton)
+        unlockButton.snp.makeConstraints { make in
+            make.centerY.equalTo(sliderContainer.titleLabel)
+            make.trailing.equalTo(distanceSegment)
+            make.leading.greaterThanOrEqualTo(sliderContainer.titleLabel.snp.trailing).offset(12)
         }
         
         let line = UIView()

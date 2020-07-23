@@ -41,6 +41,7 @@
 // MARK: Audio screen
 "audio_playButtonTitle" = "Odtwarzaj";
 "audio_pauseButtonTitle" = "Pauza";
+"audio_moreSoundsHeader" = "Więcej dźwięków";
 "audio_toneBrowserFooter" = "Wybierz dźwięk, który będzie odtwarzany po dotarciu do wyznaczonego regionu. Dźwięki alarmu mogą być odtwarzane przez maksymalnie 30 sekund.";
 "audio_downloadMoreSounds" = "Pobierz więcej dźwięków";
 "audio_downloadSoundsFooter" = "Sugerujemy, aby pobierać dźwięki tylko będąc podłączonym do sieci Wi-Fi";
@@ -90,16 +91,27 @@
 "permission_openAppAction" = "Przejdź do aplikacji";
 
 // MARK: Donate
-"donate_thankYouTitle" = "Napiwek przyjęty!";
-"donate_thankYouMessage" = "Dziękuję, że wspierasz rozwój Glarm! 🎉";
-"donateSmall" = "Mała kawa ☕️";
-"donateBig" = "Sałatka z awokado 🥑";
-"donateEnormous" = "Jedna kolejka dla przyjaciół 🍻";
+"donate_thankYouTitle" = "Napiwek przyjęty! 🎉";
+"donate_thankYouMessage" = "Dziękuję, że wspierasz rozwój Glarm!";
+"donate_small" = "Małą kawę ☕️";
+"donate_medium" = "Sałatkę z awokado 🥑";
+"donate_big" = "Kolejkę dla przyjaciół 🍻";
 "donate_action" = "Napiwek 💎👀";
 "donate_title" = "Napiwek";
 "donate_message" = "Glarm to projekt, nad którym pracuję po zajęciach na uczelni, każdy napiwek bardzo pomaga mi kontynuować nad nim pracę. Proszę, wybierz co chciałbyś mi ufundować";
+
+// MARK: Unlock
+"unlock_thankYouTitle" = "Zakup przebiegł pomyślnie! 🎉";
+"unlock_thankYouMessage" = "Dziękuję, że wspierasz rozwój Glarm!\nMożesz teraz swobodnie korzystać ze wszystkich funkcji.";
+"unlock_eligibleTitle" = "Dziękuję, że używasz Glarm!";
+"unlock_eligibleMessage" = "Glarm przekształcił się ostatnio w aplikację freemium, ale co to oznacza? Aplikacja jest darmowa do pobrania, jednak niektóre funkcje są zablokowane i wymagają zakupu pełnej wersji.\nPo namyśle jednak zdecydowałem, że byłoby nie w porządku blokować funkcje użytkownikom, którzy pobrali aplikację przed zmianą i ponieważ jesteś jednym z takich użytkowników, wszystkie funkcje pozostaną odblokowane dopóki nie odinstalujesz aplikacji!\nJeżeli jednak spodobał Ci się Glarm i chciałbyś wesprzeć jego rozwój, rozważ wysłanie mi małego napiwku.\nJesteś super!";
+"unlock_purchaseTitle" = "Odblokuj wszystkie funkcje";
+"unlock_purchaseMessage" = "Zakup pełną wersję, aby odblokować funkcje takie jak:\n• Notatki\n• Ulubione alarmy\n• Inteligentne propozycje dystansu\n• Dodatkowe dźwięki do pobrania";
+"unlock_purchaseAction" = "Odblokuj";
+"unlock_restoreAction" = "Przywróć zakupy";
 
 // MARK: Other
 "cancel" = "Anuluj";
 "dismiss" = "Zamknij";
 "continue" = "Kontynuuj";
+"unlock" = "Odblokuj";

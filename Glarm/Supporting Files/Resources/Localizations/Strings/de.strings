@@ -19,6 +19,8 @@
 "browse_pastSection" = "letzte Wecker";
 "browse_createButtonTitle" = "Wecker erstellen";
 "browse_backButton" = "Wecker";
+"browse_showNote" = "Notizen anzeigen";
+"browse_deleteAction" = "Löschen";
 
 // MARK: Browse edit actions.
 "browse_markAction" = "Markieren";
@@ -32,11 +34,16 @@
 "edit_locationHeader" = "Standort";
 "edit_toneCell" = "Ton";
 "edit_scheduleButton" = "Wecker planen";
+"edit_clearNoteButton" = " Löschen";
+"edit_noteHeader" = "Notizen";
+"edit_notePlaceholder" = "Notizen erstellen";
 
 // MARK: Audio screen
 "audio_playButtonTitle" = "Wiedergeben";
 "audio_pauseButtonTitle" = "Pause";
 "audio_toneBrowserFooter" = "Wähle Ton, der nachdem du am angewiesenen Region angekommen bist, wiedergegeben wird. Tone des Weckers können maximal durch 30 Sekunden wiedergegeben werden";
+"audio_downloadMoreSounds" = "Mehr Tone herunterladen";
+"audio_downloadSoundsFooter" = "Wir raten, die Tone nur über WLAN herunterzuladen";
 
 // MARK: Empty cell
 "emptyCell_title" = "Keiner Standort";
@@ -83,9 +90,28 @@
 "permission_openAppAction" = "zu App gehen";
 
 // MARK: Donate
+"donate_thankYouTitle" = "Trinkgeld angenommen! 🎉";
+"donate_thankYouMessage" = "Dank, dass du Entwicklung von Glarm unterstütztest!";
+"donateSmall" = "Kleiner Kaffee ☕";
+"donateBig" = "Avocado-Salat 🥑";
+"donateEnormous" = "Eine Runde für Freunde 🍻";
+ "donate_action" = "Trinkgeld 💎👀";
+ "donate_title" = "Trinkgeld";
+"donate_message" = "Glarm ist ein Projekt, an dem ich nach der Uni arbeite, jeder Trinkgeld hilft mir sehr diese Arbeit fortzusetzen. Wähle bitte, was du mir schicken wolltest";
+
+// MARK: Unlock
+"unlock_thankYouTitle" = "Purchase successful! 🎉";
+"unlock_thankYouMessage" = "Thank You for supporting Glarm's development\nYou can now freely use all features the app has to offer.";
+"unlock_eligibleTitle" = "";
+"unlock_eligibleMessage" = "";
+"unlock_purchaseTitle" = "Unlock all features";
+"unlock_purchaseMessage" = "Purchase full version to unlock features like:\n• Notes\n• Favourite alerts\n• Smart distance suggestions\n• More sounds available to download";
+"unlock_purchaseAction" = "Unlock";
+"unlock_restoreAction" = "Restore purchase";
 
 // MARK: Other
 "dismiss" = "Schließen";
 "cancel" = "Abbrechen";
+"continue" = "Fortsetzen";
 
 "permissionGreeting" = "Um zu funktionieren, Glarm benötigt Erlaubnis deine Standort zu lesen (nur während App wird benutzt!) und Benachrichtigungen zu schicken. Wir sammeln keine vertraulichen Daten und wir folgen deine Standort nicht, wenn App nicht genutzt wird.";

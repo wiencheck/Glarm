@@ -124,6 +124,7 @@ class AlarmCell: UITableViewCell {
 
         addSubview(rightDetailLabel)
         rightDetailLabel.snp.makeConstraints { make in
+            make.leading.greaterThanOrEqualTo(stack.snp.trailing).offset(4)
             make.centerY.equalTo(indicatorView)
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }

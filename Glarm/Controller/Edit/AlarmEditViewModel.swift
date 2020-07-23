@@ -45,6 +45,9 @@ final class AlarmEditViewModel {
     }
     
     var noteClearButtonText: String? {
+        guard UnlockManager.unlocked else {
+            return LocalizedStringKey.unlock.localized
+        }
         return alarmNoteText.isEmpty ? nil : LocalizedStringKey.edit_clearNoteButton.localized
     }
     

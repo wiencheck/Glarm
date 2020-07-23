@@ -60,6 +60,7 @@ enum LocalizedStringKey: String, LocalizableString {
     // MARK: Audio screen
     case audio_playButtonTitle
     case audio_pauseButtonTitle
+    case audio_moreSoundsHeader
     case audio_toneBrowserFooter
     case audio_downloadMoreSounds
     case audio_downloadSoundsFooter
@@ -111,17 +112,30 @@ enum LocalizedStringKey: String, LocalizableString {
     // MARK: Donate
     case donate_small
     case donate_big
-    case donate_enormous
+    case donate_medium
     case donate_action
     case donate_title
     case donate_message
     case donate_thankYouTitle
     case donate_thankYouMessage
     
+    // MARK: Unlock
+    case unlock_thankYouTitle
+    case unlock_thankYouMessage
+    case unlock_eligibleTitle
+    case unlock_eligibleMessage
+    /// "Unlock all features" alert title
+    case unlock_purchaseTitle
+    case unlock_purchaseMessage
+    /// "Unlock"
+    case unlock_purchaseAction
+    case unlock_restoreAction
+    
     // MARK: Other
     case cancel
     case dismiss
     case `continue`
+    case unlock
 }
 
 extension LocalizedStringKey: CustomStringConvertible {

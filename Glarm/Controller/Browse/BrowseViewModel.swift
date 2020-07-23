@@ -58,44 +58,53 @@ final class BrowseViewModel {
         return alarms[section]?.at(path.row)
     }
     
-    private func scheduleAlarm(at path: IndexPath) {
+    private func scheduleAlarm(at path: IndexPath) -> Bool {
         guard let alarm = alarm(at: path) else {
-            return
+            return false
         }
         manager.delegate = self
         manager.schedule(alarm: alarm)
+        return true
     }
     
-    private func cancelAlarm(at path: IndexPath) {
+    private func cancelAlarm(at path: IndexPath) -> Bool {
         guard let alarm = alarm(at: path) else {
-            return
+            return false
         }
         manager.cancel(alarm: alarm)
         loadData()
+        return true
     }
     
-    private func markAlarm(at path: IndexPath) {
+    private func markAlarm(at path: IndexPath) -> Bool {
+        guard UnlockManager.unlocked else {
+            AWAlertController.presentUnlockController(in: delegate)
+            return false
+        }
         guard let alarm = alarm(at: path) else {
-            return
+            return false
         }
         manager.mark(alarm: alarm)
         loadData()
+        return true
     }
     
-    private func unmarkAlarm(at path: IndexPath) {
+    private func unmarkAlarm(at path: IndexPath) -> Bool {
         guard let alarm = alarm(at: path) else {
-            return
+            return false
         }
         manager.unmark(alarm: alarm)
         loadData()
+        return true
     }
     
-    private func deleteAlarm(at path: IndexPath) {
+    private func deleteAlarm(at path: IndexPath) -> Bool {
         guard let alarm = alarm(at: path),
         manager.delete(alarm: alarm) else {
-            return
+            return false
         }
         loadData()
+        return true
     }
     
     func createPressed() {
@@ -179,42 +188,53 @@ extension BrowseViewModel {
         delegate?.model(didSelectEditAlarm: self, alarm: alarm)
     }
     
-    func editingActions(at path: IndexPath) -> [UITableViewRowAction]? {
+    func editingActions(at path: IndexPath) -> [UIContextualAction]? {
         let section = Section(rawValue: path.section)!
 
         guard let alarm = alarms[section]?.at(path.row) else {
             return nil
         }
         
-        var actions: [UITableViewRowAction] = []
+        var actions: [UIContextualAction] = []
         
         if alarm.isActive {
-            let cancel = UITableViewRowAction(style: .default, title: LocalizedStringKey.cancel.localized, handler: { _, path in
-                self.cancelAlarm(at: path)
+            let cancel = UIContextualAction(style: .normal, title: LocalizedStringKey.cancel.localized, handler: { _, _, completion in
+                let success = self.cancelAlarm(at: path)
+                BrowseViewController.swipeActionsUseCounter += 1
+                completion(success)
             })
             cancel.backgroundColor = .systemRed
             actions.append(cancel)
         } else {
-            let delete = UITableViewRowAction(style: .destructive, title: LocalizedStringKey.browse_deleteAction.localized) { _, path in
-                self.deleteAlarm(at: path)
+            let delete = UIContextualAction(style: .destructive, title: LocalizedStringKey.browse_deleteAction.localized) { _, _, completion in
+                let success = self.deleteAlarm(at: path)
+                BrowseViewController.swipeActionsUseCounter += 1
+                completion(success)
             }
             actions.append(delete)
             
-            let schedule = UITableViewRowAction(style: .default, title: LocalizedStringKey.browse_scheduleAction.localized, handler: { _, path in
-                self.scheduleAlarm(at: path)
+            let schedule = UIContextualAction(style: .normal, title: LocalizedStringKey.browse_scheduleAction.localized, handler: { _, _, completion in
+                let success = self.scheduleAlarm(at: path)
+                BrowseViewController.swipeActionsUseCounter += 1
+                completion(success)
             })
             schedule.backgroundColor = .purple
             actions.append(schedule)
         }
+        
         if alarm.isMarked {
-            let unmark = UITableViewRowAction(style: .default, title: LocalizedStringKey.browse_unmarkAction.localized, handler: { _, path in
-                self.unmarkAlarm(at: path)
+            let unmark = UIContextualAction(style: .normal, title: LocalizedStringKey.browse_unmarkAction.localized, handler: { _, _, completion in
+                let success = self.unmarkAlarm(at: path)
+                BrowseViewController.swipeActionsUseCounter += 1
+                completion(success)
             })
             unmark.backgroundColor = .tint
             actions.append(unmark)
         } else {
-            let mark = UITableViewRowAction(style: .default, title: LocalizedStringKey.browse_markAction.localized, handler: { _, path in
-                self.markAlarm(at: path)
+            let mark = UIContextualAction(style: .normal, title: LocalizedStringKey.browse_markAction.localized, handler: { _, _, completion in
+                let success = self.markAlarm(at: path)
+                BrowseViewController.swipeActionsUseCounter += 1
+                completion(success)
             })
             mark.backgroundColor = .tint
             actions.append(mark)

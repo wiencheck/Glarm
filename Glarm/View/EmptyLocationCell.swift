@@ -33,6 +33,7 @@ class EmptyLocationCell: UITableViewCell {
         let s = UIStackView(arrangedSubviews: [titleLabel, detailLabel])
         s.axis = .vertical
         s.alignment = .center
+        s.spacing = 4
         return s
     }()
     
