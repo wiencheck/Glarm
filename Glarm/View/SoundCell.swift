@@ -15,7 +15,7 @@ protocol SoundCellDelegate: class {
 class SoundCell: UITableViewCell {
     internal lazy var titleLabel: UILabel = {
         let l = UILabel()
-        l.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        l.font = .title
         l.textColor = .label()
         return l
     }()

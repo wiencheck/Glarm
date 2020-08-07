@@ -27,4 +27,28 @@ extension UIImage {
             return UIImage(named: "Download")!
         }
     }
+    
+    static let notificationThumbnailAssetName = "Notification_Thumbnail"
+
+    static let notificationThumbnail = UIImage(named: notificationThumbnailAssetName)!
+}
+
+extension UIImage {
+    class func createLocalUrl(forAssetNamed name: String) -> URL? {
+        
+        let fileManager = FileManager.default
+        let cacheDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let url = cacheDirectory.appendingPathComponent("\(name).png", isDirectory: false)
+        
+        guard fileManager.fileExists(atPath: url.path) else {
+            guard let image = UIImage(named: name),
+                let data = image.pngData()
+                else { return nil }
+            
+            fileManager.createFile(atPath: url.path, contents: data, attributes: nil)
+            return url
+        }
+        
+        return url
+    }
 }

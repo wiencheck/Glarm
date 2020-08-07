@@ -14,7 +14,8 @@ final class TableHeaderView: UITableViewHeaderFooterView {
     private lazy var label: UILabel = {
         let l = UILabel()
         l.textColor = .secondaryLabel()
-        l.font = .systemFont(ofSize: 14, weight: .medium)
+        l.font = .headerTitle
+        l.setContentCompressionResistancePriority(.required, for: .vertical)
         return l
     }()
     
@@ -24,7 +25,7 @@ final class TableHeaderView: UITableViewHeaderFooterView {
         b.text = "Button"
         b.backgroundColor = .tint
         b.textColor = .white
-        b.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        b.titleLabel?.font = .headerTitle
         b.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
         b.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return b
@@ -42,6 +43,7 @@ final class TableHeaderView: UITableViewHeaderFooterView {
         get {
             return button.text
         } set {
+            isUserInteractionEnabled = newValue != nil
             // To żeby nie było glitchy w animacji
             if let text = newValue {
                 button.text = text
@@ -60,7 +62,6 @@ final class TableHeaderView: UITableViewHeaderFooterView {
     
     var pressHandler: ((TableHeaderView) -> Void)? {
         didSet {
-            isUserInteractionEnabled = pressHandler != nil
             button.pressHandler = { _ in
                 self.pressHandler?(self)
             }
@@ -125,6 +126,8 @@ private extension TableHeaderView {
         addSubview(button)
         button.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
+            make.top.equalToSuperview().inset(6)
+
             make.trailing.equalTo(layoutMarginsGuide)
             make.leading.greaterThanOrEqualTo(label.snp.trailing).offset(12)
         }

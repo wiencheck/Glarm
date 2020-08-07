@@ -187,12 +187,11 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch ViewModel.Section(rawValue: section)! {
-        case .note:
-            return TableHeaderView.preferredHeight + 10
-        default:
-            return TableHeaderView.preferredHeight
-        }
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        return TableHeaderView.preferredHeight
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

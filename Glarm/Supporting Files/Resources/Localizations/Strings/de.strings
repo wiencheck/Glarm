@@ -37,13 +37,15 @@
 "edit_clearNoteButton" = " Löschen";
 "edit_noteHeader" = "Notizen";
 "edit_notePlaceholder" = "Notizen erstellen";
+"edit_exactScrubbingMessage" = "Bewegen Sie Ihren Finger nach oben, während Sie den Schieberegler gedrückt halten, um die Empfindlichkeit anzupassen";
 
 // MARK: Audio screen
 "audio_playButtonTitle" = "Wiedergeben";
 "audio_pauseButtonTitle" = "Pause";
+"audio_moreSoundsHeader" = "Mehr Töne";
 "audio_toneBrowserFooter" = "Wähle Ton, der nachdem du am angewiesenen Region angekommen bist, wiedergegeben wird. Tone des Weckers können maximal durch 30 Sekunden wiedergegeben werden";
 "audio_downloadMoreSounds" = "Mehr Tone herunterladen";
-"audio_downloadSoundsFooter" = "Wir raten, die Tone nur über WLAN herunterzuladen";
+"audio_downloadSoundsFooter" = "Wir raten, die Tone nur über Wi-Fi herunterzuladen";
 
 // MARK: Empty cell
 "emptyCell_title" = "Keiner Standort";
@@ -102,10 +104,10 @@
 // MARK: Unlock
 "unlock_thankYouTitle" = "Purchase successful! 🎉";
 "unlock_thankYouMessage" = "Thank You for supporting Glarm's development\nYou can now freely use all features the app has to offer.";
-"unlock_eligibleTitle" = "";
-"unlock_eligibleMessage" = "";
+"unlock_eligibleTitle" = "Thanks for using Glarm!";
+"unlock_eligibleMessage" = "Glarm has transitioned into a freemium app, but what does it mean? It is free to download, however some features are locked by default and require purchase.\nBut I decided that it would be unfaird to charge users who already downloaded the app, and because you're one of such users all features will stay unlocked for you!\nIf you like the app and would like to support its development nonetheless, please consider making a donation.\nYou're awesome!";
 "unlock_purchaseTitle" = "Unlock all features";
-"unlock_purchaseMessage" = "Purchase full version to unlock features like:\n• Notes\n• Favourite alerts\n• Smart distance suggestions\n• More sounds available to download";
+"unlock_purchaseMessage" = "Purchase full version to unlock features like:\n• Notes\n• Favourite alerts\n• Rich notifications\n• Widget displaying current position and alarm (not available on devices running iOS 14 or later)\n• Smart distance suggestions\n• More sounds available to download";
 "unlock_purchaseAction" = "Unlock";
 "unlock_restoreAction" = "Restore purchase";
 

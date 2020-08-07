@@ -14,18 +14,17 @@ protocol AlarmCellDelegate: class {
 }
 
 class AlarmCell: UITableViewCell {
-    static let preferredHeight: CGFloat = 114
     
     internal lazy var titleLabel: UILabel = {
         let l = UILabel()
-        l.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        l.font = .title
         l.textColor = .label()
         return l
     }()
     
     internal lazy var detailLabel: UILabel = {
         let l = UILabel()
-        l.font = .systemFont(ofSize: 14, weight: .regular)
+        l.font = .subtitle
         l.textColor = .secondaryLabel()
         return l
     }()
@@ -39,7 +38,7 @@ class AlarmCell: UITableViewCell {
             self.delegate?.alarmCell(didPressShowNote: self)
         }
         b.contentHorizontalAlignment = .leading
-        b.titleLabel?.font = .systemFont(ofSize: 14, weight: .regular)
+        b.titleLabel?.font = .subtitle
         return b
     }()
     
@@ -47,7 +46,7 @@ class AlarmCell: UITableViewCell {
         let l = UILabel()
         l.textColor = .secondaryLabel()
         l.setContentHuggingPriority(.required, for: .vertical)
-        l.font = .systemFont(ofSize: 14, weight: .regular)
+        l.font = .subtitle
         return l
     }()
     

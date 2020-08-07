@@ -37,6 +37,7 @@
 "edit_clearNoteButton" = "Clear";
 "edit_noteHeader" = "Note";
 "edit_notePlaceholder" = "Add note";
+"edit_exactScrubbingMessage" = "Move your finger up while holding the slider\nto adjust its sensitivity";
 
 // MARK: Audio screen
 "audio_playButtonTitle" = "Play";
@@ -55,7 +56,7 @@
 // MARK: Notification
 "notification_title" = "You're almost there!";
 "notification_messageIsLessThan" = "is less than";
-"notification_messageAway" = "away.";
+"notification_messageAway" = "away";
 "notification_youAre" = "You are";
 "notification_awayFromDestination" = "away.";
 
@@ -106,7 +107,7 @@
 "unlock_eligibleTitle" = "Thanks for using Glarm!";
 "unlock_eligibleMessage" = "Glarm has transitioned into a freemium app, but what does it mean? It is free to download, however some features are locked by default and require purchase.\nBut I decided that it would be unfaird to charge users who already downloaded the app, and because you're one of such users all features will stay unlocked for you!\nIf you like the app and would like to support its development nonetheless, please consider making a donation.\nYou're awesome!";
 "unlock_purchaseTitle" = "Unlock all features";
-"unlock_purchaseMessage" = "Purchase full version to unlock features like:\n• Notes\n• Favourite alerts\n• Smart distance suggestions\n• More sounds available to download";
+"unlock_purchaseMessage" = "Purchase full version to unlock features like:\n• Notes\n• Favourite alerts\n• Rich notifications\n• Widget displaying current position and alarm (not available on devices running iOS 14 or later)\n• Smart distance suggestions\n• More sounds available to download";
 "unlock_purchaseAction" = "Unlock";
 "unlock_restoreAction" = "Restore purchase";
 

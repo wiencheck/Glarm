@@ -270,10 +270,3 @@ extension MapController {
         }
     }
 }
-
-extension MKPointAnnotation {
-    convenience init(coordinate: CLLocationCoordinate2D) {
-        self.init()
-        self.coordinate = coordinate
-    }
-}

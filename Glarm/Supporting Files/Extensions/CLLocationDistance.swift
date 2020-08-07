@@ -50,9 +50,7 @@ extension CLLocationDistance {
                 }
         }
     }
-    
-    static var `default`: CLLocationDistance = 20 * 1000
-    
+        
     func convert(from originalUnit: UnitLength, to convertedUnit: UnitLength) -> Double {
       return Measurement(value: self, unit: originalUnit).converted(to: convertedUnit).value
     }

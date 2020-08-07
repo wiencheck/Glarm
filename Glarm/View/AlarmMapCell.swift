@@ -59,6 +59,7 @@ final class AlarmMapCell: AlarmCell {
            }
        }
     
+    private var appStateObserver: Any?
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -92,11 +93,24 @@ final class AlarmMapCell: AlarmCell {
             self?.updateDetailText()
         }
         timer.tolerance = 10
+        
+        guard appStateObserver == nil else {
+            return
+        }
+        appStateObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil, using: { [weak self] _ in
+            self?.updateDetailText()
+        })
     }
     
     func endDisplayingUserLocation() {
         mapView.showsUserLocation = false
         timer?.invalidate()
+        
+        guard let observer = appStateObserver else {
+            return
+        }
+        NotificationCenter.default.removeObserver(observer, name: UIApplication.didBecomeActiveNotification, object: nil)
+        appStateObserver = nil
     }
     
     override func setupView() {
@@ -151,16 +165,5 @@ extension AlarmMapCell: MKMapViewDelegate {
         renderer.fillColor = .tint
         renderer.alpha = 0.4
         return renderer
-    }
-}
-
-extension MKMapRect {
-    init(coordinates: [CLLocationCoordinate2D]) {
-        var rect = MKMapRect.null
-        for coord in coordinates {
-            let point = MKMapPoint(coord)
-            rect = rect.union(MKMapRect(x: point.x, y: point.y, width: 0, height: 0))
-        }
-        self.init(origin: rect.origin, size: rect.size)
     }
 }

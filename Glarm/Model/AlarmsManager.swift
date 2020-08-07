@@ -9,6 +9,7 @@
 import CoreLocation
 import UserNotifications
 import AVFoundation
+import NotificationCenter
 import UIKit
 
 enum AlarmState: Int, CaseIterable {
@@ -136,6 +137,7 @@ private extension AlarmsManager {
                     return
                 }
                 if error == nil {
+                    self.newestAlarm = alarm
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         AppRatingHelper.askForReview()
                     }
@@ -149,12 +151,24 @@ private extension AlarmsManager {
     
     func notificationContent(for alarm: AlarmEntry) -> UNMutableNotificationContent {
         let notification = UNMutableNotificationContent()
-        notification.title = LocalizedStringKey.notification_title.localized
-        
-        notification.body = "\(alarm.locationInfo.name) \(LocalizedStringKey.notification_messageIsLessThan.localized) \(alarm.locationInfo.radius.readableRepresentation()) \(LocalizedStringKey.notification_messageAway.localized)."
-        if !alarm.note.isEmpty {
-            notification.body += "\n" + alarm.note
+        if UnlockManager.unlocked {
+            notification.categoryIdentifier = ExtensionConstants.notificationContentExtensionCategory
         }
+        
+        notification.title = LocalizedStringKey.notification_title.localized
+        notification.body = "\(alarm.locationInfo.name) \(LocalizedStringKey.notification_messageIsLessThan.localized) \(alarm.locationInfo.radius.readableRepresentation()) \(LocalizedStringKey.notification_messageAway.localized)."
+        
+        if let data = try? JSONEncoder().encode(alarm.simplified) {
+            notification.userInfo = [
+                "alarm": data
+            ]
+        }
+        
+        if UnlockManager.unlocked, let thumbnailUrl = UIImage.createLocalUrl(forAssetNamed: UIImage.notificationThumbnailAssetName),
+            let thumbnailAttachment = try? UNNotificationAttachment(identifier: "thumbnail", url: thumbnailUrl, options: nil) {
+            notification.attachments = [thumbnailAttachment]
+        }
+        
         notification.sound = UNNotificationSound(named: alarm.sound.notificationSoundName)
         return notification
     }
@@ -166,6 +180,29 @@ private extension AlarmsManager {
         destRegion.notifyOnEntry = true
         destRegion.notifyOnExit = false
         return destRegion
+    }
+    
+    var newestAlarm: SimplifiedAlarmEntry? {
+        get {
+            return UserDefaults.appGroupSuite.alarm(forKey: ExtensionConstants.activeAlarmDefaultsKey)
+        } set {
+            let suite = UserDefaults.appGroupSuite
+            let simplified: SimplifiedAlarmEntry?
+            if let full = newValue as? AlarmEntry {
+                simplified = full.simplified
+            } else {
+                simplified = newValue
+            }
+            
+            guard let alarm = simplified,
+                suite.set(alarm, forKey: ExtensionConstants.activeAlarmDefaultsKey) else {
+                    suite.removeObject(forKey: ExtensionConstants.activeAlarmDefaultsKey)
+                    NCWidgetController().setHasContent(false, forWidgetWithBundleIdentifier: ExtensionConstants.widgetTargetBundleIdentifier)
+                return
+            }
+            NCWidgetController().setHasContent(UnlockManager.unlocked, forWidgetWithBundleIdentifier: ExtensionConstants.widgetTargetBundleIdentifier)
+            suite.synchronize()
+        }
     }
 }
 
@@ -191,6 +228,15 @@ extension AlarmsManager {
                     past.insert(alarm)
                 }
             }
+            
+            // Remove stored alarm if it doesn't exist in current set, or is placed in past set.
+            if let newest = self.newestAlarm {
+                if !alarms.contains(where: { $0.identifier == newest.identifier }) ||
+                    past.contains(where: { $0.identifier == newest.identifier }) {
+                    self.newestAlarm = nil
+                }
+            }
+            
             completion([
                 .active: active.sorted(by: {$0.date>$1.date}),
                 .marked: marked.sorted(by: {$0.date>$1.date}),
@@ -224,5 +270,33 @@ extension AlarmsManager: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.alert])
         delegate?.alarmsManager(notificationWasPresented: self)
+    }
+}
+
+extension AlarmsManager {
+    func displayRandomAlarm(delay: TimeInterval = 1) {
+        guard let alarm = alarms.randomElement() else {
+            return
+        }
+        PermissionsManager.shared.requestNotificationsPermission { status in
+            guard status == .authorized else {
+                self.delegate?.alarmsManager(notificationPermissionDenied: self)
+                return
+            }
+            
+            let notification = self.notificationContent(for: alarm)
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: delay, repeats: false)
+            
+            let request = UNNotificationRequest(identifier: "randomAlarm",
+                                                content: notification,
+                                                trigger: trigger)
+            
+            self.notificationCenter.getPendingNotificationRequests { requests in
+                self.notificationCenter.add(request) { error in
+                    guard let error = error else { return }
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
 }

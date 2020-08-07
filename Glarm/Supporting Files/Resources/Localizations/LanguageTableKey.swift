@@ -11,7 +11,7 @@ import Foundation
 enum LanguageTableKey: String {
     case english = "en"
     case polish = "pl"
-//    case german = "de"
+    case german = "de"
 //    case italian = "Italian"
 //    case spanish = "Spanish"
 //    case portuguese = "Portuguese"

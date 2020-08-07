@@ -37,6 +37,7 @@
 "edit_clearNoteButton" = "Wyczyść";
 "edit_noteHeader" = "Notatka";
 "edit_notePlaceholder" = "Dodaj notatkę";
+"edit_exactScrubbingMessage" = "Przesuń palec do góry trzymając suwak,\naby zmienić jego czułość";
 
 // MARK: Audio screen
 "audio_playButtonTitle" = "Odtwarzaj";
@@ -55,7 +56,7 @@
 // MARK: Notification
 "notification_title" = "Jesteś już prawie na miejscu!";
 "notification_messageIsLessThan" = "jest niecałe";
-"notification_messageAway" = "stąd.";
+"notification_messageAway" = "stąd";
 "notification_youAre" = "Jesteś";
 "notification_awayFromDestination" = "od celu.";
 
@@ -106,7 +107,7 @@
 "unlock_eligibleTitle" = "Dziękuję, że używasz Glarm!";
 "unlock_eligibleMessage" = "Glarm przekształcił się ostatnio w aplikację freemium, ale co to oznacza? Aplikacja jest darmowa do pobrania, jednak niektóre funkcje są zablokowane i wymagają zakupu pełnej wersji.\nPo namyśle jednak zdecydowałem, że byłoby nie w porządku blokować funkcje użytkownikom, którzy pobrali aplikację przed zmianą i ponieważ jesteś jednym z takich użytkowników, wszystkie funkcje pozostaną odblokowane dopóki nie odinstalujesz aplikacji!\nJeżeli jednak spodobał Ci się Glarm i chciałbyś wesprzeć jego rozwój, rozważ wysłanie mi małego napiwku.\nJesteś super!";
 "unlock_purchaseTitle" = "Odblokuj wszystkie funkcje";
-"unlock_purchaseMessage" = "Zakup pełną wersję, aby odblokować funkcje takie jak:\n• Notatki\n• Ulubione alarmy\n• Inteligentne propozycje dystansu\n• Dodatkowe dźwięki do pobrania";
+"unlock_purchaseMessage" = "Zakup pełną wersję, aby odblokować funkcje takie jak:\n• Notatki\n• Ulubione alarmy\n• Rozszerzone powiadomienia\n• Widget przedstawiający mapę i obecny alarm (niedostępne dla urządzeń z iOS 14 i nowszym)\n• Inteligentne propozycje dystansu\n• Dodatkowe dźwięki do pobrania";
 "unlock_purchaseAction" = "Odblokuj";
 "unlock_restoreAction" = "Przywróć zakupy";
 

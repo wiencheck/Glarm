@@ -21,7 +21,7 @@ final class NoteCell: UITableViewCell {
         t.isEditable = false
         t.backgroundColor = .clear
         t.text = LocalizedStringKey.edit_notePlaceholder.localized
-        t.font = .systemFont(ofSize: 17, weight: .regular)
+        t.font = .noteText
         t.textColor = .secondaryLabel()
         return t
     }()
@@ -32,7 +32,7 @@ final class NoteCell: UITableViewCell {
         t.isScrollEnabled = false
         t.isEditable = true
         t.delegate = self
-        t.font = .systemFont(ofSize: 17, weight: .regular)
+        t.font = .noteText
         return t
     }()
     

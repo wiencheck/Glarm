@@ -14,7 +14,7 @@ class EmptyLocationCell: UITableViewCell {
         let l = UILabel()
         l.textColor = .secondaryLabel()
         l.textAlignment = .center
-        l.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        l.font = .title
         l.text = LocalizedStringKey.emptyCell_title.localized
         return l
     }()
@@ -23,7 +23,7 @@ class EmptyLocationCell: UITableViewCell {
         let l = UILabel()
         l.textColor = .secondaryLabel()
         l.textAlignment = .center
-        l.font = .systemFont(ofSize: 14, weight: .regular)
+        l.font = .subtitle
         l.numberOfLines = 0
         l.text = LocalizedStringKey.emptyCell_detail.localized
         return l

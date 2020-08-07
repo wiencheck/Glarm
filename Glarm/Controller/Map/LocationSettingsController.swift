@@ -20,7 +20,7 @@ final class LocationSettingsController: UIViewController {
     
     private lazy var sliderContainer = UIView()
     
-    private var segmentDistances: [CLLocationDistance] = [1000, 2000, 5000, 10000, 20000]
+    private var segmentDistances: [CLLocationDistance] = []
     
     weak var delegate: LocationSettingsControllerDelegate?
     
@@ -39,12 +39,8 @@ final class LocationSettingsController: UIViewController {
     }
     
     private let minimumDistance: CLLocationDistance = 200
-    // 150km
-    private var maximumDistance: CLLocationDistance = 150 * 1000 {
-        didSet {
-            slider.setDoubleValue(radius / maximumDistance, animated: true)
-        }
-    }
+    // 100km
+    private let maximumDistance: CLLocationDistance = 100 * 1000
     
     private lazy var searchBar: UISearchBar = {
         let s = UISearchBar()
@@ -63,7 +59,8 @@ final class LocationSettingsController: UIViewController {
     }()
     
     lazy var slider: UISlider = {
-        let s = UISlider()
+        let s = VariSlider()
+        s.delegate = self
         s.doubleValue = radius / maximumDistance
         s.minimumTrackTintColor = .tint
         s.addTarget(self, action: #selector(sliderChanged(_:)), for: .valueChanged)
@@ -74,8 +71,20 @@ final class LocationSettingsController: UIViewController {
         let l = UILabel()
         l.textColor = .label()
         l.textAlignment = .center
-        l.font = .systemFont(ofSize: 14, weight: .regular)
+        l.font = .subtitle
         l.text = radius.readableRepresentation()
+        l.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        return l
+    }()
+    
+    private lazy var scrubbingDetailLabel: UILabel = {
+        let l = UILabel()
+        l.alpha = 0
+        l.numberOfLines = 2
+        l.textColor = .label()
+        l.textAlignment = .center
+        l.font = .headerTitle
+        l.text = LocalizedStringKey.edit_exactScrubbingMessage.localized
         l.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         return l
     }()
@@ -94,7 +103,7 @@ final class LocationSettingsController: UIViewController {
         b.text = LocalizedStringKey.unlock.localized
         b.backgroundColor = .tint
         b.textColor = .white
-        b.titleLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+        b.titleLabel?.font = .headerTitle
         b.contentEdgeInsets = UIEdgeInsets(top: 4, left: 10, bottom: 4, right: 10)
         b.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         b.pressHandler = { [weak self] sender in
@@ -130,9 +139,24 @@ final class LocationSettingsController: UIViewController {
         if distanceSegment.isEnabled {
             distanceSegment.selectedSegmentIndex = UISegmentedControl.noSegment
         }
-        radius = (sender.doubleValue * maximumDistance)
-        radiusLabel.text = radius.readableRepresentation()
-        delegate?.radiusChanged(radius)
+        let newRadius = (sender.doubleValue * maximumDistance)
+        
+        let rounded: Double
+        if newRadius < 10 * 1000 {
+            // Round to 100 meters
+            rounded = newRadius.round(nearest: 100)
+        } else if newRadius < 20 * 1000 {
+            // Round to 500 meters
+            rounded = newRadius.round(nearest: 500)
+        } else if newRadius < 50 * 1000 {
+            // Round to 1 km
+            rounded = newRadius.round(nearest: 1000)
+        } else {
+            rounded = newRadius.round(nearest: 5000)
+        }
+        radius = rounded
+        radiusLabel.text = rounded.readableRepresentation()
+        delegate?.radiusChanged(rounded)
     }
     
     @objc private func distanceSegmentChanged(_ sender: UISegmentedControl) {
@@ -176,15 +200,15 @@ extension LocationSettingsController {
     
     func updateDistanceFromLocation(_ distance: CLLocationDistance) {
         // Ensure it's at least 5km
-        let adjustedDistance = max(5*1000, min(250*1000, distance.floor(nearest: 1)))
-        segmentDistances = spitOutRadiusSuggestions(basedOn: adjustedDistance, floor: 5000)
+        let adjustedDistance = max(5*1000, min(100*1000, distance.floor(nearest: 1)))
+        let newDistances = spitOutRadiusSuggestions(basedOn: adjustedDistance, floor: 5000)
         
         // Avoid updating titles with same values
-        guard let last = segmentDistances.last, last != maximumDistance else {
+        if newDistances.last == segmentDistances.last {
             return
         }
+        segmentDistances = newDistances
         updateSegmentTitles()
-        maximumDistance = last
     }
     
     private func updateSegmentTitles() {
@@ -199,6 +223,15 @@ extension LocationSettingsController {
                 self.distanceSegment.selectedSegmentIndex = index
             }
         })
+    }
+}
+
+extension LocationSettingsController: VariSliderDelegate {
+    func slider(_ slider: VariSlider, scrubbingStatusChanged isScrubbing: Bool) {
+        UIView.animate(withDuration: 0.2) {
+            self.distanceSegment.alpha = isScrubbing ? 0 : 1
+            self.scrubbingDetailLabel.alpha = isScrubbing ? 1 : 0
+        }
     }
 }
 
@@ -237,10 +270,10 @@ private extension LocationSettingsController {
             make.leading.equalTo(radiusDummyLabel.snp.trailing).offset(4)
         }
         
+        unitSegment.setContentHuggingPriority(.defaultHigh, for: .vertical)
         radiusContainer.addSubview(unitSegment)
         unitSegment.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.trailing.equalToSuperview()
+            make.centerY.trailing.equalToSuperview()
         }
         
         let unitDummyLabel = UILabel()
@@ -257,7 +290,7 @@ private extension LocationSettingsController {
             let s = UIStackView(arrangedSubviews: [distanceSegment, slider, radiusContainer])
             s.axis = .vertical
             s.alignment = .center
-            s.spacing = 12
+            s.spacing = 18
             return s
         }()
         radiusContainer.snp.makeConstraints { make in
@@ -265,7 +298,7 @@ private extension LocationSettingsController {
             make.width.equalToSuperview()
         }
         
-        sliderContainer.addSubview(sliderStack)
+        sliderContainer.insertSubview(sliderStack, belowSubview: distanceSegment)
         sliderStack.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.leading.equalTo(sliderContainer.titleLabel)
@@ -277,6 +310,12 @@ private extension LocationSettingsController {
         }
         slider.snp.makeConstraints { make in
             make.width.equalToSuperview().multipliedBy(0.98)
+        }
+        
+        sliderContainer.addSubview(scrubbingDetailLabel)
+        scrubbingDetailLabel.snp.makeConstraints { make in
+            make.center.equalTo(distanceSegment)
+            make.leading.greaterThanOrEqualToSuperview().offset(15)
         }
         
         sliderContainer.addSubview(unlockButton)
@@ -315,7 +354,7 @@ fileprivate class SettingView: UIView {
         l.setContentCompressionResistancePriority(.required, for: .vertical)
         l.setContentHuggingPriority(.required, for: .vertical)
         l.textColor = .secondaryLabel()
-        l.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        l.font = .headerTitle
         return l
     }()
     
@@ -333,7 +372,8 @@ fileprivate class SettingView: UIView {
         backgroundColor = .clear
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview().offset(12).priority(.required)
+            make.top.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(24).priority(.required)
         }
     }
 }

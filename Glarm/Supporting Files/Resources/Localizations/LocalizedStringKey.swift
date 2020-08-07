@@ -56,6 +56,7 @@ enum LocalizedStringKey: String, LocalizableString {
     case edit_scheduleButton
     case edit_updateButton
     case edit_backButton
+    case edit_exactScrubbingMessage
     
     // MARK: Audio screen
     case audio_playButtonTitle

@@ -76,6 +76,7 @@ final class BrowseViewController: UIViewController {
         
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        //viewModel.manager.displayRandomAlarm()
         guard shouldShowSwipeHint else {
             return
         }
@@ -225,7 +226,11 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return viewModel.numberOfRows(in: section) > 0 ? TableHeaderView.preferredHeight : .leastNormalMagnitude
+        return viewModel.numberOfRows(in: section) > 0 ? UITableView.automaticDimension : .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        return TableHeaderView.preferredHeight
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

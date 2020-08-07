@@ -133,12 +133,11 @@ extension AudioBrowserViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch ViewModel.Section(rawValue: section)! {
-        case .downloads:
-            return TableHeaderView.preferredHeight + 10
-        case .sounds:
-            return TableHeaderView.preferredHeight
-        }
+        return UITableView.automaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        return TableHeaderView.preferredHeight
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
