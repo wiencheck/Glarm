@@ -37,7 +37,7 @@
 "edit_clearNoteButton" = "Wyczyść";
 "edit_noteHeader" = "Notatka";
 "edit_notePlaceholder" = "Dodaj notatkę";
-"edit_exactScrubbingMessage" = "Przesuń palec do góry trzymając suwak,\naby zmienić jego czułość";
+"edit_exactScrubbingMessage" = "Przesuń palec do góry trzymając suwak, aby zmienić jego czułość";
 
 // MARK: Audio screen
 "audio_playButtonTitle" = "Odtwarzaj";

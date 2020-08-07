@@ -37,7 +37,7 @@
 "edit_clearNoteButton" = "Clear";
 "edit_noteHeader" = "Note";
 "edit_notePlaceholder" = "Add note";
-"edit_exactScrubbingMessage" = "Move your finger up while holding the slider\nto adjust its sensitivity";
+"edit_exactScrubbingMessage" = "Move your finger up while holding the slider to adjust its sensitivity";
 
 // MARK: Audio screen
 "audio_playButtonTitle" = "Play";

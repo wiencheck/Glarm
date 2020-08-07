@@ -315,7 +315,7 @@ private extension LocationSettingsController {
         sliderContainer.addSubview(scrubbingDetailLabel)
         scrubbingDetailLabel.snp.makeConstraints { make in
             make.center.equalTo(distanceSegment)
-            make.leading.greaterThanOrEqualToSuperview().offset(15)
+            make.leading.equalTo(sliderContainer.titleLabel)
         }
         
         sliderContainer.addSubview(unlockButton)
