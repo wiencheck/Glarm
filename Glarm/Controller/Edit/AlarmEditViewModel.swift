@@ -11,6 +11,7 @@ import UIKit
 
 protocol AlarmEditViewModelDelegate: Alertable {
     func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo)
+    func model(didSelectCategory model: AlarmEditViewModel, category: String)
     func model(didSelectAudio model: AlarmEditViewModel, sound: Sound)
     func model(didReloadRow model: AlarmEditViewModel, at indexPath: IndexPath)
     func model(didReloadSection model: AlarmEditViewModel, section: Int)
@@ -24,13 +25,19 @@ final class AlarmEditViewModel {
     
     let scheduleButtonTitle: String
     
-    private var alarm: AlarmEntry
+    private(set)var alarm: AlarmEntry {
+        didSet {
+            print("alarm change")
+        }
+    }
     
-    private var edited = false {
+    private(set)var didMakeChanges = false {
         didSet {
             delegate?.model(didChangeButton: self)
         }
     }
+    
+    private(set)var didSaveChanges = false
     
     weak var delegate: AlarmEditViewModelDelegate?
     
@@ -55,19 +62,20 @@ final class AlarmEditViewModel {
         guard alarm.isActive else {
             return alarm.locationInfo != .default
         }
-        return edited
+        return didMakeChanges
     }
     
     func schedulePressed() {
         manager.delegate = self
         manager.schedule(alarm: alarm)
+        didSaveChanges = true
     }
     
     func updateAlarmNote(text: String) {
         if text == alarm.note {
             return
         }
-        edited = true
+        didMakeChanges = true
         alarm.note = text
     }
 }
@@ -87,7 +95,7 @@ extension AlarmEditViewModel: AlarmMapControllerDelegate {
     }
     
     func updateLocationInfo(info: LocationNotificationInfo) {
-        edited = true
+        didMakeChanges = true
         alarm.locationInfo = info
         delegate?.model(didReloadRow: self, at: IndexPath(row: 0, section: Section.location.rawValue))
     }
@@ -101,10 +109,24 @@ extension AlarmEditViewModel: AudioBrowserViewControllerDelegate {
         updateAudio(sound: sound)
     }
     
-    func updateAudio(sound: Sound) {
-        edited = true
+    private func updateAudio(sound: Sound) {
+        didMakeChanges = true
         alarm.sound = sound
         delegate?.model(didReloadRow: self, at: IndexPath(row: 0, section: Section.audio.rawValue))
+    }
+}
+
+extension AlarmEditViewModel: CategoriesViewControllerDelegate {
+    func categories(didReturnCategory controller: CategoriesViewController, category: String) {
+        if alarm.category == category {
+            return
+        }
+        updateCategory(category)
+    }
+    
+    private func updateCategory(_ category: String) {
+        didMakeChanges = true
+        alarm.category = category
     }
 }
 
@@ -112,6 +134,7 @@ extension AlarmEditViewModel {
     enum Section: Int, CaseIterable {
         case location
         case note
+        case category
         case audio
     }
     
@@ -147,6 +170,8 @@ extension AlarmEditViewModel {
             }
         case .note:
             break
+        case .category:
+            delegate?.model(didSelectCategory: self, category: alarm.category)
         case .audio:
             delegate?.model(didSelectAudio: self, sound: alarm.sound)
         }
@@ -169,6 +194,8 @@ extension AlarmEditViewModel {
         case .note:
             return .init(title: LocalizedStringKey.edit_noteHeader.localized,
                 buttonTitle: noteClearButtonText)
+        case .category:
+            return .init(title: LocalizedStringKey.edit_categoryHeader.localized)
         case .audio:
             return nil
         }
@@ -186,5 +213,9 @@ extension AlarmEditViewModel {
     
     var alarmNoteText: String {
         return alarm.note
+    }
+    
+    var alarmCategory: String {
+        return alarm.category
     }
 }

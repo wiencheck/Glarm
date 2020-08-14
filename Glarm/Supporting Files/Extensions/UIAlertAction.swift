@@ -13,10 +13,14 @@ extension UIAlertAction {
         self.init(title: localizedTitle.localized, style: style, handler: handler)
     }
     
-    class func cancel(text: String = LocalizedStringKey.cancel.localized, action: (() -> Void)? = nil) -> UIAlertAction {
+    class func cancel(text: String, action: (() -> Void)? = nil) -> UIAlertAction {
         return UIAlertAction(title: text, style: .cancel) { _ in
             action?()
         }
+    }
+    
+    class func cancel(localizedText: LocalizedStringKey = .cancel, action: (() -> Void)? = nil) -> UIAlertAction {
+        return cancel(text: localizedText.localized, action: action)
     }
     
     class var dismiss: UIAlertAction {

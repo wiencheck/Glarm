@@ -46,10 +46,15 @@ enum LocalizedStringKey: String, LocalizableString {
     case browse_scheduleAction
     case browse_deleteAction
     case browse_cancelAction
+    case browse_changesNotSavedTitle
+    case browse_changesNotSavedDetail
+    case browse_changesSchedule
+    case browse_changesDiscard
     
     // MARK: Edit screen
     case edit_locationHeader
     case edit_noteHeader
+    case edit_categoryHeader
     case edit_clearNoteButton
     case edit_notePlaceholder
     case edit_toneCell
@@ -57,6 +62,20 @@ enum LocalizedStringKey: String, LocalizableString {
     case edit_updateButton
     case edit_backButton
     case edit_exactScrubbingMessage
+    
+    // MARK: Category screen
+    case category_none
+    case category_createButton
+    case category_defaultHeader
+    case category_customHeader
+    case category_footer
+    case category_newCategoryMessage
+    case category_newCategoryPlaceholder
+    
+    // MARK: Default categories
+    case categories_work
+    case categories_travel
+    case categories_school
     
     // MARK: Audio screen
     case audio_playButtonTitle
@@ -89,6 +108,7 @@ enum LocalizedStringKey: String, LocalizableString {
     case about_detail
     case about_leaveReview
     case about_messageMe
+    case about_helpLocalization
     
     // MARK: Tips
     case tips_title
@@ -123,8 +143,6 @@ enum LocalizedStringKey: String, LocalizableString {
     // MARK: Unlock
     case unlock_thankYouTitle
     case unlock_thankYouMessage
-    case unlock_eligibleTitle
-    case unlock_eligibleMessage
     /// "Unlock all features" alert title
     case unlock_purchaseTitle
     case unlock_purchaseMessage
@@ -137,6 +155,7 @@ enum LocalizedStringKey: String, LocalizableString {
     case dismiss
     case `continue`
     case unlock
+    case create
 }
 
 extension LocalizedStringKey: CustomStringConvertible {

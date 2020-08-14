@@ -27,6 +27,10 @@
 "browse_unmarkAction" = "Markierung löschen";
 "browse_scheduleAction" = "Aktivieren";
 "browse_cancelAction" = "Abbrechen";
+"browse_changesNotSavedTitle" = "Wecker wurde nicht gespeichert";
+"browse_changesNotSavedDetail" = "Wecker wurde verändert, aber nicht gespeichert.";
+"browse_changesSchedule" = "Speichern und planen";
+"browse_changesDiscard" = "Änderungen ablehnen";
 
 // MARK: Edit screen
 "edit_updateButton" = "Veränderungen speichern";
@@ -36,8 +40,23 @@
 "edit_scheduleButton" = "Wecker planen";
 "edit_clearNoteButton" = " Löschen";
 "edit_noteHeader" = "Notizen";
+"edit_categoryHeader" = "Kategorie";
 "edit_notePlaceholder" = "Notizen erstellen";
 "edit_exactScrubbingMessage" = "Bewegen Sie Ihren Finger nach oben, während Sie den Schieberegler gedrückt halten, um die Empfindlichkeit anzupassen";
+
+// MARK: Category screen
+"category_none" = "Keiner";
+"category_createButton" = "Neue Kategorie";
+"category_defaultHeader" = "Standardkategorien";
+"category_customHeader" = "Ihre Kategorien";
+"category_footer" = "";
+"category_newCategoryMessage" = "";
+"category_newCategoryPlaceholder" = "Neue Kategorie";
+
+// MARK: Default categories
+"categories_work" = "Work";
+"categories_travel" = "Travel";
+"categories_school" = "School";
 
 // MARK: Audio screen
 "audio_playButtonTitle" = "Wiedergeben";
@@ -70,6 +89,7 @@
 "about_detail" = "einfache Wecker, die auf Standort basieren\nAdam Wienconek 🇵🇱\n\nGefällt dir meine App, erwäge auch eine Rezension in App Store zu schreiben, jede von ihnen hilft mir sehr. \nBist du auf Problem gestoßen oder hast du Frage? Schreib mich an!";
 "about_leaveReview" = "Rezension schreiben";
 "about_messageMe" = "Schreib mich an";
+"about_helpLocalization" = "Hilf uns Glarm zu übersetzen";
 
 // MARK: Tips
 "tips_title" = "Wie funktioniert das?";
@@ -104,10 +124,8 @@
 // MARK: Unlock
 "unlock_thankYouTitle" = "Purchase successful! 🎉";
 "unlock_thankYouMessage" = "Thank You for supporting Glarm's development\nYou can now freely use all features the app has to offer.";
-"unlock_eligibleTitle" = "Thanks for using Glarm!";
-"unlock_eligibleMessage" = "Glarm has transitioned into a freemium app, but what does it mean? It is free to download, however some features are locked by default and require purchase.\nBut I decided that it would be unfaird to charge users who already downloaded the app, and because you're one of such users all features will stay unlocked for you!\nIf you like the app and would like to support its development nonetheless, please consider making a donation.\nYou're awesome!";
 "unlock_purchaseTitle" = "Unlock all features";
-"unlock_purchaseMessage" = "Purchase full version to unlock features like:\n• Notes\n• Favourite alerts\n• Rich notifications\n• Widget displaying current position and alarm (not available on devices running iOS 14 or later)\n• Smart distance suggestions\n• More sounds available to download";
+"unlock_purchaseMessage" = "Purchase full version to unlock features like:\n• Notes\n• Alarm categories\n• Rich notifications\n• Widget displaying current position and alarm (not available on devices running iOS 14 or later)\n• Smart distance suggestions\n• More sounds available to download";
 "unlock_purchaseAction" = "Unlock";
 "unlock_restoreAction" = "Restore purchase";
 
@@ -115,5 +133,4 @@
 "dismiss" = "Schließen";
 "cancel" = "Abbrechen";
 "continue" = "Fortsetzen";
-
-"permissionGreeting" = "Um zu funktionieren, Glarm benötigt Erlaubnis deine Standort zu lesen (nur während App wird benutzt!) und Benachrichtigungen zu schicken. Wir sammeln keine vertraulichen Daten und wir folgen deine Standort nicht, wenn App nicht genutzt wird.";
+"create" = "Erschaffen";

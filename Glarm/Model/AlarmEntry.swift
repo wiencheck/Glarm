@@ -9,42 +9,43 @@
 import Foundation
 
 final class AlarmEntry: SimplifiedAlarmEntry {
+    var category: String
     var sound: Sound
     var date: Date
     
-    var isMarked = false
     var isActive = false
     
-    init(info: LocationNotificationInfo, sound: Sound, note: String) {
+    init(info: LocationNotificationInfo, category: String, sound: Sound, note: String) {
+        self.category = category
         self.sound = sound
         date = Date()
         super.init(info: info, note: note)
     }
     
     convenience init() {
-        self.init(info: LocationNotificationInfo(), sound: SoundsManager.selectedSound, note: "")
+        self.init(info: LocationNotificationInfo(), category: "", sound: SoundsManager.selectedSound, note: "")
     }
     
     // MARK: Codable stuff.
     private enum CodingKeys: String, CodingKey {
+        case category
         case sound
         case date
-        case isMarked
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        category = try container.decode(String.self, forKey: .category)
         sound = try container.decode(Sound.self, forKey: .sound)
         date = try container.decode(Date.self, forKey: .date)
-        isMarked = try container.decode(Bool.self, forKey: .isMarked)
         try super.init(from: container.superDecoder())
     }
     
     override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(category, forKey: .category)
         try container.encode(sound, forKey: .sound)
         try container.encode(date, forKey: .date)
-        try container.encode(isMarked, forKey: .isMarked)
         try super.encode(to: container.superEncoder())
     }
 }

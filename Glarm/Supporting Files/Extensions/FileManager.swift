@@ -83,7 +83,7 @@ extension FileManager {
         } else {
             fullPath = searchPath.url
         }
-        fullPath = fullPath.appendingPathComponent(name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!, isDirectory: false)
+        fullPath = fullPath.appendingPathComponent(name.replacingOccurrences(of: " ", with: ""), isDirectory: false)
         if fileExists(atPath: fullPath.path) {
             guard overwrite else {
                 return URL(string: fullPath.lastPathComponent)

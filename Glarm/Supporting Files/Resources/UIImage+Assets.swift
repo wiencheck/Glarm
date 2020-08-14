@@ -18,6 +18,13 @@ extension UIImage {
             return UIImage(named: "Info")!
         }
     }
+    class var folder: UIImage {
+        if #available(iOS 13.0, *) {
+            return UIImage(systemName: "folder")!
+        } else {
+            return UIImage(named: "Folder")!
+        }
+    }
     static let glarm = UIImage(named: "Glarm")!
     
     class var download: UIImage {

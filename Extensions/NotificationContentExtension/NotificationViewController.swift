@@ -12,7 +12,7 @@ import UserNotificationsUI
 
 class NotificationViewController: UIViewController, UNNotificationContentExtension {
     
-    private lazy var mapController = ExtensionViewController()
+    private lazy var mapController = ExtensionViewController(shouldDisplayMap: true)
     
     override func viewDidLoad() {
         super.viewDidLoad()

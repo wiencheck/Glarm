@@ -14,7 +14,6 @@ protocol AlarmCellDelegate: class {
 }
 
 class AlarmCell: UITableViewCell {
-    
     internal lazy var titleLabel: UILabel = {
         let l = UILabel()
         l.font = .title
@@ -26,6 +25,7 @@ class AlarmCell: UITableViewCell {
         let l = UILabel()
         l.font = .subtitle
         l.textColor = .secondaryLabel()
+        l.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return l
     }()
     
@@ -46,12 +46,22 @@ class AlarmCell: UITableViewCell {
         let l = UILabel()
         l.textColor = .secondaryLabel()
         l.setContentHuggingPriority(.required, for: .vertical)
+        l.font = .preferredFont(forTextStyle: .caption1)
+        return l
+    }()
+    
+    internal lazy var categoryLabel: UILabel = {
+        let l = UILabel()
+        l.textColor = .tint
+        l.textAlignment = .right
+        l.setContentHuggingPriority(.required, for: .vertical)
         l.font = .subtitle
         return l
     }()
     
-    internal lazy var markedView: UIImageView = {
-        let i = UIImageView(image: .star)
+    internal lazy var categoryImageView: UIImageView = {
+        let i = UIImageView(image: .folder)
+        i.tintColor = .tint
         i.contentMode = .scaleAspectFit
         return i
     }()
@@ -90,10 +100,11 @@ class AlarmCell: UITableViewCell {
         noteButton.isHidden = model.note == nil || model.note?.isEmpty == true
         detailLabel.text = model.locationInfo.radius.readableRepresentation()
         rightDetailLabel.text = model.date
-        if let marked = model.marked {
-            markedView.isHidden = !marked
+        categoryLabel.text = model.category
+        if let category = model.category {
+            categoryImageView.isHidden = category.isEmpty
         } else {
-            markedView.isHidden = true
+            categoryImageView.isHidden = true
         }
     }
     
@@ -109,8 +120,7 @@ class AlarmCell: UITableViewCell {
         addSubview(stack)
         
         stack.snp.makeConstraints { make in
-            make.top.leading.equalTo(layoutMarginsGuide)
-            make.bottom.equalTo(layoutMarginsGuide).offset(6)
+            make.top.bottom.leading.equalTo(layoutMarginsGuide)
         }
         
         addSubview(indicatorView)
@@ -120,40 +130,47 @@ class AlarmCell: UITableViewCell {
             make.height.equalTo(indicatorView.snp.width)
             make.height.equalTo(10)
         }
-
+        
         addSubview(rightDetailLabel)
         rightDetailLabel.snp.makeConstraints { make in
             make.leading.greaterThanOrEqualTo(stack.snp.trailing).offset(4)
             make.centerY.equalTo(indicatorView)
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
-
-        addSubview(markedView)
-        markedView.snp.makeConstraints { make in
+        
+        addSubview(categoryLabel)
+        categoryLabel.snp.makeConstraints { make in
             make.trailing.equalTo(layoutMarginsGuide)
-            make.top.equalTo(indicatorView.snp.bottom).offset(10)
-            make.height.equalTo(markedView.snp.width)
-            make.height.equalTo(12)
+            make.centerY.equalTo(detailLabel)
+        }
+        
+        addSubview(categoryImageView)
+        categoryImageView.snp.makeConstraints { make in
+            make.height.equalTo(categoryImageView.snp.width)
+            make.height.equalTo(16)
+            make.leading.greaterThanOrEqualTo(detailLabel.snp.trailing).offset(2)
+            make.trailing.equalTo(categoryLabel.snp.leading).offset(-2)
+            make.centerY.equalTo(detailLabel)
         }
     }
 }
 
 extension AlarmCell {
     struct Model {
-        init(locationInfo: LocationNotificationInfo, note: String?, date: String? = nil, marked: Bool? = nil) {
+        init(locationInfo: LocationNotificationInfo, note: String?, date: String? = nil, category: String? = nil) {
             self.locationInfo = locationInfo
             self.note = note
             self.date = date
-            self.marked = marked
+            self.category = category
         }
         
         init(alarm: AlarmEntry) {
-            self.init(locationInfo: alarm.locationInfo, note: alarm.note, date: DateFormatter.localizedString(from: alarm.date, dateStyle: .short, timeStyle: .none), marked: alarm.isMarked)
+            self.init(locationInfo: alarm.locationInfo, note: alarm.note, date: DateFormatter.localizedString(from: alarm.date, dateStyle: .short, timeStyle: .none), category: alarm.category)
         }
         
-        let locationInfo: LocationNotificationInfo
-        let note: String?
-        let date: String?
-        let marked: Bool?
+        var locationInfo: LocationNotificationInfo
+        var note: String?
+        var date: String?
+        var category: String?
     }
 }

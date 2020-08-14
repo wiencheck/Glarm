@@ -81,26 +81,16 @@ final class AlarmsManager: NSObject {
     
     func cancel(alarm: AlarmEntry) {
         notificationCenter.removePendingNotificationRequests(withIdentifiers: [alarm.identifier])
+        updateNewestAlarm()
     }
     
     @discardableResult
     func delete(alarm: AlarmEntry) -> Bool {
         return alarms.remove(alarm) != nil
     }
-    
-    func mark(alarm: AlarmEntry) {
-        alarm.isMarked = true
-        alarms.update(with: alarm)
-    }
-    
-    func unmark(alarm: AlarmEntry) {
-        alarm.isMarked = false
-        alarms.update(with: alarm)
-    }
 }
 
 // MARK: - Private Functions
-
 private extension AlarmsManager {
     func askForNotificationPermissions(for alarm: AlarmEntry) {
         PermissionsManager.shared.requestNotificationsPermission { status in
@@ -137,7 +127,6 @@ private extension AlarmsManager {
                     return
                 }
                 if error == nil {
-                    self.newestAlarm = alarm
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         AppRatingHelper.askForReview()
                     }
@@ -183,26 +172,23 @@ private extension AlarmsManager {
     }
     
     var newestAlarm: SimplifiedAlarmEntry? {
-        get {
-            return UserDefaults.appGroupSuite.alarm(forKey: ExtensionConstants.activeAlarmDefaultsKey)
-        } set {
-            let suite = UserDefaults.appGroupSuite
-            let simplified: SimplifiedAlarmEntry?
-            if let full = newValue as? AlarmEntry {
-                simplified = full.simplified
-            } else {
-                simplified = newValue
-            }
-            
-            guard let alarm = simplified,
-                suite.set(alarm, forKey: ExtensionConstants.activeAlarmDefaultsKey) else {
-                    suite.removeObject(forKey: ExtensionConstants.activeAlarmDefaultsKey)
-                    NCWidgetController().setHasContent(false, forWidgetWithBundleIdentifier: ExtensionConstants.widgetTargetBundleIdentifier)
-                return
-            }
-            NCWidgetController().setHasContent(UnlockManager.unlocked, forWidgetWithBundleIdentifier: ExtensionConstants.widgetTargetBundleIdentifier)
-            suite.synchronize()
+        return UserDefaults.appGroupSuite.alarm(forKey: ExtensionConstants.activeAlarmDefaultsKey)
+    }
+    
+    func updateNewestAlarm() {
+        // Fetch newest alarm
+        guard let alarm = alarms.max(by: {$0.date < $1.date})?.simplified else {
+            return
         }
+        let suite = UserDefaults.appGroupSuite
+        
+        guard suite.set(alarm, forKey: ExtensionConstants.activeAlarmDefaultsKey) else {
+                suite.removeObject(forKey: ExtensionConstants.activeAlarmDefaultsKey)
+                NCWidgetController().setHasContent(false, forWidgetWithBundleIdentifier: ExtensionConstants.widgetTargetBundleIdentifier)
+            return
+        }
+        NCWidgetController().setHasContent(UnlockManager.unlocked, forWidgetWithBundleIdentifier: ExtensionConstants.widgetTargetBundleIdentifier)
+        suite.synchronize()
     }
 }
 
@@ -222,18 +208,10 @@ extension AlarmsManager {
                 if identifiers.contains(alarm.identifier) {
                     alarm.isActive = true
                     active.insert(alarm)
-                } else if alarm.isMarked {
+                } else if !alarm.category.isEmpty {
                     marked.insert(alarm)
                 } else {
                     past.insert(alarm)
-                }
-            }
-            
-            // Remove stored alarm if it doesn't exist in current set, or is placed in past set.
-            if let newest = self.newestAlarm {
-                if !alarms.contains(where: { $0.identifier == newest.identifier }) ||
-                    past.contains(where: { $0.identifier == newest.identifier }) {
-                    self.newestAlarm = nil
                 }
             }
             
@@ -253,14 +231,16 @@ extension AlarmsManager {
             }
             return arr
         } set {
-            let marked = newValue.filter { $0.isMarked }
+            let marked = newValue.filter { !$0.category.isEmpty }
             // 11 15 9
             let unmarked = newValue.subtracting(marked).sorted(by: {
                 $0.date > $1.date
                 }).prefix(10)
-            guard let data = try? JSONEncoder().encode(marked.union(unmarked)) else {
+            let joined = marked.union(unmarked)
+            guard let data = try? JSONEncoder().encode(joined) else {
                 return
             }
+            updateNewestAlarm()
             UserDefaults.standard.set(data, forKey: AlarmsManager.alarmsDataDefaultsKey)
         }
     }

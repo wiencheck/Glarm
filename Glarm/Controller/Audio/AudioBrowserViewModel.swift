@@ -172,15 +172,6 @@ extension AudioBrowserViewModel {
         }
     }
     
-    func shouldEnableCell(at path: IndexPath) -> Bool {
-        switch Section(rawValue: path.section)! {
-        case .sounds:
-            return true
-        case .downloads:
-            return UnlockManager.unlocked
-        }
-    }
-    
     func didSelectRow(at path: IndexPath) {
         guard let sound = sound(at: path) else {
             return

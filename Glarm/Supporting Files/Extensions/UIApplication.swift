@@ -44,11 +44,11 @@ extension UIApplication {
     }
     
     func openReviewPage() {
-        guard let url = URL(string: "https://apps.apple.com/app/id1523237367" + "?action=write-review"),
+        guard let str = PlistReader.property(from: PlistFile.urls.rawValue, key: "Review") as? String, let url = URL(string: str),
         canOpenURL(url) else {
             return
         }
-        open(url, options: [:], completionHandler: nil)
+        open(url)
     }
     
     func openMail() {

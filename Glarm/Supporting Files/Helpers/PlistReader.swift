@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum PlistFile: String {
+    case urls = "Urls"
+    case sounds = "AvailableSounds"
+}
+
 /// Utility class for getting contents of property list files
 class PlistReader {
     class func dictionary(from file: String) -> [String: Any]? {
@@ -22,4 +27,6 @@ class PlistReader {
     class func property(from file: String, key: String) -> Any? {
         return dictionary(from: file)?[key]
     }
+    
+    private init() {}
 }

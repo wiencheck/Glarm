@@ -35,7 +35,7 @@ class SoundsManager {
     
     private let fileManager = FileManager.default
     
-    private lazy var soundUrls: [String: URL] = PlistReader.dictionary(from: "AvailableSounds") ?? [:]
+    private lazy var soundUrls: [String: URL] = PlistReader.dictionary(from: PlistFile.sounds.rawValue) ?? [:]
     
     weak var delegate: SoundsManagerDelegate?
     

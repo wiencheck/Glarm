@@ -9,11 +9,17 @@
 import UIKit
 import BoldButton
 
+protocol AlarmEditControllerDelegate: class {
+    func editController(_ controller: AlarmEditController, didDisappearWithoutSavingChanges modifiedAlarm: AlarmEntry)
+}
+
 final class AlarmEditController: UIViewController {
 
     typealias ViewModel = AlarmEditViewModel
     
     private let viewModel: ViewModel
+    
+    weak var delegate: AlarmEditControllerDelegate?
     
     internal var tableView: UITableView! {
         didSet {
@@ -54,8 +60,8 @@ final class AlarmEditController: UIViewController {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.title = LocalizedStringKey.title_edit.localized
-        navigationItem.backBarButtonItem?.title = LocalizedStringKey.edit_backButton.localized
-        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: LocalizedStringKey.edit_backButton.localized, style: .plain, target: nil, action: nil)
+
         setupView()
         viewModel.delegate = self
     }
@@ -76,6 +82,17 @@ final class AlarmEditController: UIViewController {
             }
             map.endDisplayingUserLocation()
         }
+    }
+    
+    override func willMove(toParent parent: UIViewController?) {
+        super.willMove(toParent: parent)
+        guard parent == nil,
+        viewModel.alarm.locationInfo != .default,
+            viewModel.didMakeChanges,
+            !viewModel.didSaveChanges else {
+                return
+        }
+        delegate?.editController(self, didDisappearWithoutSavingChanges: viewModel.alarm)
     }
     
     private weak var noteHeader: TableHeaderView? {
@@ -109,6 +126,12 @@ extension AlarmEditController: AlarmEditViewModelDelegate {
     
     func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo) {
         let vc = MapController(info: locationInfo)
+        vc.delegate = viewModel
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func model(didSelectCategory model: AlarmEditViewModel, category: String) {
+        let vc = CategoriesViewController(category: category)
         vc.delegate = viewModel
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -165,6 +188,18 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "note") as! NoteCell
             cell.delegate = self
             cell.noteText = viewModel.alarmNoteText
+            return cell
+        case .category:
+            var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "category")
+            if cell == nil {
+                cell = UITableViewCell(style: .value1, reuseIdentifier: "category")
+            }
+            if viewModel.alarmCategory.isEmpty {
+                cell.textLabel?.text = .localized(.category_none)
+            } else {
+                cell.textLabel?.text = viewModel.alarmCategory
+            }
+            cell.accessoryType = .disclosureIndicator
             return cell
         case .audio:
             var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "audio")

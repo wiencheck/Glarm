@@ -11,18 +11,18 @@ import NotificationCenter
 
 class TodayViewController: UIViewController, NCWidgetProviding {
     
-    private lazy var mapController = ExtensionViewController()
+    private lazy var mapController = ExtensionViewController(shouldDisplayMap: false)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        extensionContext?.widgetLargestAvailableDisplayMode = .expanded
         add(child: mapController)
+        mapController.delegate = self
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        preferredContentSize.height = mapController.contentHeight
-    }
+//    override func viewDidLayoutSubviews() {
+//        super.viewDidLayoutSubviews()
+//        preferredContentSize.height = mapController.contentHeight
+//    }
     
     private func fetchActiveAlarm() -> SimplifiedAlarmEntry? {
         let suite = UserDefaults.appGroupSuite
@@ -41,7 +41,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
             return
         }
         mapController.configure(with: alarm)
-        extensionContext?.widgetLargestAvailableDisplayMode = .expanded
+        extensionContext?.widgetLargestAvailableDisplayMode = alarm.note.isEmpty ? .compact : .expanded
         completionHandler(.newData)
     }
     
@@ -54,4 +54,10 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         }
     }
     
+}
+
+extension TodayViewController: ExtensionViewControllerDelegate {
+    func extensionController(_ controller: ExtensionViewController, didUpdateHeight newHeight: CGFloat) {
+        preferredContentSize.height = newHeight
+    }
 }

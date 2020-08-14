@@ -75,7 +75,7 @@ extension AudioBrowserViewController: AudioBrowserViewModelDelegate {
     }
     
     func model(didReloadData model: AudioBrowserViewModel) {
-        tableView.reloadData()
+        tableView.reloadData(animated: true)
     }
     
     func model(_ model: AudioBrowserViewModel, didChangeLoadingStatus loading: Bool, at indexPath: IndexPath) {
@@ -113,7 +113,7 @@ extension AudioBrowserViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let enable = viewModel.shouldEnableCell(at: indexPath)
+        let enable = UnlockManager.unlocked || indexPath.section == 0
         cell.alpha = enable ? 1 : 0.4
         cell.isUserInteractionEnabled = enable
     }

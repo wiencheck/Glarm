@@ -27,17 +27,36 @@
 "browse_scheduleAction" = "Aktywuj";
 "browse_deleteAction" = "Usuń";
 "browse_cancelAction" = "Anuluj";
+"browse_changesNotSavedTitle" = "Alarm nie został zapisany";
+"browse_changesNotSavedDetail" = "Zmodyfikowano alarm, jednak nie został zapisany.";
+"browse_changesSchedule" = "Zapisz i zaplanuj";
+"browse_changesDiscard" = "Odrzuć zmiany";
 
 // MARK: Edit screen
 "edit_updateButton" = "Zachowaj zmiany";
-"edit_backButton" = "Alarm";
+"edit_backButton" = "Edytuj Alarm";
 "edit_locationHeader" = "Lokacja";
 "edit_toneCell" = "Dźwięk";
 "edit_scheduleButton" = "Zaplanuj Alarm";
 "edit_clearNoteButton" = "Wyczyść";
 "edit_noteHeader" = "Notatka";
+"edit_categoryHeader" = "Kategoria";
 "edit_notePlaceholder" = "Dodaj notatkę";
 "edit_exactScrubbingMessage" = "Przesuń palec do góry trzymając suwak, aby zmienić jego czułość";
+
+// MARK: Category screen
+"category_none" = "Nie wybrano";
+"category_createButton" = "Nowa kategoria";
+"category_defaultHeader" = "Domyślne kategorie";
+"category_customHeader" = "Twoje kategorie";
+"category_footer" = "Wybranie kategorii alarmu ułatwia zapisywanie często używanych alarmów i sprawia, że nie zostaną one usunięte po czasie.";
+"category_newCategoryMessage" = "Utwórz własną kategorię dla alarmu";
+"category_newCategoryPlaceholder" = "Nowa kategoria";
+
+// MARK: Default categories
+"categories_work" = "Praca";
+"categories_travel" = "Podróże";
+"categories_school" = "Szkoła";
 
 // MARK: Audio screen
 "audio_playButtonTitle" = "Odtwarzaj";
@@ -70,6 +89,7 @@
 "about_detail" = "Proste alarmy oparte na lokalizacji\nAdam Wienconek 🇵🇱\n\nJeżeli polubiłeś/aś moją aplikację, rozważ napisanie krótkiej recenzji w App Store, każda z nich bardzo pomaga.\nNatrafiłeś na problem, lub masz pytanie? Wyślij mi maila!";
 "about_leaveReview" = "Napisz recenzję";
 "about_messageMe" = "Napisz do mnie";
+"about_helpLocalization" = "Pomóż w tłumaczeniu Glarm";
 
 // MARK: Tips
 "tips_title" = "Jak to działa?";
@@ -104,10 +124,8 @@
 // MARK: Unlock
 "unlock_thankYouTitle" = "Zakup przebiegł pomyślnie! 🎉";
 "unlock_thankYouMessage" = "Dziękuję, że wspierasz rozwój Glarm!\nMożesz teraz swobodnie korzystać ze wszystkich funkcji.";
-"unlock_eligibleTitle" = "Dziękuję, że używasz Glarm!";
-"unlock_eligibleMessage" = "Glarm przekształcił się ostatnio w aplikację freemium, ale co to oznacza? Aplikacja jest darmowa do pobrania, jednak niektóre funkcje są zablokowane i wymagają zakupu pełnej wersji.\nPo namyśle jednak zdecydowałem, że byłoby nie w porządku blokować funkcje użytkownikom, którzy pobrali aplikację przed zmianą i ponieważ jesteś jednym z takich użytkowników, wszystkie funkcje pozostaną odblokowane dopóki nie odinstalujesz aplikacji!\nJeżeli jednak spodobał Ci się Glarm i chciałbyś wesprzeć jego rozwój, rozważ wysłanie mi małego napiwku.\nJesteś super!";
 "unlock_purchaseTitle" = "Odblokuj wszystkie funkcje";
-"unlock_purchaseMessage" = "Zakup pełną wersję, aby odblokować funkcje takie jak:\n• Notatki\n• Ulubione alarmy\n• Rozszerzone powiadomienia\n• Widget przedstawiający mapę i obecny alarm (niedostępne dla urządzeń z iOS 14 i nowszym)\n• Inteligentne propozycje dystansu\n• Dodatkowe dźwięki do pobrania";
+"unlock_purchaseMessage" = "Zakup pełną wersję, aby odblokować funkcje takie jak:\n• Notatki\n• Kategorie alarmów\n• Rozszerzone powiadomienia\n• Widget przedstawiający mapę i obecny alarm (niedostępne dla urządzeń z iOS 14 i nowszym)\n• Inteligentne propozycje dystansu\n• Dodatkowe dźwięki do pobrania";
 "unlock_purchaseAction" = "Odblokuj";
 "unlock_restoreAction" = "Przywróć zakupy";
 
@@ -116,3 +134,4 @@
 "dismiss" = "Zamknij";
 "continue" = "Kontynuuj";
 "unlock" = "Odblokuj";
+"create" = "Utwórz";

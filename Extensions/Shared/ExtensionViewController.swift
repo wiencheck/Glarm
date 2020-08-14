@@ -10,6 +10,10 @@ import UIKit
 import SnapKit
 import MapKit
 
+protocol ExtensionViewControllerDelegate: class {
+    func extensionController(_ controller: ExtensionViewController, didUpdateHeight newHeight: CGFloat)
+}
+
 final class ExtensionViewController: UIViewController {
     
     private var timer: Timer!
@@ -17,6 +21,10 @@ final class ExtensionViewController: UIViewController {
     /// Spacing between mapView-stack-bottom
     private let stackInterSpacing: CGFloat = 6
     
+    private let shouldDisplayMap: Bool
+    
+    public weak var delegate: ExtensionViewControllerDelegate?
+        
     private lazy var locationManager: CLLocationManager = {
         let l = CLLocationManager()
         l.delegate = self
@@ -25,6 +33,9 @@ final class ExtensionViewController: UIViewController {
     
     private var locationInfo: LocationNotificationInfo? {
         didSet {
+            guard let mapView = mapView else {
+                return
+            }
             mapView.isHidden = locationInfo == nil
             guard let info = locationInfo else {
                 mapView.removeAnnotations(mapView.annotations)
@@ -39,7 +50,10 @@ final class ExtensionViewController: UIViewController {
         }
     }
     
-    private lazy var mapView: MKMapView = {
+    private lazy var mapView: MKMapView? = {
+        guard shouldDisplayMap else {
+            return nil
+        }
         let m = MKMapView()
         m.tintColor = .tint
         m.delegate = self
@@ -97,8 +111,9 @@ final class ExtensionViewController: UIViewController {
         let l = UILabel()
         l.font = .noteText
         l.textColor = .label()
-        l.numberOfLines = 0
-        l.isHidden = true
+        l.numberOfLines = 1
+        // We hide the label so the stack will update its size when it becomes visible.
+        //l.isHidden = true
         return l
     }()
     
@@ -126,21 +141,32 @@ final class ExtensionViewController: UIViewController {
         return s
     }()
     
+    init(shouldDisplayMap: Bool) {
+        self.shouldDisplayMap = shouldDisplayMap
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         locationManager.startUpdatingLocation()
         setupView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         startDisplayingUserLocation()
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        endDisplayingUserLocation()
-    }
+  
+    // When this was enabled, location would only show on the first time when widget appeared.
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        startDisplayingUserLocation()
+//    }
+//
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        endDisplayingUserLocation()
+//    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -157,7 +183,7 @@ final class ExtensionViewController: UIViewController {
         if locationInfo == nil {
             return .leastNormalMagnitude
         }
-        var height = mapView.bounds.height + (2 * stackInterSpacing)
+        var height = (mapView?.bounds.height ?? 0) + (2 * stackInterSpacing)
         // Get visible stack.
         if let visibleStack = [noteStack, labelStack].first(where: { $0.alpha == 1 }) {
             height += visibleStack.bounds.height
@@ -189,12 +215,16 @@ final class ExtensionViewController: UIViewController {
     }
     
     public func showNote(_ flag: Bool, animated: Bool) {
-        UIView.animate(withDuration: animated ? 0.2 : 0) {
-            self.noteLabel.isHidden = !flag
+        UIView.animate(withDuration: animated ? 0.4 : 0, animations: {
             self.noteStack.alpha = flag ? 1 : 0
             self.labelStack.alpha = !flag ? 1 : 0
-            self.mapView.alpha = 1
-        }
+            self.mapView?.alpha = 1
+            // Expand label and stack if needed.
+            self.noteLabel.numberOfLines = 0
+            self.view.layoutIfNeeded()
+            self.delegate?.extensionController(self, didUpdateHeight: self.contentHeight)
+
+        })
     }
 }
 
@@ -212,29 +242,34 @@ extension ExtensionViewController: MKMapViewDelegate {
 
 private extension ExtensionViewController {
     func setupView() {
-        view.addSubview(mapView)
-        mapView.snp.makeConstraints { make in
-            make.leading.top.trailing.equalToSuperview()
-            /// Compact height of widget.
-            make.height.equalTo(110)
+        if let mapView = mapView {
+            view.addSubview(mapView)
+            mapView.snp.makeConstraints { make in
+                make.leading.top.trailing.equalToSuperview()
+                /// Compact height of widget.
+                make.height.equalTo(110)
+            }
         }
         
         view.addSubview(noteStack)
         noteStack.snp.makeConstraints { make in
-            make.top.equalTo(mapView.snp.bottom).offset(stackInterSpacing)
+            make.top.equalTo(mapView?.snp.bottom ?? view.snp.top).offset(stackInterSpacing)
             make.leading.equalToSuperview().offset(15)
             make.bottom.lessThanOrEqualToSuperview().inset(stackInterSpacing).priority(.low)
         }
         
         view.addSubview(labelStack)
         labelStack.snp.makeConstraints { make in
-            make.top.equalTo(mapView.snp.bottom).offset(stackInterSpacing)
+            make.top.equalTo(mapView?.snp.bottom ?? view.snp.top).offset(stackInterSpacing)
             make.leading.equalToSuperview().offset(15)
             make.bottom.lessThanOrEqualToSuperview().inset(stackInterSpacing).priority(.low)
         }
     }
     
     func showUserLocation(and coordinate: CLLocationCoordinate2D, animated: Bool) {
+        guard let mapView = mapView else {
+            return
+        }
         let userCoordinate = locationManager.location?.coordinate ?? .zero
         
         if userCoordinate == .zero {
@@ -248,7 +283,7 @@ private extension ExtensionViewController {
     }
     
     func startDisplayingUserLocation() {
-        mapView.showsUserLocation = true
+        mapView?.showsUserLocation = true
         updateDetailText()
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             self?.updateDetailText()
@@ -257,7 +292,7 @@ private extension ExtensionViewController {
     }
     
     func endDisplayingUserLocation() {
-        mapView.showsUserLocation = false
+        mapView?.showsUserLocation = false
         timer?.invalidate()
     }
 }

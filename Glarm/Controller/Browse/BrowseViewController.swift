@@ -51,7 +51,7 @@ final class BrowseViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = LocalizedStringKey.title_browser.localized
-        navigationItem.backBarButtonItem?.title = LocalizedStringKey.browse_backButton.localized
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: LocalizedStringKey.browse_backButton.localized, style: .plain, target: nil, action: nil)
 
         if !UnlockManager.unlocked {
             navigationItem.setLeftBarButton(unlockBarButtonItem, animated: false)
@@ -112,6 +112,8 @@ final class BrowseViewController: UIViewController {
         // Go straight to the map otherwise.
         let editModel = AlarmEditViewModel(manager: viewModel.manager, alarm: alarm)
         let editVc = AlarmEditController(model: editModel)
+        editVc.navigationItem.backBarButtonItem = UIBarButtonItem(title: LocalizedStringKey.edit_backButton.localized, style: .plain, target: nil, action: nil)
+        editVc.delegate = viewModel
         guard alarm == nil else {
             navigationController?.pushViewController(editVc, animated: true)
             return
@@ -136,6 +138,12 @@ final class BrowseViewController: UIViewController {
             }),
             UIAlertAction(localizedTitle: .about_messageMe, style: .default, handler: { _ in
                 UIApplication.shared.openMail()
+            }),
+            UIAlertAction(localizedTitle: .about_helpLocalization, style: .default, handler: { _ in
+                guard let str = PlistReader.property(from: PlistFile.urls.rawValue, key: "Translation") as? String, let url = URL(string: str), UIApplication.shared.canOpenURL(url) else {
+                    return
+                }
+                UIApplication.shared.open(url)
             }),
             UIAlertAction(localizedTitle: .tips_title, style: .default, handler: { [weak self] _ in
                 let model = AlertViewModel(localizedTitle: .tips_title, message: .tips_description, actions: [.cancel(text: LocalizedStringKey.dismiss.localized)], style: .alert)
@@ -194,8 +202,9 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // First section contains active alarms
+        let identifier = indexPath.section == 0 ? "map" : "alarm"
         
-        let identifier = BrowseViewModel.Section(rawValue: indexPath.section)! == .active ? "map" : "alarm"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as! AlarmCell
         let model = viewModel.cellModel(for: indexPath)
         cell.configure(with: model)

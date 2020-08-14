@@ -125,14 +125,14 @@ final class AlarmMapCell: AlarmCell {
         labelStack.spacing = 4
         addSubview(labelStack)
         labelStack.snp.makeConstraints { make in
-            make.top.equalTo(mapView.snp.bottom).offset(6)
+            make.top.equalTo(mapView.snp.bottom).offset(8)
             make.leading.equalTo(layoutMarginsGuide)
-            make.bottom.equalTo(layoutMarginsGuide).offset(6)
+            make.bottom.equalTo(layoutMarginsGuide)
         }
         
         addSubview(indicatorView)
         indicatorView.snp.makeConstraints { make in
-            make.top.equalTo(mapView.snp.bottom).offset(12)
+            make.centerY.equalTo(titleLabel)
             make.trailing.equalTo(layoutMarginsGuide)
             make.height.equalTo(indicatorView.snp.width)
             make.height.equalTo(10)
@@ -144,14 +144,20 @@ final class AlarmMapCell: AlarmCell {
             make.leading.greaterThanOrEqualTo(labelStack.snp.trailing).offset(4)
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
-
-        addSubview(markedView)
-        markedView.snp.makeConstraints { make in
-            make.leading.greaterThanOrEqualTo(detailLabel.snp.trailing).offset(8)
+        
+        addSubview(categoryLabel)
+        categoryLabel.snp.makeConstraints { make in
             make.trailing.equalTo(layoutMarginsGuide)
-            make.top.equalTo(indicatorView.snp.bottom).offset(10)
-            make.height.equalTo(markedView.snp.width)
-            make.height.equalTo(12)
+            make.centerY.equalTo(detailLabel)
+        }
+        
+        addSubview(categoryImageView)
+        categoryImageView.snp.makeConstraints { make in
+            make.height.equalTo(categoryImageView.snp.width)
+            make.height.equalTo(16)
+            make.leading.greaterThanOrEqualTo(detailLabel.snp.trailing).offset(2)
+            make.trailing.equalTo(categoryLabel.snp.leading).offset(-2)
+            make.centerY.equalTo(detailLabel)
         }
     }
 }

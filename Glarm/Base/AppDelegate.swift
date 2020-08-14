@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        UnlockManager.determineFullAccess(application: application)
         IAPHandler.shared.fetchAvailableProducts(completion: nil)
         LocationManager.shared.start()
         
