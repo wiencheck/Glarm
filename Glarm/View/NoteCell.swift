@@ -81,12 +81,12 @@ extension NoteCell: UITextViewDelegate {
 
 private extension NoteCell {
     func setupView() {
-        addSubview(textView)
+        contentView.addSubview(textView)
         textView.snp.makeConstraints { make in
             make.edges.equalTo(layoutMargins)
         }
         
-        insertSubview(placeholderTextView, belowSubview: textView)
+        contentView.insertSubview(placeholderTextView, belowSubview: textView)
         placeholderTextView.snp.makeConstraints { make in
             make.edges.equalTo(textView)
         }

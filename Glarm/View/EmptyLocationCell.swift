@@ -54,10 +54,10 @@ class EmptyLocationCell: UITableViewCell {
 
 private extension EmptyLocationCell {
     func setupView() {
-        addSubview(stack)
+        contentView.addSubview(stack)
         stack.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.leading.top.greaterThanOrEqualTo(layoutMarginsGuide).offset(8)
+            make.leading.top.greaterThanOrEqualTo(contentView.layoutMarginsGuide).offset(8)
         }
     }
 }

@@ -117,34 +117,34 @@ class AlarmCell: UITableViewCell {
         let stack = UIStackView(arrangedSubviews: [titleLabel, detailLabel, noteButton])
         stack.axis = .vertical
         stack.spacing = 4
-        addSubview(stack)
+        contentView.addSubview(stack)
         
         stack.snp.makeConstraints { make in
-            make.top.bottom.leading.equalTo(layoutMarginsGuide)
+            make.top.bottom.leading.equalTo(contentView.layoutMarginsGuide)
         }
         
-        addSubview(indicatorView)
+        contentView.addSubview(indicatorView)
         indicatorView.snp.makeConstraints { make in
-            make.top.equalTo(layoutMarginsGuide)
-            make.trailing.equalTo(layoutMarginsGuide)
+            make.top.equalTo(contentView.layoutMarginsGuide)
+            make.trailing.equalTo(contentView.layoutMarginsGuide)
             make.height.equalTo(indicatorView.snp.width)
             make.height.equalTo(10)
         }
         
-        addSubview(rightDetailLabel)
+        contentView.addSubview(rightDetailLabel)
         rightDetailLabel.snp.makeConstraints { make in
             make.leading.greaterThanOrEqualTo(stack.snp.trailing).offset(4)
             make.centerY.equalTo(indicatorView)
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
         
-        addSubview(categoryLabel)
+        contentView.addSubview(categoryLabel)
         categoryLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(layoutMarginsGuide)
+            make.trailing.equalTo(contentView.layoutMarginsGuide)
             make.centerY.equalTo(detailLabel)
         }
         
-        addSubview(categoryImageView)
+        contentView.addSubview(categoryImageView)
         categoryImageView.snp.makeConstraints { make in
             make.height.equalTo(categoryImageView.snp.width)
             make.height.equalTo(16)

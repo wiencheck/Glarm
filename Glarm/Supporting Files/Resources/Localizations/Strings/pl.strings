@@ -93,7 +93,7 @@
 
 // MARK: Tips
 "tips_title" = "Jak to działa?";
-"tips_description" = "Glarm tworzy alarmy oparte na twojej lokalizacji, która jest śledzona przez iOS w tle. W praktyce oznacza to, że możesz zamknąć Glarm, a mimo tego alarm zostanie dostarczony, oraz że zużycie baterii jest minimalne.\n\nKilka porad:\n• Przesuń w lewo którykolwiek alarm, aby odsłonić opcje\n• Oznacz swoje ulubione alarmy, żeby nie zniknęły po czasie (Glarm trzyma w pamięci jedynie 10 ostatnich nieoznaczonych alarmów)";
+"tips_description" = "Glarm tworzy alarmy oparte na twojej lokalizacji, która jest śledzona przez iOS w tle. W praktyce oznacza to, że możesz zamknąć Glarm, a mimo tego alarm zostanie dostarczony, oraz że zużycie baterii jest minimalne.\n\nKilka porad:\n• Przesuń w lewo którykolwiek alarm, aby odsłonić opcje\n• Przypisz swoje ulubione alarmy do jednej z kategorii, aby nie zniknęły po czasie (Glarm trzyma w pamięci jedynie 10 ostatnich nieoznaczonych alarmów)";
 
 // MARK: Review
 "review_areYouEnjoyingTitle" = "Jak podoba Ci się Glarm?";

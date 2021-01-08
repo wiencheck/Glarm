@@ -93,7 +93,7 @@
 
 // MARK: Tips
 "tips_title" = "How does it work?";
-"tips_description" = "Glarm creates and schedules alarms based on your location, which is tracked by iOS in the background. What that means is you can close Glarm and still receive the alarm after entering region and battery consumption is minimal.\n\nFew tips:\n• Swipe left on any alarm to show options for it\n• Mark your favourite alarms so they are easily accessed and don't disappear after time (Glarm keeps track of last 10 non-marked alarms)";
+"tips_description" = "Glarm creates and schedules alarms based on your location, which is tracked by iOS in the background. What that means is you can close Glarm and still receive the alarm after entering region and battery consumption is minimal.\n\nFew tips:\n• Swipe left on any alarm to show options for it\n• Assign your often-used alarms to any category so they are easily accessed and don't disappear after time (Glarm keeps track of last 10 non-categorized alarms)";
 
 // MARK: Review
 "review_areYouEnjoyingTitle" = "Are You enjoying Glarm?";

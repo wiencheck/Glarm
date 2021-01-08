@@ -71,7 +71,6 @@
 		2B88BFB724B32414003B96EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B88BFB624B32414003B96EE /* SceneDelegate.swift */; };
 		2B88BFBE24B32415003B96EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B88BFBD24B32415003B96EE /* Assets.xcassets */; };
 		2B88BFC124B32415003B96EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B88BFBF24B32415003B96EE /* LaunchScreen.storyboard */; };
-		2B88BFCC24B32415003B96EE /* WakeMeAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B88BFCB24B32415003B96EE /* WakeMeAppTests.swift */; };
 		2B8C807924BF894C009EBBAE /* Alertable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8C807824BF894C009EBBAE /* Alertable.swift */; };
 		2BAF05EC24C5F83900AB7FF4 /* UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAF05EB24C5F83900AB7FF4 /* UITableViewCell.swift */; };
 		2BAF05EE24C60D9D00AB7FF4 /* de.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2BAF05ED24C60D9D00AB7FF4 /* de.strings */; };
@@ -168,13 +167,6 @@
 			remoteGlobalIDString = 2B48A18124DD35FC00D74D9A;
 			remoteInfo = TodayWidgetExtension;
 		};
-		2B88BFC824B32415003B96EE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2B88BFA924B32414003B96EE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2B88BFB024B32414003B96EE;
-			remoteInfo = WakeMeApp;
-		};
 		2BB99DB024D2D23D0002DDC8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2B88BFA924B32414003B96EE /* Project object */;
@@ -232,9 +224,6 @@
 		2B88BFBD24B32415003B96EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2B88BFC024B32415003B96EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2B88BFC224B32415003B96EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2B88BFC724B32415003B96EE /* GlarmTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GlarmTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2B88BFCB24B32415003B96EE /* WakeMeAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeMeAppTests.swift; sourceTree = "<group>"; };
-		2B88BFCD24B32415003B96EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B8C807824BF894C009EBBAE /* Alertable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alertable.swift; sourceTree = "<group>"; };
 		2BAF05EB24C5F83900AB7FF4 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
 		2BAF05ED24C60D9D00AB7FF4 /* de.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = de.strings; sourceTree = "<group>"; };
@@ -327,13 +316,6 @@
 				2BDAD7AC24C2478400BA4AF9 /* Alamofire in Frameworks */,
 				2BCA122424B34859009965E4 /* SnapKit in Frameworks */,
 				2BC647F824BF53C6009CEE6C /* BoldButton in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2B88BFC424B32415003B96EE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -451,7 +433,6 @@
 			isa = PBXGroup;
 			children = (
 				2B88BFB324B32414003B96EE /* Glarm */,
-				2B88BFCA24B32415003B96EE /* GlarmTests */,
 				2B3E3F7F24DC2DEB0040539B /* Extensions */,
 				2BB99DA424D2D23D0002DDC8 /* Frameworks */,
 				2B88BFB224B32414003B96EE /* Products */,
@@ -462,7 +443,6 @@
 			isa = PBXGroup;
 			children = (
 				2B88BFB124B32414003B96EE /* Glarm.app */,
-				2B88BFC724B32415003B96EE /* GlarmTests.xctest */,
 				2BB99DA324D2D23D0002DDC8 /* NotificationContentExtension.appex */,
 				2B48A18224DD35FC00D74D9A /* TodayWidgetExtension.appex */,
 			);
@@ -479,15 +459,6 @@
 				2BCA121724B33A4A009965E4 /* Controller */,
 			);
 			path = Glarm;
-			sourceTree = "<group>";
-		};
-		2B88BFCA24B32415003B96EE /* GlarmTests */ = {
-			isa = PBXGroup;
-			children = (
-				2B88BFCB24B32415003B96EE /* WakeMeAppTests.swift */,
-				2B88BFCD24B32415003B96EE /* Info.plist */,
-			);
-			path = GlarmTests;
 			sourceTree = "<group>";
 		};
 		2BB99DA424D2D23D0002DDC8 /* Frameworks */ = {
@@ -712,24 +683,6 @@
 			productReference = 2B88BFB124B32414003B96EE /* Glarm.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2B88BFC624B32415003B96EE /* GlarmTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2B88BFD324B32415003B96EE /* Build configuration list for PBXNativeTarget "GlarmTests" */;
-			buildPhases = (
-				2B88BFC324B32415003B96EE /* Sources */,
-				2B88BFC424B32415003B96EE /* Frameworks */,
-				2B88BFC524B32415003B96EE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2B88BFC924B32415003B96EE /* PBXTargetDependency */,
-			);
-			name = GlarmTests;
-			productName = WakeMeAppTests;
-			productReference = 2B88BFC724B32415003B96EE /* GlarmTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		2BB99DA224D2D23D0002DDC8 /* NotificationContentExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2BB99DB324D2D23D0002DDC8 /* Build configuration list for PBXNativeTarget "NotificationContentExtension" */;
@@ -766,10 +719,6 @@
 					2B88BFB024B32414003B96EE = {
 						CreatedOnToolsVersion = 11.5;
 					};
-					2B88BFC624B32415003B96EE = {
-						CreatedOnToolsVersion = 11.5;
-						TestTargetID = 2B88BFB024B32414003B96EE;
-					};
 					2BB99DA224D2D23D0002DDC8 = {
 						CreatedOnToolsVersion = 11.6;
 					};
@@ -794,7 +743,6 @@
 			projectRoot = "";
 			targets = (
 				2B88BFB024B32414003B96EE /* Glarm */,
-				2B88BFC624B32415003B96EE /* GlarmTests */,
 				2BB99DA224D2D23D0002DDC8 /* NotificationContentExtension */,
 				2B48A18124DD35FC00D74D9A /* TodayWidgetExtension */,
 			);
@@ -826,13 +774,6 @@
 				2BEDCD0224BB5A45009EED08 /* en.strings in Resources */,
 				2BF6111424B625AF00D01007 /* Bulletin.caf in Resources */,
 				2BAF05EE24C60D9D00AB7FF4 /* de.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2B88BFC524B32415003B96EE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -966,14 +907,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2B88BFC324B32415003B96EE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2B88BFCC24B32415003B96EE /* WakeMeAppTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2BB99D9F24D2D23D0002DDC8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1009,11 +942,6 @@
 			isa = PBXTargetDependency;
 			target = 2B48A18124DD35FC00D74D9A /* TodayWidgetExtension */;
 			targetProxy = 2B48A18B24DD35FC00D74D9A /* PBXContainerItemProxy */;
-		};
-		2B88BFC924B32415003B96EE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2B88BFB024B32414003B96EE /* Glarm */;
-			targetProxy = 2B88BFC824B32415003B96EE /* PBXContainerItemProxy */;
 		};
 		2BB99DB124D2D23D0002DDC8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1227,7 +1155,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adw.glarm;
 				PRODUCT_NAME = Glarm;
 				SWIFT_VERSION = 5.0;
@@ -1250,55 +1178,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.adw.glarm;
 				PRODUCT_NAME = Glarm;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		2B88BFD424B32415003B96EE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5346R7RC8E;
-				INFOPLIST_FILE = WakeMeAppTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.adw.WakeMeAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Glarm.app/Glarm";
-			};
-			name = Debug;
-		};
-		2B88BFD524B32415003B96EE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 5346R7RC8E;
-				INFOPLIST_FILE = WakeMeAppTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.adw.WakeMeAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Glarm.app/Glarm";
 			};
 			name = Release;
 		};
@@ -1374,15 +1258,6 @@
 			buildConfigurations = (
 				2B88BFD124B32415003B96EE /* Debug */,
 				2B88BFD224B32415003B96EE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2B88BFD324B32415003B96EE /* Build configuration list for PBXNativeTarget "GlarmTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2B88BFD424B32415003B96EE /* Debug */,
-				2B88BFD524B32415003B96EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

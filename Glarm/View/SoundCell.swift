@@ -74,25 +74,25 @@ class SoundCell: UITableViewCell {
         setupView()
     }
     
-    /// This method should be completely overwritten by subclasses.
+    /// This method should be completely overwritten by any subclasses.
     internal func setupView() {
-        addSubview(titleLabel)
+        contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.height.greaterThanOrEqualTo(34)
-            make.leading.equalTo(layoutMarginsGuide)
-            make.bottom.equalTo(layoutMarginsGuide).offset(6)
+            make.leading.equalTo(contentView.layoutMarginsGuide)
+            make.bottom.equalTo(contentView.layoutMarginsGuide).offset(6)
         }
         
-        addSubview(downloadButton)
+        contentView.addSubview(downloadButton)
         downloadButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.width.equalTo(downloadButton.snp.height)
             make.width.equalTo(30)
-            make.trailing.equalTo(layoutMarginsGuide)
+            make.trailing.equalTo(contentView.layoutMarginsGuide)
         }
         
-        addSubview(indicatorView)
+        contentView.addSubview(indicatorView)
         indicatorView.snp.makeConstraints { make in
             make.center.equalTo(downloadButton)
         }

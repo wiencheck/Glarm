@@ -117,18 +117,18 @@ extension TableHeaderView {
 
 private extension TableHeaderView {
     func setupView() {
-        addSubview(label)
+        contentView.addSubview(label)
         label.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(layoutMarginsGuide)
+            make.leading.equalTo(contentView.layoutMarginsGuide)
         }
         
-        addSubview(button)
+        contentView.addSubview(button)
         button.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.top.equalToSuperview().inset(6)
 
-            make.trailing.equalTo(layoutMarginsGuide)
+            make.trailing.equalTo(contentView.layoutMarginsGuide)
             make.leading.greaterThanOrEqualTo(label.snp.trailing).offset(12)
         }
     }

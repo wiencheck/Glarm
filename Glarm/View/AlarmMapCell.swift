@@ -114,7 +114,7 @@ final class AlarmMapCell: AlarmCell {
     }
     
     override func setupView() {
-        addSubview(mapView)
+        contentView.addSubview(mapView)
         mapView.snp.makeConstraints { make in
             make.leading.top.trailing.equalToSuperview()
             make.height.equalTo(mapView.snp.width).multipliedBy(0.44)
@@ -123,35 +123,35 @@ final class AlarmMapCell: AlarmCell {
         let labelStack = UIStackView(arrangedSubviews: [titleLabel, detailLabel, noteButton])
         labelStack.axis = .vertical
         labelStack.spacing = 4
-        addSubview(labelStack)
+        contentView.addSubview(labelStack)
         labelStack.snp.makeConstraints { make in
             make.top.equalTo(mapView.snp.bottom).offset(8)
-            make.leading.equalTo(layoutMarginsGuide)
-            make.bottom.equalTo(layoutMarginsGuide)
+            make.leading.equalTo(contentView.layoutMarginsGuide)
+            make.bottom.equalTo(contentView.layoutMarginsGuide)
         }
         
-        addSubview(indicatorView)
+        contentView.addSubview(indicatorView)
         indicatorView.snp.makeConstraints { make in
             make.centerY.equalTo(titleLabel)
-            make.trailing.equalTo(layoutMarginsGuide)
+            make.trailing.equalTo(contentView.layoutMarginsGuide)
             make.height.equalTo(indicatorView.snp.width)
             make.height.equalTo(10)
         }
 
-        addSubview(rightDetailLabel)
+        contentView.addSubview(rightDetailLabel)
         rightDetailLabel.snp.makeConstraints { make in
             make.centerY.equalTo(indicatorView)
             make.leading.greaterThanOrEqualTo(labelStack.snp.trailing).offset(4)
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
         
-        addSubview(categoryLabel)
+        contentView.addSubview(categoryLabel)
         categoryLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(layoutMarginsGuide)
+            make.trailing.equalTo(contentView.layoutMarginsGuide)
             make.centerY.equalTo(detailLabel)
         }
         
-        addSubview(categoryImageView)
+        contentView.addSubview(categoryImageView)
         categoryImageView.snp.makeConstraints { make in
             make.height.equalTo(categoryImageView.snp.width)
             make.height.equalTo(16)

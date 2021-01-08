@@ -37,11 +37,10 @@ class AudioBrowserViewModel: NSObject {
         selectedSound = sound
         let item = AVPlayerItem(url: sound.playbackUrl)
         player = AVPlayer(playerItem: item)
-        //player.rate = 0
         manager = SoundsManager()
+        
         super.init()
         player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
-
         loadSounds()
     }
     
@@ -202,12 +201,6 @@ extension AudioBrowserViewModel: SoundsManagerDelegate {
         DispatchQueue.main.async {
             //self.delegate
         }
-    }
-}
-
-extension AudioBrowserViewModel: AVAudioPlayerDelegate {
-    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        delegate?.model(playerDidChangeStatus: self, playing: player.isPlaying)
     }
 }
 
