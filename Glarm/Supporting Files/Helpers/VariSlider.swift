@@ -8,7 +8,7 @@
 
 import UIKit
 
-public protocol VariSliderDelegate: class {
+public protocol VariSliderDelegate: AnyObject {
     func slider(_ slider: VariSlider, changed speed: Float)
     func slider(_ slider: VariSlider, scrubbingStatusChanged isScrubbing: Bool)
 }

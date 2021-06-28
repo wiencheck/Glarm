@@ -2,11 +2,12 @@
 //  AlertViewModel.swift
 //  Glarm
 //
-//  Created by Adam Wienconek on 13/07/2020.
-//  Copyright © 2020 Adam Wienconek. All rights reserved.
+//  Created by Adam Wienconek on 22/06/2021.
+//  Copyright © 2021 Adam Wienconek. All rights reserved.
 //
 
 import UIKit
+import AWAlertController
 
 struct AlertViewModel {
     let title: String?
@@ -22,9 +23,13 @@ struct AlertViewModel {
     }
     
     init(localizedTitle: LocalizedStringKey?, message: LocalizedStringKey?, actions: [UIAlertAction], style: UIAlertController.Style) {
-        self.title = localizedTitle?.localized
-        self.message = message?.localized
-        self.actions = actions
-        self.style = style
+        self.init(title: localizedTitle?.localized, message: message?.localized, actions: actions, style: style)
+    }
+}
+
+extension AWAlertController {
+    convenience init(model: AlertViewModel) {
+        self.init(title: model.title, message: model.message, preferredStyle: model.style)
+        model.actions.forEach({ self.addAction($0) })
     }
 }

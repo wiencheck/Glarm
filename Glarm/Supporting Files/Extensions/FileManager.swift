@@ -77,31 +77,27 @@ extension FileManager {
     @discardableResult
     func save(file: Data, named name: String, searchPath: SearchPathDirectory = .documentDirectory, directory: String? = nil, overwrite: Bool) -> URL? {
         
-        var fullPath: URL
-        if let directory = directory, let dirUrl = directoryUrl(named: directory, searchPath: searchPath, shouldCreateNewDirectory: true) {
-            fullPath = dirUrl
-        } else {
-            fullPath = searchPath.url
+        guard let path = url(forFileNamed: name, searchPath: searchPath, directory: directory) else {
+            return nil
         }
-        fullPath = fullPath.appendingPathComponent(name.replacingOccurrences(of: " ", with: ""), isDirectory: false)
-        if fileExists(atPath: fullPath.path) {
+        if fileExists(atPath: path.path) {
             guard overwrite else {
-                return URL(string: fullPath.lastPathComponent)
+                return URL(string: path.lastPathComponent)
             }
             do {
-                try removeItem(atPath: fullPath.path)
+                try removeItem(atPath: path.path)
             } catch let removeError {
                 print("couldn't remove file at path", removeError)
             }
         }
         
         do {
-            try file.write(to: fullPath)
+            try file.write(to: path)
         } catch let error {
             print("error saving file with error", error)
             return nil
         }
-        return URL(string: fullPath.lastPathComponent)
+        return URL(string: path.lastPathComponent)
     }
     
     @discardableResult
@@ -111,19 +107,30 @@ extension FileManager {
     
     func load(fileNamed name: String, searchPath: SearchPathDirectory = .documentDirectory, directory: String?) -> Data? {
         
+        guard let path = url(forFileNamed: name, searchPath: searchPath, directory: directory) else {
+            return nil
+        }
+        return try? Data(contentsOf: path)
+    }
+    
+    func load(fileNamed name: String, directory: Directory) -> Data? {
+        return load(fileNamed: name, searchPath: directory.searchPath, directory: directory.rawValue)
+    }
+    
+    func url(forFileNamed name: String, searchPath: SearchPathDirectory = .documentDirectory, directory: String?) -> URL? {
+        
         var fullPath: URL
         if let directory = directory, let dirUrl = directoryUrl(named: directory, searchPath: searchPath, shouldCreateNewDirectory: false) {
             fullPath = dirUrl
         } else {
             fullPath = searchPath.url
         }
-        fullPath = fullPath.appendingPathComponent(name, isDirectory: false)
-        
-        return try? Data(contentsOf: fullPath)
+        return fullPath.appendingPathComponent(name.replacingOccurrences(of: " ", with: ""), isDirectory: false)
     }
     
-    func load(fileNamed name: String, directory: Directory) -> Data? {
-        return load(fileNamed: name, searchPath: directory.searchPath, directory: directory.rawValue)
+    func url(forFileNamed name: String, directory: Directory) -> URL? {
+        
+        return url(forFileNamed: name, searchPath: directory.searchPath, directory: directory.rawValue)
     }
     
     @discardableResult

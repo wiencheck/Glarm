@@ -21,7 +21,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     
     func didReceive(_ notification: UNNotification) {
         guard let data = notification.request.content.userInfo["alarm"] as? Data,
-            let alarm = try? JSONDecoder().decode(SimplifiedAlarmEntry.self, from: data) else {
+            let alarm = try? JSONDecoder().decode(AlarmEntryRepresentation.self, from: data) else {
                 return
         }
         mapController.configure(with: alarm)

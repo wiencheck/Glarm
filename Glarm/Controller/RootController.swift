@@ -8,20 +8,30 @@
 
 import UIKit
 import SnapKit
+import CoreLocation
+import AWAlertController
 
 class RootController: UIViewController {
+    private let manager: AlarmsManagerProtocol
+    private let locationManager: CLLocationManager
+    
     private lazy var navigation: UINavigationController = {
-        let model = BrowseViewModel(manager: AlarmsManager())
+        let model = BrowseViewModel(manager: manager)
         let vc = BrowseViewController(model: model)
         return RootNavigationController(rootViewController: vc)
     }()
+    
+    private lazy var blurOverlayView = UIVisualEffectView(effect: nil)
     
     fileprivate lazy var drawer = UIView()
     fileprivate lazy var contentContainer = UIView()
     private var drawerContentController: UIViewController?
     
-    init() {
+    init(manager: AlarmsManagerProtocol) {
+        self.manager = manager
+        self.locationManager = CLLocationManager()
         super.init(nibName: nil, bundle: nil)
+        locationManager.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -133,6 +143,43 @@ extension RootController {
                 make.bottom.equalTo(self.drawer.safeAreaLayoutGuide)
             }
             self.view.layoutIfNeeded()
+        }
+    }
+}
+
+extension RootController: CLLocationManagerDelegate {
+    private func displayLocationBlockedMessage(visible: Bool) {
+        if blurOverlayView.superview == nil {
+            view.addSubview(blurOverlayView)
+            blurOverlayView.pinToSuperView()
+        }
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            self.blurOverlayView.effect = visible ? UIBlurEffect(style: .systemMaterial) : nil
+        }, completion: { _ in
+            if visible {
+                return
+            }
+            self.blurOverlayView.removeFromSuperview()
+        })
+        
+        guard visible else {
+            return
+        }
+        let model = AlertViewModel(title: "Location services are disabled for Glarm", message: "Please enable location services for Glarm to use the app.", actions: [
+                                    UIAlertAction(title: .localized(.permission_openSettingsAction), style: .default, handler: { _ in
+                                        UIApplication.shared.openSettings()
+                                    })
+        ], style: .alert)
+        AWAlertController(model: model).show()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .notDetermined, .authorizedAlways, .authorizedWhenInUse:
+            displayLocationBlockedMessage(visible: false)
+        default:
+            displayLocationBlockedMessage(visible: true)
         }
     }
 }

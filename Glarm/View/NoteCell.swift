@@ -9,7 +9,7 @@
 import UIKit
 import SnapKit
 
-protocol NoteCellDelegate: class {
+protocol NoteCellDelegate: AnyObject {
     func noteCell(shouldBeginEditingTextIn cell: NoteCell) -> Bool
     func noteCell(didChangeTextIn cell: NoteCell)
 }

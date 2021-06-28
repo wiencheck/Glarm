@@ -2,21 +2,21 @@
   "object": {
     "pins": [
       {
-        "package": "Alamofire",
-        "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
-        "state": {
-          "branch": null,
-          "revision": "becd9a729a37bdbef5bc39dc3c702b99f9e3d046",
-          "version": "5.2.2"
-        }
-      },
-      {
         "package": "BoldButton",
         "repositoryURL": "https://github.com/wiencheck/BoldButton",
         "state": {
           "branch": null,
-          "revision": "e76b50b60841dd9f4ed7fcc5759ba45842904b11",
-          "version": "0.3.2"
+          "revision": "1d13f85126445f86ad41c725a72d0a527e437e96",
+          "version": "0.3.8"
+        }
+      },
+      {
+        "package": "DatabaseManager",
+        "repositoryURL": "https://github.com/wiencheck/DatabaseManager",
+        "state": {
+          "branch": null,
+          "revision": "f6e12b3e19a5d69b3a79a3f1062e0f30ef536603",
+          "version": "1.0.2"
         }
       },
       {

@@ -71,7 +71,7 @@ final class AlarmMapCell: AlarmCell {
         guard let model = model else {
             return
         }
-        radiusText = model.locationInfo.radius.readableRepresentation()
+        radiusText = model.locationInfo?.radius.readableRepresentation()
         locationInfo = model.locationInfo
     }
     
@@ -122,7 +122,7 @@ final class AlarmMapCell: AlarmCell {
         
         let labelStack = UIStackView(arrangedSubviews: [titleLabel, detailLabel, noteButton])
         labelStack.axis = .vertical
-        labelStack.spacing = 4
+        labelStack.spacing = 5
         contentView.addSubview(labelStack)
         labelStack.snp.makeConstraints { make in
             make.top.equalTo(mapView.snp.bottom).offset(8)
@@ -145,19 +145,16 @@ final class AlarmMapCell: AlarmCell {
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
         
-        contentView.addSubview(categoryLabel)
-        categoryLabel.snp.makeConstraints { make in
+        let categoryStack = UIStackView(arrangedSubviews: [categoryImageView, categoryLabel, markedImageView])
+        categoryStack.axis = .horizontal
+        categoryStack.spacing = 5
+        
+        contentView.addSubview(categoryStack)
+        categoryStack.snp.makeConstraints { make in
+            make.leading.greaterThanOrEqualTo(detailLabel.snp.trailing).offset(2)
             make.trailing.equalTo(contentView.layoutMarginsGuide)
             make.centerY.equalTo(detailLabel)
-        }
-        
-        contentView.addSubview(categoryImageView)
-        categoryImageView.snp.makeConstraints { make in
-            make.height.equalTo(categoryImageView.snp.width)
             make.height.equalTo(16)
-            make.leading.greaterThanOrEqualTo(detailLabel.snp.trailing).offset(2)
-            make.trailing.equalTo(categoryLabel.snp.leading).offset(-2)
-            make.centerY.equalTo(detailLabel)
         }
     }
 }

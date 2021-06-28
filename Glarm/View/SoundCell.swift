@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol SoundCellDelegate: class {
+protocol SoundCellDelegate: AnyObject {
     func soundCell(didPressDownloadButtonIn cell: SoundCell)
 }
 

@@ -38,6 +38,11 @@ extension UIImage {
     static let notificationThumbnailAssetName = "Notification_Thumbnail"
 
     static let notificationThumbnail = UIImage(named: notificationThumbnailAssetName)!
+    
+    class func star(filled: Bool) -> UIImage? {
+        let name = filled ? "star.fill" : "star"
+        return UIImage(systemName: name)
+    }
 }
 
 extension UIImage {

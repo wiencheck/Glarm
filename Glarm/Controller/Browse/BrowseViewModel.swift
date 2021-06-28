@@ -7,139 +7,134 @@
 //
 
 import UIKit
+import AWAlertController
+import ReviewKit
 
 protocol BrowseViewModelDelegate: Alertable {
     func model(didUpdate model: BrowseViewModel, scrollToTop: Bool)
-    func model(didSelectEditAlarm model: BrowseViewModel, alarm: AlarmEntry?)
+    func model(didSelectEditAlarm model: BrowseViewModel, alarm: AlarmEntryProtocol?)
     func model(didEncounterError model: BrowseViewModel, error: Error)
 }
 
 final class BrowseViewModel {
-    let manager: AlarmsManager
+    var manager: AlarmsManagerProtocol
     
-    private var observer: Any?
-    weak var delegate: BrowseViewModelDelegate? {
-        didSet {
-            if delegate == nil, let observer = observer {
-                NotificationCenter.default.removeObserver(observer, name: UIApplication.didBecomeActiveNotification, object: nil)
-            } else {
-                observer = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { _ in
-                    self.loadData()
-                }
-            }
-        }
-    }
+    private var dataObserver: Any?
+    private var applicationObserver: Any?
+    weak var delegate: BrowseViewModelDelegate?
     
-    init(manager: AlarmsManager) {
+    init(manager: AlarmsManagerProtocol) {
         self.manager = manager
+        setObservers(true)
     }
     
-    //private var alarms = [AlarmState: [AlarmEntry]]()
-    private var activeAlarms = [AlarmEntry]()
-    private var markedAlarms = [String: [AlarmEntry]]()
-    private var pastAlarms = [AlarmEntry]()
-    
-    private var categoryNames = [String]()
-    
-    private var sectionNames: [String] = [
-        LocalizedStringKey.browse_activeSection.localized,
-        LocalizedStringKey.browse_pastSection.localized
-    ]
-    
-    let activeSection: Int = 0
-    var pastSection: Int {
-        return markedAlarms.count + 1
+    deinit {
+        setObservers(false)
     }
+    
+    private var alarms = [String: [AlarmEntryProtocol]]()
+        
+    private var sectionNames = [String]()
     
     func loadData() {
         manager.fetchAlarms { alarms in
-            self.configure(with: alarms)
+            self.sort(alarms: alarms)
             self.delegate?.model(didUpdate: self, scrollToTop: true)
         }
     }
     
-    private func configure(with alarms: [AlarmState: [AlarmEntry]]) {
-        activeAlarms = alarms[.active] ?? []
-        markedAlarms.removeAll()
-        if let marked = alarms[.marked] {
-            for alarm in marked {
-                if markedAlarms[alarm.category] == nil {
-                    markedAlarms.updateValue([alarm], forKey: alarm.category)
-                } else {
-                    markedAlarms[alarm.category]!.append(alarm)
-                }
+    private func sort(alarms: [AlarmEntryProtocol]) {
+        var newAlarms = [String: [AlarmEntryProtocol]]()
+        var categoryNames = [String]()
+        
+        for alarm in alarms.sorted(by: \.dateCreated, ascending: false) {
+            let key: String
+            if alarm.isActive {
+                key = activeSection.title
+            } else if alarm.isMarked {
+                key = markedSection.title
+            } else if let name = alarm.category?.name {
+                key = name
+                categoryNames.append(name)
+            } else {
+                key = pastSection.title
             }
-            categoryNames = markedAlarms.keys.sorted()
+            newAlarms.appendValue(alarm, toArrayAtKey: key)
         }
-        pastAlarms = alarms[.past] ?? []
+        
+        self.sectionNames = {
+            var sections: [String] = [
+                activeSection.title,
+                markedSection.title,
+                pastSection.title
+            ]
+            sections.insert(contentsOf: categoryNames.sorted(), at: sections.lastIndex)
+            return sections
+        }()
+        self.alarms = newAlarms
     }
     
-//    private func sectionName(for section: Int) -> String? {
-//        if section == activeSection {
-//            return .localized(.browse_activeSection)
-//        } else if section == pastSection {
-//            return .localized(.browse_pastSection)
-//        } else if let category = categoryNames.at(section) {
-//            return category
-//        }
-//        return nil
-//    }
-    
-    private func alarm(at path: IndexPath) -> AlarmEntry? {
-        if path.section == activeSection {
-            return activeAlarms.at(path.row)
-        } else if let category = categoryNames.at(path.section - 1) {
-            return markedAlarms[category]?.at(path.row)
-        } else if path.section == pastSection {
-            return pastAlarms.at(path.row)
-        }
-        return nil
+    func alarm(at path: IndexPath) -> AlarmEntryProtocol? {
+        let section = sectionNames[path.section]
+        return alarms[section]?[path.row]
     }
     
-    private func scheduleAlarm(at path: IndexPath) -> Bool {
+    func scheduleAlarm(at path: IndexPath) -> Bool {
         guard let alarm = alarm(at: path) else {
             return false
         }
         manager.delegate = self
-        manager.schedule(alarm: alarm)
+        if let error = manager.schedule(alarm: alarm) {
+            delegate?.displayErrorMessage(title: nil, error: error)
+            return false
+        }
         return true
     }
     
-    private func cancelAlarm(at path: IndexPath) -> Bool {
+    func cancelAlarm(at path: IndexPath) -> Bool {
         guard let alarm = alarm(at: path) else {
             return false
         }
-        manager.cancel(alarm: alarm)
+        if let error = manager.cancel(alarm: alarm) {
+            delegate?.displayErrorMessage(title: nil, error: error)
+            return false
+        }
         loadData()
         return true
     }
     
-    //    private func markAlarm(at path: IndexPath) -> Bool {
-    //        guard UnlockManager.unlocked else {
-    //            AWAlertController.presentUnlockController(in: delegate)
-    //            return false
-    //        }
-    //        guard let alarm = alarm(at: path) else {
-    //            return false
-    //        }
-    //        manager.mark(alarm: alarm)
-    //        loadData()
-    //        return true
-    //    }
-    //
-    //    private func unmarkAlarm(at path: IndexPath) -> Bool {
-    //        guard let alarm = alarm(at: path) else {
-    //            return false
-    //        }
-    //        manager.unmark(alarm: alarm)
-    //        loadData()
-    //        return true
-    //    }
+    func markAlarm(atPath path: IndexPath, marked: Bool) {
+        guard var alarm = alarm(at: path) else {
+            return
+        }
+        alarm.isMarked = marked
+        manager.saveChanges(forAlarm: alarm)
+    }
     
-    private func deleteAlarm(at path: IndexPath) -> Bool {
-        guard let alarm = alarm(at: path),
-            manager.delete(alarm: alarm) else {
+    private func setObservers(_ active: Bool) {
+        if let observer = applicationObserver {
+            NotificationCenter.default.removeObserver(observer, name: UIApplication.didBecomeActiveNotification, object: nil)
+        }
+        if let observer = dataObserver {
+            NotificationCenter.default.removeObserver(observer, name: NewAlarmsManager.alarmsUpdatedNotification, object: nil)
+        }
+        
+        guard active else { return }
+        applicationObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [weak self] _ in
+            self?.loadData()
+        }
+        dataObserver = NotificationCenter.default.addObserver(forName: NewAlarmsManager.alarmsUpdatedNotification, object: nil, queue: nil) { [weak self] _ in
+            self?.loadData()
+        }
+    }
+    
+    func deleteAlarm(at path: IndexPath) -> Bool {
+        guard let alarm = alarm(at: path) else {
                 return false
+        }
+        if let error = manager.delete(alarm: alarm) {
+            delegate?.displayErrorMessage(title: nil, error: error)
+            return false
         }
         loadData()
         return true
@@ -169,27 +164,38 @@ final class BrowseViewModel {
 }
 
 extension BrowseViewModel: AlarmsManagerDelegate {  
-    func alarmsManager(notificationScheduled manager: AlarmsManager, error: Error?) {
+    func alarmsManager(notificationScheduled manager: AlarmsManagerProtocol, error: Error?) {
         if let error = error {
             delegate?.model(didEncounterError: self, error: error)
         } else {
             loadData()
         }
+        AppReviewManager.attemptPresentingAlert()
     }
     
-    func alarmsManager(notificationWasPresented manager: AlarmsManager) {
+    func alarmsManager(notificationWasPresented manager: AlarmsManagerProtocol) {
         loadData()
     }
 }
 
 extension BrowseViewModel: AlarmEditControllerDelegate {
-    func editController(_ controller: AlarmEditController, didDisappearWithoutSavingChanges modifiedAlarm: AlarmEntry) {
+    
+    func editController(_ controller: AlarmEditController, didDisappearWithoutSavingChanges modifiedAlarm: AlarmEntryProtocol) {
+        if modifiedAlarm.locationInfo == .default {
+            manager.discardChanges(forAlarm: modifiedAlarm)
+            return
+        }
+        
         let actions: [UIAlertAction] = [
             UIAlertAction(localizedTitle: .browse_changesSchedule, style: .default, handler: { [weak self] _ in
                 self?.manager.delegate = self
-                self?.manager.schedule(alarm: modifiedAlarm)
+                if let error = self?.manager.schedule(alarm: modifiedAlarm) {
+                    self?.delegate?.displayErrorMessage(title: nil, error: error)
+                }
             }),
-            .cancel(localizedText: .browse_changesDiscard)
+            .cancel(localizedText: .browse_changesDiscard, action: { [weak self] in
+                self?.manager.discardChanges(forAlarm: modifiedAlarm)
+            })
         ]
         
         let model = AlertViewModel(localizedTitle: .browse_changesNotSavedTitle, message: .browse_changesNotSavedDetail, actions: actions, style: .alert)
@@ -200,18 +206,12 @@ extension BrowseViewModel: AlarmEditControllerDelegate {
 extension BrowseViewModel {
     var numberOfSections: Int {
         // Adding active and past sections
-        return categoryNames.count + 2
+        return sectionNames.count
     }
     
     func numberOfRows(in section: Int) -> Int {
-        if section == activeSection {
-            return activeAlarms.count
-        } else if let category = categoryNames.at(section - 1) {
-            return markedAlarms[category]?.count ?? 0
-        } else if section == pastSection {
-            return pastAlarms.count
-        }
-        return 0
+        let section = sectionNames[section]
+        return alarms[section]?.count ?? 0
     }
     
     func cellModel(for path: IndexPath) -> AlarmCell.Model? {
@@ -220,61 +220,74 @@ extension BrowseViewModel {
         }
         var model = AlarmCell.Model(alarm: alarm)
         // Prevent displaying category name in category sections
-        if !(path.section == activeSection || path.section == pastSection) {
-            model.category = nil
+        if !staticSections.map(\.index).contains(path.section) {
+            model.category?.name = ""
         }
         return model
     }
     
-    func headerTitle(in section: Int) -> String? {
-        if section == activeSection {
+    func headerTitle(in section: Int) -> String {
+        let name = sectionNames[section]
+        let sec = Section(section, name)
+        return localizedSectionTitle(forSection: sec)
+    }
+}
+
+private extension BrowseViewModel {
+    typealias Section = (index: Int, title: String)
+    
+    var activeSection: Section {
+        return (0, "###active###")
+    }
+    
+    var markedSection: Section {
+        return (1, "###marked###")
+    }
+    
+    var pastSection: Section {
+        return (sectionNames.lastIndex, "###past###")
+    }
+    
+    var staticSections: [Section] {
+        [activeSection, markedSection, pastSection]
+    }
+    
+    func localizedSectionTitle(forSection section: Section) -> String {
+        switch section.index {
+        case activeSection.index:
             return .localized(.browse_activeSection)
-        } else if section == pastSection {
+        case markedSection.index:
+            return .localized(.browse_markedSection)
+        case pastSection.index:
             return .localized(.browse_pastSection)
-        } else if let category = categoryNames.at(section - 1) {
-            return category
+        default:
+            return section.title
         }
-        return nil
     }
-    
-    func didSelectRow(at path: IndexPath) {
-        guard let a = alarm(at: path) else {
-            return
-        }
-        delegate?.model(didSelectEditAlarm: self, alarm: a)
-    }
-    
-    func editingActions(at path: IndexPath) -> [UIContextualAction]? {
-        guard let a = alarm(at: path) else {
-            return nil
-        }
-        var actions: [UIContextualAction] = []
-        
-        if a.isActive {
-            let cancel = UIContextualAction(style: .normal, title: LocalizedStringKey.cancel.localized, handler: { _, _, completion in
-                let success = self.cancelAlarm(at: path)
-                BrowseViewController.swipeActionsUseCounter += 1
-                completion(success)
-            })
-            cancel.backgroundColor = .systemRed
-            actions.append(cancel)
+}
+
+extension Dictionary where Value == [AlarmEntryProtocol] {
+    mutating func appendValue(_ newValue: AlarmEntryProtocol, toArrayAtKey key: Key) {
+        if self[key] == nil {
+            self[key] = [newValue]
         } else {
-            let delete = UIContextualAction(style: .destructive, title: LocalizedStringKey.browse_deleteAction.localized) { _, _, completion in
-                let success = self.deleteAlarm(at: path)
-                BrowseViewController.swipeActionsUseCounter += 1
-                completion(success)
-            }
-            actions.append(delete)
-            
-            let schedule = UIContextualAction(style: .normal, title: LocalizedStringKey.browse_scheduleAction.localized, handler: { _, _, completion in
-                let success = self.scheduleAlarm(at: path)
-                BrowseViewController.swipeActionsUseCounter += 1
-                completion(success)
-            })
-            schedule.backgroundColor = .purple
-            actions.append(schedule)
+            self[key]!.append(newValue)
         }
-        
-        return actions
+    }
+}
+
+extension Dictionary {
+    mutating func merge(_ rhs: [Key: Value], overwriting: Bool = true) {
+        rhs.forEach { key, value in
+            if self[key] == nil || overwriting {
+                self[key] = value
+            }
+        }
+    }
+}
+
+extension Collection {
+    var lastIndex: Int {
+        return Swift.max(0, count - 1)
     }
 }

@@ -7,30 +7,10 @@
 //
 
 import UIKit
-
-class AWAlertController: UIAlertController {
-    
-    var onTextFieldChange: ((UITextField) -> Void)?
-    
-    convenience init(model: AlertViewModel) {
-        self.init(title: model.title, message: model.message, preferredStyle: model.style)
-        model.actions.forEach({ self.addAction($0) })
-    }
-}
+import AWAlertController
 
 extension AWAlertController {
-    override func addTextField(configurationHandler: ((UITextField) -> Void)? = nil) {
-        super.addTextField(configurationHandler: configurationHandler)
-        NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: nil, queue: nil) { [weak self] sender in
-            guard let textField = sender.object as? UITextField else {
-                return
-            }
-            self?.onTextFieldChange?(textField)
-        }
-    }
-}
-
-extension AWAlertController {
+    
     class var notificationsPermissionRestrictedAlert: UIAlertController {
         let actions: [UIAlertAction] = [
             UIAlertAction(localizedTitle: .permission_openSettingsAction, style: .default, handler: { _ in
@@ -38,7 +18,7 @@ extension AWAlertController {
             }),
             .cancel()
         ]
-        let model = AlertViewModel(localizedTitle: .permission_notificationDeniedTitle, message: .permission_notificationDeniedMessage, actions: actions, style: .alert)
+        let model = AlertViewModel(title: .localized(.permission_notificationDeniedTitle), message: .localized(.permission_notificationDeniedMessage), actions: actions, style: .alert)
         return AWAlertController(model: model)
     }
     

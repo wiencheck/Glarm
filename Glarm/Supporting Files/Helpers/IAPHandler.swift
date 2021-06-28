@@ -55,7 +55,8 @@ final class IAPHandler: NSObject {
     }
     
     public var didPurchaseFullVersion: Bool {
-        return purchasedProductsIdentifiers.contains(IAPHandler.FULL_VERSION_PRODUCT_ID)
+        return true
+        // return purchasedProductsIdentifiers.contains(IAPHandler.FULL_VERSION_PRODUCT_ID)
     }
     
     //private var currentProduct: SKProduct?

@@ -8,11 +8,12 @@
 
 import CoreLocation
 import UIKit
+import ReviewKit
 
 protocol AlarmEditViewModelDelegate: Alertable {
-    func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo)
-    func model(didSelectCategory model: AlarmEditViewModel, category: String)
-    func model(didSelectAudio model: AlarmEditViewModel, sound: Sound)
+    func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo?)
+    func model(didSelectCategory model: AlarmEditViewModel, category: Category?)
+    func model(didSelectAudio model: AlarmEditViewModel, soundName: String)
     func model(didReloadRow model: AlarmEditViewModel, at indexPath: IndexPath)
     func model(didReloadSection model: AlarmEditViewModel, section: Int)
     func model(didScheduleAlert model: AlarmEditViewModel, error: Error?)
@@ -21,11 +22,12 @@ protocol AlarmEditViewModelDelegate: Alertable {
 
 final class AlarmEditViewModel {
     
-    let manager: AlarmsManager
+    var manager: AlarmsManagerProtocol
+    var categoriesManager: AlarmCategoriesManagerProtocol
     
     let scheduleButtonTitle: String
     
-    private(set)var alarm: AlarmEntry {
+    private(set) var alarm: AlarmEntryProtocol {
         didSet {
             print("alarm change")
         }
@@ -41,9 +43,10 @@ final class AlarmEditViewModel {
     
     weak var delegate: AlarmEditViewModelDelegate?
     
-    init(manager: AlarmsManager, alarm: AlarmEntry?) {
+    init(manager: AlarmsManagerProtocol, alarm: AlarmEntryProtocol?) {
         self.manager = manager
-        self.alarm = alarm ?? AlarmEntry()
+        self.categoriesManager = AppDelegate.shared.categoriesManager
+        self.alarm = alarm ?? manager.makeNewAlarm()
         if let alarm = alarm {
             scheduleButtonTitle = alarm.isActive ? LocalizedStringKey.edit_updateButton.localized : LocalizedStringKey.edit_scheduleButton.localized
         } else {
@@ -67,7 +70,10 @@ final class AlarmEditViewModel {
     
     func schedulePressed() {
         manager.delegate = self
-        manager.schedule(alarm: alarm)
+        if let error = manager.schedule(alarm: alarm) {
+            delegate?.displayErrorMessage(title: .localized(.message_errorOccurred), error: error)
+            return
+        }
         didSaveChanges = true
     }
     
@@ -75,14 +81,20 @@ final class AlarmEditViewModel {
         if text == alarm.note {
             return
         }
+        alarm.note = text.trimmingCharacters(in: .whitespacesAndNewlines)
         didMakeChanges = true
-        alarm.note = text
+    }
+    
+    func setAlarmMarked(_ marked: Bool) {
+        alarm.isMarked = marked
+        manager.saveChanges(forAlarm: alarm)
     }
 }
 
 extension AlarmEditViewModel: AlarmsManagerDelegate {
-    func alarmsManager(notificationScheduled manager: AlarmsManager, error: Error?) {
+    func alarmsManager(notificationScheduled manager: AlarmsManagerProtocol, error: Error?) {
         delegate?.model(didScheduleAlert: self, error: error)
+        AppReviewManager.attemptPresentingAlert()
     }
 }
 
@@ -102,31 +114,33 @@ extension AlarmEditViewModel: AlarmMapControllerDelegate {
 }
 
 extension AlarmEditViewModel: AudioBrowserViewControllerDelegate {
-    func audio(didReturnTone controller: AudioBrowserViewController, sound: Sound) {
-        if alarm.sound == sound {
+    func audio(didReturnTone controller: AudioBrowserViewController, soundName: String) {
+        if alarm.soundName == soundName {
             return
         }
-        updateAudio(sound: sound)
+        updateAudio(withSoundName: soundName)
     }
     
-    private func updateAudio(sound: Sound) {
+    private func updateAudio(withSoundName soundName: String) {
         didMakeChanges = true
-        alarm.sound = sound
+        alarm.soundName = soundName
         delegate?.model(didReloadRow: self, at: IndexPath(row: 0, section: Section.audio.rawValue))
     }
 }
 
 extension AlarmEditViewModel: CategoriesViewControllerDelegate {
-    func categories(didReturnCategory controller: CategoriesViewController, category: String) {
+    func categories(didReturnCategory controller: CategoriesViewController, category: Category?) {
         if alarm.category == category {
             return
         }
         updateCategory(category)
     }
     
-    private func updateCategory(_ category: String) {
-        didMakeChanges = true
-        alarm.category = category
+    private func updateCategory(_ category: Category?) {
+        if !didMakeChanges {
+            didMakeChanges = alarm.category != category
+        }
+        categoriesManager.assign(alarm: alarm, toCategory: category)
     }
 }
 
@@ -173,7 +187,7 @@ extension AlarmEditViewModel {
         case .category:
             delegate?.model(didSelectCategory: self, category: alarm.category)
         case .audio:
-            delegate?.model(didSelectAudio: self, sound: alarm.sound)
+            delegate?.model(didSelectAudio: self, soundName: alarm.soundName)
         }
     }
     
@@ -203,19 +217,19 @@ extension AlarmEditViewModel {
 }
 
 extension AlarmEditViewModel {
-    var alarmLocationInfo: LocationNotificationInfo {
+    var alarmLocationInfo: LocationNotificationInfo? {
         return alarm.locationInfo
     }
     
     var alarmToneName: String {
-        return alarm.sound.name
+        return alarm.soundName
     }
     
     var alarmNoteText: String {
         return alarm.note
     }
     
-    var alarmCategory: String {
+    var alarmCategory: Category? {
         return alarm.category
     }
 }

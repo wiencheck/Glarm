@@ -10,20 +10,22 @@ import UIKit
 import SnapKit
 import BoldButton
 import CoreLocation
+import AWAlertController
+import EmptyBackgroundView
 
 final class BrowseViewController: UIViewController {
-    internal var tableView: UITableView! {
-        didSet {
-            tableView.register(AlarmMapCell.self, forCellReuseIdentifier: "map")
-            tableView.register(AlarmCell.self, forCellReuseIdentifier: "alarm")
-            tableView.register(TableHeaderView.self, forHeaderFooterViewReuseIdentifier: "header")
-            tableView.backgroundView = EmptyBackgroundView(image: nil, top: LocalizedStringKey.emptyView_title.localized, bottom: LocalizedStringKey.emptyView_detail.localized)
-            tableView.dataSource = self
-            tableView.delegate = self
-            tableView.estimatedSectionFooterHeight = 0
-            tableView.estimatedSectionHeaderHeight = 0
-        }
-    }
+    internal lazy var tableView: AWTableView = {
+        let t = AWTableView(frame: .zero, style: .grouped)
+        t.register(AlarmMapCell.self, forCellReuseIdentifier: "map")
+        t.register(AlarmCell.self, forCellReuseIdentifier: "alarm")
+        t.register(TableHeaderView.self, forHeaderFooterViewReuseIdentifier: "header")
+        t.backgroundView = EmptyBackgroundView(image: nil, top: LocalizedStringKey.emptyView_title.localized, bottom: LocalizedStringKey.emptyView_detail.localized)
+        t.dataSource = self
+        t.delegate = self
+        t.estimatedSectionFooterHeight = 0
+        t.estimatedSectionHeaderHeight = 0
+        return t
+    }()
     
     private lazy var buttonController: BoldButtonViewController = {
         let b = BoldButtonViewController()
@@ -107,7 +109,7 @@ final class BrowseViewController: UIViewController {
         return UIApplication.shared.launchCount % 3 == 0
     }
     
-    private func openEditView(alarm: AlarmEntry?) {
+    private func openEditView(withAlarm alarm: AlarmEntryProtocol?) {
         // Open edit view if alarm exists
         // Go straight to the map otherwise.
         let editModel = AlarmEditViewModel(manager: viewModel.manager, alarm: alarm)
@@ -181,9 +183,9 @@ extension BrowseViewController: BrowseViewModelDelegate {
         }
     }
     
-    func model(didSelectEditAlarm model: BrowseViewModel, alarm: AlarmEntry?) {
+    func model(didSelectEditAlarm model: BrowseViewModel, alarm: AlarmEntryProtocol?) {
         DispatchQueue.main.async {
-            self.openEditView(alarm: alarm)
+            self.openEditView(withAlarm: alarm)
         }
     }
     
@@ -214,7 +216,9 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        viewModel.didSelectRow(at: indexPath)
+        
+        let alarm = viewModel.alarm(at: indexPath)
+        openEditView(withAlarm: alarm)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -260,9 +264,52 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
         return .none
     }
     
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let actions = viewModel.editingActions(at: indexPath) else {
+    func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let alarm = viewModel.alarm(at: indexPath) else {
             return nil
+        }
+        let isMarked = alarm.isMarked
+        
+        let action = UIContextualAction(style: .normal, title: isMarked ? .localized(.browse_unmarkAction) : .localized(.browse_markAction), handler: { [weak self] _, _, completion in
+            self?.viewModel.markAlarm(atPath: indexPath, marked: !isMarked)
+            completion(true)
+        })
+        action.backgroundColor = .tint
+        
+        let configuration = UISwipeActionsConfiguration(actions: [action])
+        configuration.performsFirstActionWithFullSwipe = false
+        return configuration
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard let alarm = viewModel.alarm(at: indexPath) else {
+            return nil
+        }
+        var actions: [UIContextualAction] = []
+        
+        if alarm.isActive {
+            let cancel = UIContextualAction(style: .normal, title: LocalizedStringKey.cancel.localized, handler: { [weak self] _, _, completion in
+                let success = self?.viewModel.cancelAlarm(at: indexPath) ?? false
+                BrowseViewController.swipeActionsUseCounter += 1
+                completion(success)
+            })
+            cancel.backgroundColor = .systemRed
+            actions.append(cancel)
+        } else {
+            let delete = UIContextualAction(style: .destructive, title: LocalizedStringKey.browse_deleteAction.localized) { [weak self] _, _, completion in
+                let success = self?.viewModel.deleteAlarm(at: indexPath) ?? false
+                BrowseViewController.swipeActionsUseCounter += 1
+                completion(success)
+            }
+            actions.append(delete)
+            
+            let schedule = UIContextualAction(style: .normal, title: LocalizedStringKey.browse_scheduleAction.localized, handler: { [weak self] _, _, completion in
+                let success = self?.viewModel.scheduleAlarm(at: indexPath) ?? false
+                BrowseViewController.swipeActionsUseCounter += 1
+                completion(success)
+            })
+            schedule.backgroundColor = .purple
+            actions.append(schedule)
         }
         let configuration = UISwipeActionsConfiguration(actions: actions)
         configuration.performsFirstActionWithFullSwipe = false
@@ -272,8 +319,6 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension BrowseViewController {
     func setupView() {
-        tableView = UITableView(frame: .zero, style: .grouped)
-        
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -288,7 +333,7 @@ extension BrowseViewController: AlarmCellDelegate {
             let note = model.note else {
                 return
         }
-        let alertModel = AlertViewModel(title: model.locationInfo.name, message: note, actions: [.dismiss], style: .alert)
+        let alertModel = AlertViewModel(title: model.locationInfo?.name, message: note, actions: [.dismiss], style: .alert)
         present(AWAlertController(model: alertModel), animated: true, completion: nil)
     }
 }

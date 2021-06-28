@@ -9,7 +9,7 @@
 import UIKit
 import MapKit
 
-protocol AlarmMapControllerDelegate: class {
+protocol AlarmMapControllerDelegate: AnyObject {
     func map(didReturnLocationInfo controller: MapController, locationInfo: LocationNotificationInfo)
 }
 
@@ -54,7 +54,7 @@ class MapController: UIViewController {
     internal lazy var mapView: MKMapView = {
         let m = MKMapView()
         m.showsUserLocation = true
-        m.showsPointsOfInterest = true
+        m.pointOfInterestFilter = MKPointOfInterestFilter(including: [])
         m.showsScale = true
         m.addGestureRecognizer(longPress)
         m.delegate = self

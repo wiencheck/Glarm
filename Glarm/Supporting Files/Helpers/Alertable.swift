@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AWAlertController
 
 protocol Alertable: UIViewController {
     func didReceiveAlert(model: AlertViewModel)

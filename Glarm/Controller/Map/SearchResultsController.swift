@@ -8,7 +8,7 @@
 
 import MapKit
 
-protocol SearchResultsControllerDelegate: class {
+protocol SearchResultsControllerDelegate: AnyObject {
     func searchResultsWillAppear()
     func searchResultsWillDisappear()
     func searchResults(didSelectLocation controller: SearchResultsController, name: String, address: String?, coordinate: CLLocationCoordinate2D)

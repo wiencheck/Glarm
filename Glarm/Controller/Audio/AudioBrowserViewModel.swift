@@ -9,7 +9,7 @@
 import Foundation
 import AVFoundation
 
-protocol AudioBrowserViewModelDelegate: class {
+protocol AudioBrowserViewModelDelegate: AnyObject {
     func model(playerDidChangeStatus model: AudioBrowserViewModel, playing: Bool)
     func model(didReloadData model: AudioBrowserViewModel)
     func model(_ model: AudioBrowserViewModel, didChangeLoadingStatus loading: Bool, at indexPath: IndexPath)
@@ -19,9 +19,9 @@ protocol AudioBrowserViewModelDelegate: class {
 class AudioBrowserViewModel: NSObject {
     private let player: AVPlayer
     
-    private(set)var selectedSound: Sound {
+    private(set)var selectedSoundName: String {
         didSet {
-            manager.setSound(selectedSound)
+            manager.setSound(named: selectedSoundName)
         }
     }
     
@@ -33,9 +33,10 @@ class AudioBrowserViewModel: NSObject {
     private var availableSounds: [Sound]!
     private var timeControlObservation: NSKeyValueObservation!
     
-    init(sound: Sound) {
-        selectedSound = sound
-        let item = AVPlayerItem(url: sound.playbackUrl)
+    init(soundName: String) {
+        selectedSoundName = soundName
+        let url = SoundsManager.url(forSoundNamed: soundName) ?? Sound.default.playbackUrl
+        let item = AVPlayerItem(url: url)
         player = AVPlayer(playerItem: item)
         manager = SoundsManager()
         
@@ -146,7 +147,7 @@ extension AudioBrowserViewModel {
         guard let sound = sound(at: path) else {
             return nil
         }
-        return SoundCell.Model(sound: sound, isSelected: sound == selectedSound)
+        return SoundCell.Model(sound: sound, isSelected: sound.name == selectedSoundName)
     }
     
     func headerModel(in section: Int) -> TableHeaderView.Model? {
@@ -180,7 +181,7 @@ extension AudioBrowserViewModel {
         }
         loadSound(url: sound.playbackUrl)
         if path.section == Section.sounds.rawValue {
-            selectedSound = sound
+            selectedSoundName = sound.name
             delegate?.model(didReloadData: self)
         }
         play()

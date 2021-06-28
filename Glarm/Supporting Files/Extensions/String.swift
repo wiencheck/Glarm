@@ -13,3 +13,7 @@ extension String {
         return key.localized
     }
 }
+
+extension String: LocalizedError {
+    public var errorDescription: String? { self }
+}

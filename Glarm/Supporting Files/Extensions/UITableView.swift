@@ -7,15 +7,15 @@
 //
 
 import UIKit
+import EmptyBackgroundView
 
 extension UITableView {
-    func reloadData(animated: Bool, options: UIView.AnimationOptions = .transitionCrossDissolve, completion: ((Bool) -> Void)? = nil) {
+    @objc func reloadData(animated: Bool, options: UIView.AnimationOptions = .transitionCrossDissolve, completion: ((Bool) -> Void)? = nil) {
         let animations = {
             self.reloadData()
-            self.updateEmptyView()
         }
         if animated {
-            UIView.transition(with: self, duration: 0.3, options: options, animations: animations, completion: completion)
+            UIView.transition(with: self, duration: 0.2, options: options, animations: animations, completion: completion)
         } else {
             animations()
             completion?(true)
@@ -24,20 +24,10 @@ extension UITableView {
     
     func deleteRow(at indexPath: IndexPath, with animation: RowAnimation) {
         deleteRows(at: [indexPath], with: animation)
-        updateEmptyView()
     }
     
     func reloadSection(_ section: Int, with animation: RowAnimation) {
         reloadSections([section], with: animation)
-        updateEmptyView()
-    }
-    
-    func updateEmptyView() {
-        guard let emptyView = self.backgroundView as? EmptyBackgroundView else {
-            return
-        }
-        isScrollEnabled = !isEmpty
-        emptyView.isEmpty = isEmpty
     }
     
     var isEmpty: Bool {

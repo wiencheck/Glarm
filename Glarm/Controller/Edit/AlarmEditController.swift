@@ -8,9 +8,10 @@
 
 import UIKit
 import BoldButton
+import AWAlertController
 
-protocol AlarmEditControllerDelegate: class {
-    func editController(_ controller: AlarmEditController, didDisappearWithoutSavingChanges modifiedAlarm: AlarmEntry)
+protocol AlarmEditControllerDelegate: AnyObject {
+    func editController(_ controller: AlarmEditController, didDisappearWithoutSavingChanges modifiedAlarm: AlarmEntryProtocol)
 }
 
 final class AlarmEditController: UIViewController {
@@ -47,6 +48,8 @@ final class AlarmEditController: UIViewController {
         return b
     }()
     
+    private lazy var markBarButton = UIBarButtonItem(image: .star(filled: viewModel.alarm.isMarked), style: .plain, target: self, action: #selector(handleMarkButtonPressed(_:)))
+    
     init(model: ViewModel) {
         viewModel = model
         super.init(nibName: nil, bundle: nil)
@@ -61,6 +64,7 @@ final class AlarmEditController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.title = LocalizedStringKey.title_edit.localized
         navigationItem.backBarButtonItem = UIBarButtonItem(title: LocalizedStringKey.edit_backButton.localized, style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = markBarButton
 
         setupView()
         viewModel.delegate = self
@@ -87,8 +91,7 @@ final class AlarmEditController: UIViewController {
     override func willMove(toParent parent: UIViewController?) {
         super.willMove(toParent: parent)
         guard parent == nil,
-        viewModel.alarm.locationInfo != .default,
-            viewModel.didMakeChanges,
+        viewModel.didMakeChanges,
             !viewModel.didSaveChanges else {
                 return
         }
@@ -97,6 +100,13 @@ final class AlarmEditController: UIViewController {
     
     private weak var noteHeader: TableHeaderView? {
         return tableView.headerView(forSection: ViewModel.Section.note.rawValue) as? TableHeaderView
+    }
+    
+    @objc private func handleMarkButtonPressed(_ sender: UIBarButtonItem) {
+        let alarm = viewModel.alarm
+        let newStatus = !alarm.isMarked
+        viewModel.setAlarmMarked(newStatus)
+        markBarButton.image = .star(filled: alarm.isMarked)
     }
 }
 
@@ -124,20 +134,20 @@ extension AlarmEditController: AlarmEditViewModelDelegate {
         }
     }
     
-    func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo) {
+    func model(didSelectMap model: AlarmEditViewModel, locationInfo: LocationNotificationInfo?) {
         let vc = MapController(info: locationInfo)
         vc.delegate = viewModel
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func model(didSelectCategory model: AlarmEditViewModel, category: String) {
+    func model(didSelectCategory model: AlarmEditViewModel, category: Category?) {
         let vc = CategoriesViewController(category: category)
         vc.delegate = viewModel
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func model(didSelectAudio model: AlarmEditViewModel, sound: Sound) {
-        let vc = AudioBrowserViewController(sound: sound)
+    func model(didSelectAudio model: AlarmEditViewModel, soundName: String) {
+        let vc = AudioBrowserViewController(soundName: soundName)
         vc.delegate = viewModel
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -190,14 +200,17 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
             cell.noteText = viewModel.alarmNoteText
             return cell
         case .category:
+            let category = viewModel.alarmCategory
             var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "category")
             if cell == nil {
                 cell = UITableViewCell(style: .value1, reuseIdentifier: "category")
             }
-            if viewModel.alarmCategory.isEmpty {
-                cell.textLabel?.text = .localized(.category_none)
+            cell.textLabel?.text = category?.name ?? .localized(.category_none)
+            if let imageName = category?.imageName,
+               let image = UIImage(systemName: imageName) {
+                cell.imageView?.image = image
             } else {
-                cell.textLabel?.text = viewModel.alarmCategory
+                cell.imageView?.image = nil
             }
             cell.accessoryType = .disclosureIndicator
             return cell
@@ -326,7 +339,7 @@ extension AlarmEditController {
     }
 }
 
-fileprivate protocol BackgroundTapViewDelegate: class {
+fileprivate protocol BackgroundTapViewDelegate: AnyObject {
     func backgroundView(didReceiveTouch view: BackgroundTapView)
 }
 

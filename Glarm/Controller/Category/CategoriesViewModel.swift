@@ -8,48 +8,52 @@
 
 import Foundation
 
-protocol CategoriesViewModelDelegate: class {
+protocol CategoriesViewModelDelegate: AnyObject {
     func model(didReloadData model: CategoriesViewModel)
 }
 
 final class CategoriesViewModel {
     
-    private let manager: AlarmCategoriesManager
-    private(set)var selectedCategory: String
+    private let manager: AlarmCategoriesManagerProtocol
+    private(set) var selectedCategory: Category?
     
-    private var categories: [[String]] {
-        return [
-            [""],
-            manager.categories.default,
-            manager.categories.custom
-        ]
-    }
+    private(set) lazy var categories: [[Category]] = loadCategories()
     
     weak var delegate: CategoriesViewModelDelegate?
 
-    init(category: String) {
-        manager = AlarmCategoriesManager()
+    init(category: Category?) {
+        manager = AppDelegate.shared.categoriesManager
         self.selectedCategory = category
     }
     
+    private func loadCategories() -> [[Category]] {
+        var arr = Array<[Category]>(repeating: [], count: 2)
+        for category in manager.categories.sorted(by: \.name) {
+            if category.isCreatedByUser {
+                arr[1].append(category)
+            } else {
+                arr[0].append(category)
+            }
+        }
+        return arr.filter { !$0.isEmpty }
+    }
+    
     func createCategory(named name: String) {
-        guard manager.addCategory(named: name) else {
+        guard !name.isEmpty, UnlockManager.unlocked else {
             return
         }
-        if UnlockManager.unlocked {
-            selectedCategory = name
-        }
+        selectedCategory = manager.createCategory(named: name, imageName: nil)
+        categories = loadCategories()
         delegate?.model(didReloadData: self)
     }
     
     func removeCategory(at path: IndexPath) -> Bool {
-        let category = categories[path.section][path.row]
-        guard manager.removeCategory(named: category) else {
+        let category = categories[path.section - 1][path.row]
+        if let _ = manager.removeCategory(named: category.name) {
             return false
         }
-        if category == selectedCategory {
-            selectedCategory = ""
-        }
+        selectedCategory = nil
+        categories = loadCategories()
         delegate?.model(didReloadData: self)
         return true
     }
@@ -64,17 +68,22 @@ extension CategoriesViewModel {
     }
     
     var numberOfSections: Int {
-        return categories.count
+        return categories.count + 1
     }
     
     func numberOfRows(in section: Int) -> Int {
-        categories[section].count
+        if section == 0 {
+            return 1
+        }
+        return categories[section - 1].count
     }
     
-    func cellConfiguration(at path: IndexPath) -> (text: String, selected: Bool)? {
-        let category = categories[path.section][path.row]
-        let text = category.isEmpty ? LocalizedStringKey.category_none.localized : category
-        return (text, category == selectedCategory)
+    func cellConfiguration(at path: IndexPath) -> (text: String, imageName: String?, selected: Bool)? {
+        if path.section == 0 {
+            return (.localized(.category_none), nil, selectedCategory == nil)
+        }
+        let category = categories[path.section - 1][path.row]
+        return (category.name, category.imageName, category == selectedCategory)
     }
     
     func headerModel(in section: Int) -> TableHeaderView.Model? {
@@ -82,23 +91,21 @@ extension CategoriesViewModel {
         case .none:
             return nil
         case .default:
-            return .init(title: LocalizedStringKey.category_defaultHeader.localized, buttonTitle: UnlockManager.unlocked ? nil : .localized(.unlock))
+            return .init(title: .localized(.category_defaultHeader), buttonTitle: UnlockManager.unlocked ? nil : .localized(.unlock))
         case .custom:
-            if categories.last?.isEmpty == true {
-                return nil
-            }
-            return .init(title: LocalizedStringKey.category_customHeader.localized)
+            return .init(title: .localized(.category_customHeader))
         }
     }
     
     func didSelectRow(at path: IndexPath) {
-        selectedCategory = categories[path.section][path.row]
+        selectedCategory = categories.at(path.section - 1)?[path.row]
         delegate?.model(didReloadData: self)
     }
     
     func canEditRow(at path: IndexPath) -> Bool {
         // Only custom section can be edited
-        return path.section == 2
+        let category = categories[path.section - 1][path.row]
+        return category.isCreatedByUser
     }
 }
 

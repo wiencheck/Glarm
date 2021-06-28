@@ -9,6 +9,10 @@
 import UIKit
 
 extension UIScrollView {
+    var isMoving: Bool {
+        return isDragging || isTracking || isDecelerating || isZooming
+    }
+    
     func startObservingKeyboard() {
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { [weak self] notification in
             guard let self = self,

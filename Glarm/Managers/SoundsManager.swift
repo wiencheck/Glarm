@@ -8,10 +8,9 @@
 
 import Foundation
 import UserNotifications
-import Alamofire
 import AVFoundation
 
-protocol SoundsManagerDelegate: class {
+protocol SoundsManagerDelegate: AnyObject {
     func soundsManager(_ manager: SoundsManager, didBeginDownloading sound: Sound)
     func soundsManager(_ manager: SoundsManager, didDownload sound: Sound)
     func soundsManager(_ manager: SoundsManager, didEncounter error: Error)
@@ -38,6 +37,14 @@ class SoundsManager {
     private lazy var soundUrls: [String: URL] = PlistReader.dictionary(from: PlistFile.sounds.rawValue) ?? [:]
     
     weak var delegate: SoundsManagerDelegate?
+    
+    private var downloadTask: URLSessionTask? {
+        willSet {
+            downloadTask?.cancel()
+        } didSet {
+            downloadTask?.resume()
+        }
+    }
     
     var didDownloadAllSounds: Bool {
         let contents = fileManager.contents(directory: SoundsDirectory.data) ?? []
@@ -66,8 +73,8 @@ class SoundsManager {
         }
     }
     
-    func setSound(_ sound: Sound) {
-        SoundsManager.selectedSound = sound
+    func setSound(named name: String) {
+        SoundsManager.selectedSoundName = name
     }
     
     //    func removeSound(_ sound: Sound) {
@@ -75,14 +82,18 @@ class SoundsManager {
     //    }
     
     func downloadSound(_ sound: Sound) {
-        AF.download(sound.url).responseData { response in
-            if let error = response.error {
+        downloadTask = URLSession.shared.dataTask(with: sound.url) { data, response, error in
+            if let error = error {
                 self.delegate?.soundsManager(self, didEncounter: error)
                 return
             }
-            guard let data = response.value,
-                let fileUrl = self.fileManager.save(file: data, named: sound.name + ".caf", directory: SoundsDirectory.files, overwrite: true) else {
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
                     return
+            }
+            guard let data = data,
+                  let fileUrl = self.fileManager.save(file: data, named: sound.name + ".caf", directory: SoundsDirectory.files, overwrite: true) else {
+                return
             }
             let newSound = Sound(name: sound.name, url: fileUrl)
             do {
@@ -102,19 +113,30 @@ class SoundsManager {
 }
 
 extension SoundsManager {
-    private(set)static var selectedSound: Sound {
+    private(set)static var selectedSoundName: String {
         get {
-            guard let data = UserDefaults.standard.data(forKey: "selectedSound"),
-                let sound = try? JSONDecoder().decode(Sound.self, from: data) else {
-                    return .default
-            }
-            return sound
+            return UserDefaults.standard.string(forKey: "selectedSound") ?? "Bulletin"
         } set {
-            guard let data = try? JSONEncoder().encode(newValue) else {
-                return
-            }
-            UserDefaults.standard.set(data, forKey: "selectedSound")
+            UserDefaults.standard.set(newValue, forKey: "selectedSound")
         }
+    }
+    
+    class func url(forSoundNamed name: String) -> URL? {
+        FileManager.default.url(forFileNamed: name, directory: SoundsDirectory.files)
+    }
+    
+    class func playbackUrl(forSoundNamed name: String) -> URL? {
+        guard let url = url(forSoundNamed: name) else {
+            return nil
+        }
+        // Files in Bundle will be here
+        if url.isFileURL {
+            return url
+        }
+        if url.isLocal {
+            return SoundsDirectory.files.url.appendingPathComponent(url.path, isDirectory: false)
+        }
+        return url
     }
 }
 

@@ -8,9 +8,10 @@
 
 import UIKit
 import BoldButton
+import AWAlertController
 
-protocol AudioBrowserViewControllerDelegate: class {
-    func audio(didReturnTone controller: AudioBrowserViewController, sound: Sound)
+protocol AudioBrowserViewControllerDelegate: AnyObject {
+    func audio(didReturnTone controller: AudioBrowserViewController, soundName: String)
 }
 
 class AudioBrowserViewController: UIViewController {
@@ -37,8 +38,8 @@ class AudioBrowserViewController: UIViewController {
         return b
     }()
     
-    init(sound: Sound) {
-        viewModel = ViewModel(sound: sound)
+    init(soundName: String) {
+        viewModel = ViewModel(soundName: soundName)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -55,7 +56,7 @@ class AudioBrowserViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        delegate?.audio(didReturnTone: self, sound: viewModel.selectedSound)
+        delegate?.audio(didReturnTone: self, soundName: viewModel.selectedSoundName)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

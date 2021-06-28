@@ -15,4 +15,9 @@ extension UIView {
             make.edges.equalToSuperview()
         }
     }
+    
+    func setEqualAspectRatio() {
+        translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalTo: heightAnchor).isActive = true
+    }
 }

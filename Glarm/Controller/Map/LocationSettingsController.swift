@@ -8,8 +8,9 @@
 
 import UIKit
 import CoreLocation
+import AWAlertController
 
-protocol LocationSettingsControllerDelegate: class {
+protocol LocationSettingsControllerDelegate: AnyObject {
     func radiusChanged(_ radius: CLLocationDistance)
     func searchBarPressed()
     func searchButtonPressed()

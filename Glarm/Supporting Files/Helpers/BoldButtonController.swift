@@ -9,7 +9,7 @@
 import UIKit
 import BoldButton
 
-protocol BoldButtonViewControllerDelegate: class {
+protocol BoldButtonViewControllerDelegate: AnyObject {
     func boldButtonPressed(_ sender: BoldButton)
 }
 

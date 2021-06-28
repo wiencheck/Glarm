@@ -8,9 +8,10 @@
 
 import UIKit
 import BoldButton
+import AWAlertController
 
-protocol CategoriesViewControllerDelegate: class {
-    func categories(didReturnCategory controller: CategoriesViewController, category: String)
+protocol CategoriesViewControllerDelegate: AnyObject {
+    func categories(didReturnCategory controller: CategoriesViewController, category: Category?)
 }
 
 final class CategoriesViewController: UIViewController {
@@ -42,8 +43,8 @@ final class CategoriesViewController: UIViewController {
         return b
     }()
     
-    init(category: String ) {
-        viewModel = .init(category: category)
+    init(category: Category? ) {
+        viewModel = ViewModel(category: category)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -87,12 +88,13 @@ extension CategoriesViewController: BoldButtonViewControllerDelegate {
             self?.viewModel.createCategory(named: text)
         }
         confirmAction.isEnabled = false
-        let model = AlertViewModel(localizedTitle: .category_createButton, message: .category_newCategoryMessage, actions: [confirmAction, .cancel()], style: .alert)
+        let model = AlertViewModel(title: .localized(.category_createButton), message: .localized(.category_newCategoryMessage), actions: [confirmAction, .cancel()], style: .alert)
         alert = AWAlertController(model: model)
         alert.onTextFieldChange = { field in
             confirmAction.isEnabled = field.text?.isEmpty == false
         }
         alert.addTextField { field in
+            field.autocapitalizationType = .words
             field.placeholder = .localized(.category_newCategoryPlaceholder)
         }
         present(alert, animated: true, completion: nil)
@@ -116,6 +118,12 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
         }
         let config = viewModel.cellConfiguration(at: indexPath)
         cell.textLabel?.text = config?.text
+        if let imageName = config?.imageName,
+           let image = UIImage(systemName: imageName) {
+            cell.imageView?.image = image
+        } else {
+            cell.imageView?.image = nil
+        }
         cell.accessoryType = config?.selected == true ? .checkmark : .none
         return cell
     }

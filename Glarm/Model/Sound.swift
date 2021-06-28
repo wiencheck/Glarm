@@ -9,7 +9,7 @@
 import Foundation
 import UserNotifications
 
-struct Sound: Codable {
+struct Sound: Codable, Hashable {
     internal init(name: String, url: URL) {
         self.name = name
         self.url = url
