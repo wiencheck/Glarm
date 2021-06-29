@@ -24,6 +24,6 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             let alarm = try? JSONDecoder().decode(AlarmEntryRepresentation.self, from: data) else {
                 return
         }
-        mapController.configure(with: alarm)
+        mapController.configure(withAlarm: alarm)
     }
 }

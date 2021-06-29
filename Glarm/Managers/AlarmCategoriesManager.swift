@@ -17,7 +17,7 @@ final class AlarmCategoriesManager: CoreDatabaseManager<Category>, AlarmCategori
     }
     
     override var dataModel: CoreDataModel {
-        CoreDataModel(name: "Glarm", usesCloud: true)
+        CoreDataModel(name: "Glarm", containerURL: nil, usesCloud: true)
     }
     
     override func setup(in application: UIApplication) {

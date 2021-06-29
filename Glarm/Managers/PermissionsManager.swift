@@ -48,7 +48,7 @@ final class PermissionsManager: NSObject {
                     completion(.resticted)
                     return
                 }
-                let category = UNNotificationCategory(identifier: ExtensionConstants.notificationContentExtensionCategory, actions: [], intentIdentifiers: [], options: [])
+                let category = UNNotificationCategory(identifier: SharedConstants.notificationContentExtensionCategory, actions: [], intentIdentifiers: [], options: [])
                 self.notificationCenter.setNotificationCategories(Set([category]))
                 completion(.authorized)
             }

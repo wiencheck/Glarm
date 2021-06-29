@@ -10,7 +10,7 @@ import Foundation
 
 extension UserDefaults {
     class var appGroupSuite: UserDefaults {
-        return UserDefaults(suiteName: ExtensionConstants.userDefaultsSuiteName)!
+        return UserDefaults(suiteName: SharedConstants.appGroupIdentifier)!
     }
     
     var currentAlarmRepresentation: AlarmEntryRepresentation? {

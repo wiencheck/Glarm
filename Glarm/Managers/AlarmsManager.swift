@@ -6,16 +6,11 @@
 //  Copyright © 2020 Adam Wienconek. All rights reserved.
 //
 
-import CoreLocation
-import UserNotifications
-import AVFoundation
+import Foundation
 import NotificationCenter
-import UIKit
 import CoreDataManager
-import AWAlertController
-import CoreData
 
-final class NewAlarmsManager: CoreDatabaseManager<AlarmEntry>, AlarmsManagerProtocol {
+class AlarmsManager: CoreDatabaseManager<AlarmEntry>, AlarmsManagerProtocol {
     
     // MARK: - Public Properties
     
@@ -30,9 +25,7 @@ final class NewAlarmsManager: CoreDatabaseManager<AlarmEntry>, AlarmsManagerProt
         notificationCenter.delegate = self
     }
     
-    override var dataModel: CoreDataModel {
-        CoreDataModel(name: "Glarm", usesCloud: true)
-    }
+    override var dataModel: CoreDataModel { .appModel }
     
     func schedule(alarm: AlarmEntryProtocol) -> Error? {
         guard let entry = alarm as? DatabaseRecord else {
@@ -78,11 +71,6 @@ final class NewAlarmsManager: CoreDatabaseManager<AlarmEntry>, AlarmsManagerProt
         NotificationCenter.default.post(name: Self.alarmsUpdatedNotification, object: self)
     }
     
-    func updateNewestAlarm(representation: AlarmEntryRepresentation) {
-        UserDefaults.appGroupSuite.currentAlarmRepresentation = representation
-        UserDefaults.appGroupSuite.synchronize()
-    }
-    
     func fetchAlarms(completion: @escaping ([AlarmEntryProtocol]) -> Void) {
         notificationCenter.getPendingNotificationRequests { requests in
             let identifiers = Set(requests.map { $0.identifier })
@@ -103,7 +91,7 @@ final class NewAlarmsManager: CoreDatabaseManager<AlarmEntry>, AlarmsManagerProt
     }
 }
 
-private extension NewAlarmsManager {
+private extension AlarmsManager {
     func askForNotificationPermissions(for alarm: DatabaseRecord) {
         PermissionsManager.shared.requestNotificationsPermission { status in
             guard status == .authorized else {
@@ -148,13 +136,14 @@ private extension NewAlarmsManager {
     
 }
 
-extension NewAlarmsManager: UNUserNotificationCenterDelegate {
+extension AlarmsManager: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        
         completionHandler([.alert])
-        // delegate?.alarmsManager(notificationWasPresented: self)
+        delegate?.alarmsManager(notificationWasPresented: self)
     }
 }
 
-extension NewAlarmsManager {
+extension AlarmsManager {
     static let alarmsUpdatedNotification = Notification.Name("alarmsUpdatedNotification")
 }

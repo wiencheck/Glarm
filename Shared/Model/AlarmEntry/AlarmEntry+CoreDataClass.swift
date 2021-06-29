@@ -12,7 +12,6 @@ import CoreData
 import CoreDataManager
 import UserNotifications
 
-
 @objc(AlarmEntry)
 public class AlarmEntry: NSManagedObject, AlarmEntryProtocol {
     var isActive = false

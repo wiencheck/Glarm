@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private(set) static var shared: AppDelegate!
 
     var window: UIWindow?
-    private(set) lazy var alarmsManager = NewAlarmsManager()
+    private(set) lazy var alarmsManager = AlarmsManager()
     private(set) lazy var categoriesManager = AlarmCategoriesManager()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

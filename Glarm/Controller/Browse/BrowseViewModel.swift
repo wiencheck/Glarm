@@ -116,14 +116,14 @@ final class BrowseViewModel {
             NotificationCenter.default.removeObserver(observer, name: UIApplication.didBecomeActiveNotification, object: nil)
         }
         if let observer = dataObserver {
-            NotificationCenter.default.removeObserver(observer, name: NewAlarmsManager.alarmsUpdatedNotification, object: nil)
+            NotificationCenter.default.removeObserver(observer, name: AlarmsManager.alarmsUpdatedNotification, object: nil)
         }
         
         guard active else { return }
         applicationObserver = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil) { [weak self] _ in
             self?.loadData()
         }
-        dataObserver = NotificationCenter.default.addObserver(forName: NewAlarmsManager.alarmsUpdatedNotification, object: nil, queue: nil) { [weak self] _ in
+        dataObserver = NotificationCenter.default.addObserver(forName: AlarmsManager.alarmsUpdatedNotification, object: nil, queue: nil) { [weak self] _ in
             self?.loadData()
         }
     }

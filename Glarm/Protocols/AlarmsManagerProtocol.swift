@@ -36,9 +36,6 @@ protocol AlarmsManagerProtocol {
     
     /// Discards any changes made to the alarm after last save operation.
     func discardChanges(forAlarm alarm: AlarmEntryProtocol)
-    
-    /// Saves most recent alarm entry to the database.
-    func updateNewestAlarm(representation: AlarmEntryRepresentation)
 }
 
 extension AlarmsManagerProtocol {
@@ -68,8 +65,6 @@ extension AlarmsManagerProtocol {
             self.notificationCenter.add(request) { error in
                 
                 if error == nil {
-                    let representation = AlarmEntryRepresentation(alarm: alarm)
-                    self.updateNewestAlarm(representation: representation)
                     print("Scheduled alarm with uuid: \(alarm.uid)")
                 }
                 completion?(error)
@@ -81,7 +76,7 @@ extension AlarmsManagerProtocol {
     private func notificationContent(for alarm: AlarmEntryProtocol) -> UNMutableNotificationContent {
         let notification = UNMutableNotificationContent()
         if UnlockManager.unlocked {
-            notification.categoryIdentifier = ExtensionConstants.notificationContentExtensionCategory
+            notification.categoryIdentifier = SharedConstants.notificationContentExtensionCategory
         }
         
         notification.title = LocalizedStringKey.notification_title.localized

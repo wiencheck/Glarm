@@ -202,7 +202,7 @@ final class ExtensionViewController: UIViewController {
         detailLabel.text = info.radius.readableRepresentation() + ", \(LocalizedStringKey.notification_youAre.localized) \(distance.readableRepresentation()) \(LocalizedStringKey.notification_awayFromDestination.localized)"
     }
     
-    public func configure(with alarm: AlarmEntryRepresentation) {
+    public func configure(withAlarm alarm: AlarmEntryRepresentation) {
         guard let info = alarm.locationInfo else {
             return
         }
