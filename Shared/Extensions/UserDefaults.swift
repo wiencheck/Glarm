@@ -13,19 +13,24 @@ extension UserDefaults {
         return UserDefaults(suiteName: SharedConstants.appGroupIdentifier)!
     }
     
-    var currentAlarmRepresentation: AlarmEntryRepresentation? {
+    private static let recentAlarmsUserDefaultsKey = "recentAlarmsUserDefaultsKey"
+    var recentAlarms: [SimpleAlarmEntry]? {
         get {
-            guard let data = data(forKey: Self.currentAlarmRepresentationUserDefaultsKey) else {
-                return nil
+            guard let arr = array(forKey: Self.recentAlarmsUserDefaultsKey) as? [Data] else {
+                return []
             }
-            return try? JSONDecoder().decode(AlarmEntryRepresentation.self, from: data)
+            return arr.compactMap { data in
+                try? JSONDecoder().decode(SimpleAlarmEntry.self, from: data)
+            }
         } set {
-            guard let data = try? JSONEncoder().encode(newValue) else {
-                return
+            let arr = newValue?.compactMap { entry -> Data? in
+                try? JSONEncoder().encode(entry)
+            } ?? []
+            if arr.isEmpty {
+                removeObject(forKey: Self.recentAlarmsUserDefaultsKey)
+            } else {
+                set(arr, forKey: Self.recentAlarmsUserDefaultsKey)
             }
-            set(data, forKey: Self.currentAlarmRepresentationUserDefaultsKey)
         }
     }
-    
-    private static let currentAlarmRepresentationUserDefaultsKey = "currentAlarmRepresentation"
 }

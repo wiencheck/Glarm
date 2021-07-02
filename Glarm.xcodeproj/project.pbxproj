@@ -23,7 +23,6 @@
 		2B43646824DD6C8A00110F09 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B43646724DD6C8A00110F09 /* UIFont.swift */; };
 		2B43646924DD6D5E00110F09 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B43646724DD6C8A00110F09 /* UIFont.swift */; };
 		2B48A17B24DD352E00D74D9A /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB99DAA24D2D23D0002DDC8 /* NotificationViewController.swift */; };
-		2B4E9DA224C5B82A00A2D5EC /* Cacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E9DA124C5B82A00A2D5EC /* Cacher.swift */; };
 		2B58487124DC3C940043BB59 /* ExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3E3F8324DC2E460040539B /* ExtensionViewController.swift */; };
 		2B58487524DC3D0F0043BB59 /* UIViewController+Containment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B58487424DC3D0F0043BB59 /* UIViewController+Containment.swift */; };
 		2B58487624DC3D2A0043BB59 /* UIViewController+Containment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B58487424DC3D0F0043BB59 /* UIViewController+Containment.swift */; };
@@ -31,7 +30,6 @@
 		2B58487C24DC3DDC0043BB59 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF6112024B72FA300D01007 /* UIView.swift */; };
 		2B58488024DC3EC60043BB59 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE2691424BD28E0000299A3 /* CLLocation.swift */; };
 		2B58488224DC3F270043BB59 /* CLLocationDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF13DC024B4BDD400B40D4E /* CLLocationDistance.swift */; };
-		2B58488424DC41040043BB59 /* Cacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E9DA124C5B82A00A2D5EC /* Cacher.swift */; };
 		2B58488724DC41300043BB59 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2B58488624DC41300043BB59 /* SnapKit */; };
 		2B58488A24DC41AA0043BB59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B88BFBD24B32415003B96EE /* Assets.xcassets */; };
 		2B6C7BA724B8E3B4000DEEDA /* RootController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6C7BA624B8E3B4000DEEDA /* RootController.swift */; };
@@ -81,7 +79,6 @@
 		2BD8EF7924E674B90084B64B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD8EF7824E674B90084B64B /* String.swift */; };
 		2BDAD7A724C2452800BA4AF9 /* SoundsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDAD7A624C2452800BA4AF9 /* SoundsManager.swift */; };
 		2BDAD7A924C245B500BA4AF9 /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDAD7A824C245B500BA4AF9 /* Sound.swift */; };
-		2BDAD7AE24C2478C00BA4AF9 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDAD7AD24C2478C00BA4AF9 /* ImageLoader.swift */; };
 		2BDAD7B024C24C4E00BA4AF9 /* FileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDAD7AF24C24C4E00BA4AF9 /* FileManager.swift */; };
 		2BE0553724C5C78E001D7995 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE0553624C5C78E001D7995 /* Locale.swift */; };
 		2BE2691524BD28E0000299A3 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE2691424BD28E0000299A3 /* CLLocation.swift */; };
@@ -139,20 +136,50 @@
 		302FCA5126828AD900D4461E /* AWAlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA5026828AD900D4461E /* AWAlertViewController.swift */; };
 		302FCA572682946C00D4461E /* EmptyBackgroundView in Frameworks */ = {isa = PBXBuildFile; productRef = 302FCA562682946C00D4461E /* EmptyBackgroundView */; };
 		302FCA592682954000D4461E /* AWTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA582682954000D4461E /* AWTableView.swift */; };
-		30D14CEE268AF9BE00B4C983 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14CED268AF9BE00B4C983 /* ContentView.swift */; };
+		30A783DC268CCBF00066795E /* SimpleAlarmEntryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A783DB268CCBF00066795E /* SimpleAlarmEntryProtocol.swift */; };
+		30A783DE268CCBF00066795E /* SimpleAlarmEntryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A783DB268CCBF00066795E /* SimpleAlarmEntryProtocol.swift */; };
+		30A783DF268CCC9D0066795E /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30165133268483CC00388390 /* UserDefaults.swift */; };
+		30B02473268F3B310059A6F4 /* SimpleAlarmEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F22D23268C99F8006E9A9F /* SimpleAlarmEntry.swift */; };
+		30B02475268F3B7D0059A6F4 /* SimpleAlarmEntryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A783DB268CCBF00066795E /* SimpleAlarmEntryProtocol.swift */; };
+		30B02476268F3B7F0059A6F4 /* SimpleAlarmEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F22D23268C99F8006E9A9F /* SimpleAlarmEntry.swift */; };
+		30B02477268F4A110059A6F4 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0F753E24B5E06800EE9876 /* UIColor.swift */; };
+		30B02478268F4ADA0059A6F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B88BFBD24B32415003B96EE /* Assets.xcassets */; };
+		30B0247E268F721B0059A6F4 /* WidgetAlarmsProvider+MapDrawing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B0247D268F721B0059A6F4 /* WidgetAlarmsProvider+MapDrawing.swift */; };
+		30B02481268F76FC0059A6F4 /* WidgetMediumDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B02480268F76FC0059A6F4 /* WidgetMediumDetailsView.swift */; };
+		30B02483268F77160059A6F4 /* LargeWidgetDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B02482268F77160059A6F4 /* LargeWidgetDetailsView.swift */; };
+		30B02487268F77BF0059A6F4 /* AlarmEntryWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B02486268F77BF0059A6F4 /* AlarmEntryWidget.swift */; };
+		30B02489268F77EF0059A6F4 /* LargeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B02488268F77EF0059A6F4 /* LargeWidgetEntryView.swift */; };
+		30B0248B268F7A170059A6F4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B0248A268F7A170059A6F4 /* Constants.swift */; };
 		30D14CF2268AFDF700B4C983 /* AlarmEntryRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14CF1268AFDF700B4C983 /* AlarmEntryRepresentation.swift */; };
 		30D14CF4268AFE0100B4C983 /* AlarmEntryRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14CF1268AFDF700B4C983 /* AlarmEntryRepresentation.swift */; };
-		30D14CF7268AFE4900B4C983 /* AlarmEntryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 301650FF268320DB00388390 /* AlarmEntryProtocol.swift */; };
-		30D14CF9268AFE6900B4C983 /* AlarmEntry+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA3C2680D09C00D4461E /* AlarmEntry+CoreDataProperties.swift */; };
-		30D14CFA268AFE6900B4C983 /* AlarmEntry+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA3B2680D09C00D4461E /* AlarmEntry+CoreDataClass.swift */; };
-		30D14D01268AFF1C00B4C983 /* Glarm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA1D2680B84000D4461E /* Glarm.xcdatamodeld */; };
-		30D14D03268AFFC500B4C983 /* CoreDataManager in Frameworks */ = {isa = PBXBuildFile; productRef = 30D14D02268AFFC500B4C983 /* CoreDataManager */; };
 		30D14D0E268B0AB600B4C983 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D0D268B0AB600B4C983 /* SharedConstants.swift */; };
 		30D14D0F268B0AEA00B4C983 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D0D268B0AB600B4C983 /* SharedConstants.swift */; };
 		30D14D17268B1E9300B4C983 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D16268B1E9300B4C983 /* CoreDataModel.swift */; };
-		30D14D18268B1EB500B4C983 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D16268B1E9300B4C983 /* CoreDataModel.swift */; };
-		30D14D19268B1EDE00B4C983 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA412681FA0500D4461E /* Sequence.swift */; };
-		30D14D1A268B1F4300B4C983 /* WidgetAlarmsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D10268B1C7900B4C983 /* WidgetAlarmsManager.swift */; };
+		30D14D21268B2A7000B4C983 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D14D20268B2A7000B4C983 /* WidgetKit.framework */; };
+		30D14D23268B2A7000B4C983 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30D14D22268B2A7000B4C983 /* SwiftUI.framework */; };
+		30D14D28268B2A7300B4C983 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30D14D27268B2A7300B4C983 /* Assets.xcassets */; };
+		30D14D2C268B2A7300B4C983 /* GlarmWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 30D14D1F268B2A7000B4C983 /* GlarmWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		30D14D38268B2C0400B4C983 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D0D268B0AB600B4C983 /* SharedConstants.swift */; };
+		30D14D3D268B2C0400B4C983 /* LocationNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB99DC124D2D7820002DDC8 /* LocationNotificationInfo.swift */; };
+		30D14D3E268B2C0400B4C983 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA412681FA0500D4461E /* Sequence.swift */; };
+		30D14D3F268B2C0800B4C983 /* Glarm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA1D2680B84000D4461E /* Glarm.xcdatamodeld */; };
+		30D14D40268B2C5800B4C983 /* CLLocationDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF13DC024B4BDD400B40D4E /* CLLocationDistance.swift */; };
+		30D14D41268B2C5800B4C983 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE2691424BD28E0000299A3 /* CLLocation.swift */; };
+		30D14D42268B2C5800B4C983 /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCA122024B34538009965E4 /* CLLocationCoordinate2D.swift */; };
+		30D14D43268B2C6F00B4C983 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE0553624C5C78E001D7995 /* Locale.swift */; };
+		30D14D45268B2CAC00B4C983 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D44268B2CAC00B4C983 /* NumberFormatter.swift */; };
+		30D14D47268B2D8C00B4C983 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D44268B2CAC00B4C983 /* NumberFormatter.swift */; };
+		30D14D48268B2D8D00B4C983 /* NumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D44268B2CAC00B4C983 /* NumberFormatter.swift */; };
+		30D14D4E268B2FEF00B4C983 /* WidgetAlarmEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D4D268B2FEF00B4C983 /* WidgetAlarmEntry.swift */; };
+		30D14D51268B364B00B4C983 /* SmallWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D50268B364B00B4C983 /* SmallWidgetEntryView.swift */; };
+		30E62972268B5C54003655AB /* MKCoordinateRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB99DC424D2D8EC0002DDC8 /* MKCoordinateRegion.swift */; };
+		30E62973268B5DA3003655AB /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8815F624BE130A001DD905 /* LocationManager.swift */; };
+		30E62975268B5E56003655AB /* AuthorizationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */; };
+		30E62976268B5E74003655AB /* UIDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB146E024BD18800076D547 /* UIDevice.swift */; };
+		30E6299E268BC115003655AB /* WidgetAlarmsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E6299B268BC115003655AB /* WidgetAlarmsProvider.swift */; };
+		30E629A1268BC28E003655AB /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E629A0268BC28E003655AB /* CGRect.swift */; };
+		30E629A3268BC28E003655AB /* CGRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E629A0268BC28E003655AB /* CGRect.swift */; };
+		30F22D24268C99F8006E9A9F /* SimpleAlarmEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30F22D23268C99F8006E9A9F /* SimpleAlarmEntry.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -163,6 +190,13 @@
 			remoteGlobalIDString = 2BB99DA224D2D23D0002DDC8;
 			remoteInfo = MapAlarmNotificationContentExtension;
 		};
+		30D14D2A268B2A7300B4C983 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2B88BFA924B32414003B96EE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 30D14D1E268B2A7000B4C983;
+			remoteInfo = GlarmWidgetExtension;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -172,6 +206,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				30D14D2C268B2A7300B4C983 /* GlarmWidgetExtension.appex in Embed App Extensions */,
 				2BB99DB224D2D23D0002DDC8 /* NotificationContentExtension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
@@ -195,7 +230,6 @@
 		2B2DDA1324C9A95400A8791E /* Notification.Name.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.Name.swift; sourceTree = "<group>"; };
 		2B3E3F8324DC2E460040539B /* ExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionViewController.swift; sourceTree = "<group>"; };
 		2B43646724DD6C8A00110F09 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
-		2B4E9DA124C5B82A00A2D5EC /* Cacher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cacher.swift; sourceTree = "<group>"; };
 		2B58487424DC3D0F0043BB59 /* UIViewController+Containment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Containment.swift"; sourceTree = "<group>"; };
 		2B6C7BA624B8E3B4000DEEDA /* RootController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootController.swift; sourceTree = "<group>"; };
 		2B81B1CE24C592E8007CB1D6 /* TableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableHeaderView.swift; sourceTree = "<group>"; };
@@ -235,7 +269,6 @@
 		2BD8EF7824E674B90084B64B /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		2BDAD7A624C2452800BA4AF9 /* SoundsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundsManager.swift; sourceTree = "<group>"; };
 		2BDAD7A824C245B500BA4AF9 /* Sound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sound.swift; sourceTree = "<group>"; };
-		2BDAD7AD24C2478C00BA4AF9 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		2BDAD7AF24C24C4E00BA4AF9 /* FileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager.swift; sourceTree = "<group>"; };
 		2BE0553624C5C78E001D7995 /* Locale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
 		2BE2691424BD28E0000299A3 /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocation.swift; sourceTree = "<group>"; };
@@ -295,11 +328,28 @@
 		302FCA552682946500D4461E /* EmptyBackgroundView */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EmptyBackgroundView; path = ../EmptyBackgroundView; sourceTree = "<group>"; };
 		302FCA582682954000D4461E /* AWTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWTableView.swift; sourceTree = "<group>"; };
 		305F8F6A2673878800BB328B /* Hamburg.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Hamburg.gpx; sourceTree = "<group>"; };
-		30D14CED268AF9BE00B4C983 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		30A783DB268CCBF00066795E /* SimpleAlarmEntryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAlarmEntryProtocol.swift; sourceTree = "<group>"; };
+		30B0247D268F721B0059A6F4 /* WidgetAlarmsProvider+MapDrawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WidgetAlarmsProvider+MapDrawing.swift"; sourceTree = "<group>"; };
+		30B02480268F76FC0059A6F4 /* WidgetMediumDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetMediumDetailsView.swift; sourceTree = "<group>"; };
+		30B02482268F77160059A6F4 /* LargeWidgetDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeWidgetDetailsView.swift; sourceTree = "<group>"; };
+		30B02486268F77BF0059A6F4 /* AlarmEntryWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmEntryWidget.swift; sourceTree = "<group>"; };
+		30B02488268F77EF0059A6F4 /* LargeWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeWidgetEntryView.swift; sourceTree = "<group>"; };
+		30B0248A268F7A170059A6F4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		30D14CF1268AFDF700B4C983 /* AlarmEntryRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmEntryRepresentation.swift; sourceTree = "<group>"; };
 		30D14D0D268B0AB600B4C983 /* SharedConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedConstants.swift; sourceTree = "<group>"; };
-		30D14D10268B1C7900B4C983 /* WidgetAlarmsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetAlarmsManager.swift; sourceTree = "<group>"; };
 		30D14D16268B1E9300B4C983 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
+		30D14D1F268B2A7000B4C983 /* GlarmWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GlarmWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		30D14D20268B2A7000B4C983 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		30D14D22268B2A7000B4C983 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		30D14D27268B2A7300B4C983 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		30D14D29268B2A7300B4C983 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30D14D44268B2CAC00B4C983 /* NumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatter.swift; sourceTree = "<group>"; };
+		30D14D4C268B2EEE00B4C983 /* GlarmWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GlarmWidgetExtension.entitlements; sourceTree = "<group>"; };
+		30D14D4D268B2FEF00B4C983 /* WidgetAlarmEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetAlarmEntry.swift; sourceTree = "<group>"; };
+		30D14D50268B364B00B4C983 /* SmallWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallWidgetEntryView.swift; sourceTree = "<group>"; };
+		30E6299B268BC115003655AB /* WidgetAlarmsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetAlarmsProvider.swift; sourceTree = "<group>"; };
+		30E629A0268BC28E003655AB /* CGRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRect.swift; sourceTree = "<group>"; };
+		30F22D23268C99F8006E9A9F /* SimpleAlarmEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAlarmEntry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -322,9 +372,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B58488724DC41300043BB59 /* SnapKit in Frameworks */,
-				30D14D03268AFFC500B4C983 /* CoreDataManager in Frameworks */,
 				2BB99DA824D2D23D0002DDC8 /* UserNotificationsUI.framework in Frameworks */,
 				2BB99DA624D2D23D0002DDC8 /* UserNotifications.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30D14D1C268B2A7000B4C983 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30D14D23268B2A7000B4C983 /* SwiftUI.framework in Frameworks */,
+				30D14D21268B2A7000B4C983 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,16 +392,12 @@
 		2B0DBDD024B355DD005B6A6A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				30D14D16268B1E9300B4C983 /* CoreDataModel.swift */,
 				2B0DBDE024B386D1005B6A6A /* Array.swift */,
 				2B0DBDD124B355E6005B6A6A /* CaseIterable.swift */,
-				2BE2691424BD28E0000299A3 /* CLLocation.swift */,
-				2BCA122024B34538009965E4 /* CLLocationCoordinate2D.swift */,
-				2BF13DC024B4BDD400B40D4E /* CLLocationDistance.swift */,
 				2BF4A69B24BBCD0F00F52A4D /* Date.swift */,
 				2BF76A3F24C45BA300A3BAB8 /* Double.swift */,
 				2BDAD7AF24C24C4E00BA4AF9 /* FileManager.swift */,
-				2BE0553624C5C78E001D7995 /* Locale.swift */,
-				2BB99DC424D2D8EC0002DDC8 /* MKCoordinateRegion.swift */,
 				2BB99DB724D2D5E80002DDC8 /* MKMapRect.swift */,
 				2BF4A6A324BCE2D500F52A4D /* MKMapView.swift */,
 				2BB99DBC24D2D6AA0002DDC8 /* MKPointAnnotation.swift */,
@@ -354,8 +408,6 @@
 				2BF6111C24B628BE00D01007 /* UIApplication.swift */,
 				2BF6111E24B72E9D00D01007 /* UIBlurStyle.swift */,
 				2BF13DBA24B48A6500B40D4E /* UIButton.swift */,
-				2B0F753E24B5E06800EE9876 /* UIColor.swift */,
-				2BB146E024BD18800076D547 /* UIDevice.swift */,
 				2B43646724DD6C8A00110F09 /* UIFont.swift */,
 				2BF76A3D24C4464C00A3BAB8 /* UIScrollView.swift */,
 				2BF13DBC24B48A6F00B40D4E /* UISlider.swift */,
@@ -421,11 +473,10 @@
 		2B88BFA824B32414003B96EE = {
 			isa = PBXGroup;
 			children = (
-				30D14D10268B1C7900B4C983 /* WidgetAlarmsManager.swift */,
-				30D14CED268AF9BE00B4C983 /* ContentView.swift */,
 				30165131268483B800388390 /* Shared */,
 				2B88BFB324B32414003B96EE /* Glarm */,
 				2B3E3F7F24DC2DEB0040539B /* Extensions */,
+				30D14D24268B2A7000B4C983 /* GlarmWidget */,
 				2BB99DA424D2D23D0002DDC8 /* Frameworks */,
 				2B88BFB224B32414003B96EE /* Products */,
 			);
@@ -436,6 +487,7 @@
 			children = (
 				2B88BFB124B32414003B96EE /* Glarm.app */,
 				2BB99DA324D2D23D0002DDC8 /* NotificationContentExtension.appex */,
+				30D14D1F268B2A7000B4C983 /* GlarmWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -465,6 +517,8 @@
 				2BB99DA524D2D23D0002DDC8 /* UserNotifications.framework */,
 				2BB99DA724D2D23D0002DDC8 /* UserNotificationsUI.framework */,
 				2BBDB96B24D9CBE900C8138B /* NotificationCenter.framework */,
+				30D14D20268B2A7000B4C983 /* WidgetKit.framework */,
+				30D14D22268B2A7000B4C983 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -484,15 +538,12 @@
 			isa = PBXGroup;
 			children = (
 				2B8C807824BF894C009EBBAE /* Alertable.swift */,
-				2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */,
 				2BF4A69324BBC9B300F52A4D /* AWAlertController.swift */,
 				2BF4A69F24BBCF2300F52A4D /* AWError.swift */,
 				2BBDE5D624B9A69E000AF05F /* BoldButtonController.swift */,
-				2B4E9DA124C5B82A00A2D5EC /* Cacher.swift */,
 				2BE2691824BDA6F9000299A3 /* Config.swift */,
 				2BF13DBE24B4905D00B40D4E /* DrawerNavigationController.swift */,
 				2BF4A69D24BBCEC500F52A4D /* IAPHandler.swift */,
-				2BDAD7AD24C2478C00BA4AF9 /* ImageLoader.swift */,
 				2BFD602E24C3745100D03C7A /* PlistReader.swift */,
 				2BF4A69924BBCC3800F52A4D /* UnlockManager.swift */,
 				2BE7404B24D876E80062EA58 /* VariSlider.swift */,
@@ -504,6 +555,7 @@
 		2BCA121524B33A3D009965E4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				301651182683776500388390 /* AlarmEntry */,
 				3016512026837D1E00388390 /* Category */,
 				2BDAD7A824C245B500BA4AF9 /* Sound.swift */,
 				302FCA4B268289E500D4461E /* AlertViewModel.swift */,
@@ -628,6 +680,7 @@
 		301650FE268320CA00388390 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
+				301650FF268320DB00388390 /* AlarmEntryProtocol.swift */,
 				30165101268320E600388390 /* AlarmsManagerProtocol.swift */,
 				301651032683278900388390 /* AlarmsManagerDelegate.swift */,
 				30165137268488FD00388390 /* AlarmCategoriesManagerProtocol.swift */,
@@ -649,7 +702,6 @@
 			children = (
 				2BCA121D24B33C36009965E4 /* AlarmsManager.swift */,
 				2B0F753A24B59FEE00EE9876 /* PermissionsManager.swift */,
-				2B8815F624BE130A001DD905 /* LocationManager.swift */,
 				2BDAD7A624C2452800BA4AF9 /* SoundsManager.swift */,
 				2BD8EF7224E5250B0084B64B /* AlarmCategoriesManager.swift */,
 			);
@@ -668,6 +720,7 @@
 		30165131268483B800388390 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				30E62974268B5E48003655AB /* Enums */,
 				30D14CFB268AFE7800B4C983 /* Supporting Files */,
 				30D14CF3268AFDFA00B4C983 /* Model */,
 				30D14CF0268AFD3300B4C983 /* Protocols */,
@@ -681,9 +734,17 @@
 		30165132268483BD00388390 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				2B0F753E24B5E06800EE9876 /* UIColor.swift */,
+				2BE2691424BD28E0000299A3 /* CLLocation.swift */,
+				2BCA122024B34538009965E4 /* CLLocationCoordinate2D.swift */,
+				2BF13DC024B4BDD400B40D4E /* CLLocationDistance.swift */,
+				2BB99DC424D2D8EC0002DDC8 /* MKCoordinateRegion.swift */,
+				2BE0553624C5C78E001D7995 /* Locale.swift */,
 				302FCA412681FA0500D4461E /* Sequence.swift */,
 				30165133268483CC00388390 /* UserDefaults.swift */,
-				30D14D16268B1E9300B4C983 /* CoreDataModel.swift */,
+				2BB146E024BD18800076D547 /* UIDevice.swift */,
+				30D14D44268B2CAC00B4C983 /* NumberFormatter.swift */,
+				30E629A0268BC28E003655AB /* CGRect.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -696,9 +757,38 @@
 			path = Locations;
 			sourceTree = "<group>";
 		};
+		30B0247F268F76E70059A6F4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				30B02485268F778F0059A6F4 /* Medium */,
+				30B02484268F77890059A6F4 /* Large */,
+				30D14D50268B364B00B4C983 /* SmallWidgetEntryView.swift */,
+				30B02486268F77BF0059A6F4 /* AlarmEntryWidget.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		30B02484268F77890059A6F4 /* Large */ = {
+			isa = PBXGroup;
+			children = (
+				30B02482268F77160059A6F4 /* LargeWidgetDetailsView.swift */,
+				30B02488268F77EF0059A6F4 /* LargeWidgetEntryView.swift */,
+			);
+			path = Large;
+			sourceTree = "<group>";
+		};
+		30B02485268F778F0059A6F4 /* Medium */ = {
+			isa = PBXGroup;
+			children = (
+				30B02480268F76FC0059A6F4 /* WidgetMediumDetailsView.swift */,
+			);
+			path = Medium;
+			sourceTree = "<group>";
+		};
 		30D14CEF268AFC5900B4C983 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				2B8815F624BE130A001DD905 /* LocationManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -706,7 +796,7 @@
 		30D14CF0268AFD3300B4C983 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				301650FF268320DB00388390 /* AlarmEntryProtocol.swift */,
+				30A783DB268CCBF00066795E /* SimpleAlarmEntryProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -714,9 +804,9 @@
 		30D14CF3268AFDFA00B4C983 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				301651182683776500388390 /* AlarmEntry */,
 				2BB99DC124D2D7820002DDC8 /* LocationNotificationInfo.swift */,
 				30D14CF1268AFDF700B4C983 /* AlarmEntryRepresentation.swift */,
+				30F22D23268C99F8006E9A9F /* SimpleAlarmEntry.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -737,6 +827,37 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		30D14D24268B2A7000B4C983 /* GlarmWidget */ = {
+			isa = PBXGroup;
+			children = (
+				30B0247F268F76E70059A6F4 /* View */,
+				30E6299F268BC152003655AB /* Provider */,
+				30D14D4C268B2EEE00B4C983 /* GlarmWidgetExtension.entitlements */,
+				30D14D27268B2A7300B4C983 /* Assets.xcassets */,
+				30D14D29268B2A7300B4C983 /* Info.plist */,
+				30D14D4D268B2FEF00B4C983 /* WidgetAlarmEntry.swift */,
+				30B0248A268F7A170059A6F4 /* Constants.swift */,
+			);
+			path = GlarmWidget;
+			sourceTree = "<group>";
+		};
+		30E62974268B5E48003655AB /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				2B24757D24BF591E00A1070D /* AuthorizationStatus.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		30E6299F268BC152003655AB /* Provider */ = {
+			isa = PBXGroup;
+			children = (
+				30B0247D268F721B0059A6F4 /* WidgetAlarmsProvider+MapDrawing.swift */,
+				30E6299B268BC115003655AB /* WidgetAlarmsProvider.swift */,
+			);
+			path = Provider;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -753,6 +874,7 @@
 			);
 			dependencies = (
 				2BB99DB124D2D23D0002DDC8 /* PBXTargetDependency */,
+				30D14D2B268B2A7300B4C983 /* PBXTargetDependency */,
 			);
 			name = Glarm;
 			packageProductDependencies = (
@@ -782,10 +904,28 @@
 			name = NotificationContentExtension;
 			packageProductDependencies = (
 				2B58488624DC41300043BB59 /* SnapKit */,
-				30D14D02268AFFC500B4C983 /* CoreDataManager */,
 			);
 			productName = MapAlarmNotificationContentExtension;
 			productReference = 2BB99DA324D2D23D0002DDC8 /* NotificationContentExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		30D14D1E268B2A7000B4C983 /* GlarmWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 30D14D2F268B2A7300B4C983 /* Build configuration list for PBXNativeTarget "GlarmWidgetExtension" */;
+			buildPhases = (
+				30D14D1B268B2A7000B4C983 /* Sources */,
+				30D14D1C268B2A7000B4C983 /* Frameworks */,
+				30D14D1D268B2A7000B4C983 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GlarmWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = GlarmWidgetExtension;
+			productReference = 30D14D1F268B2A7000B4C983 /* GlarmWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -794,7 +934,7 @@
 		2B88BFA924B32414003B96EE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1160;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "Adam Wienconek";
 				TargetAttributes = {
@@ -803,6 +943,9 @@
 					};
 					2BB99DA224D2D23D0002DDC8 = {
 						CreatedOnToolsVersion = 11.6;
+					};
+					30D14D1E268B2A7000B4C983 = {
+						CreatedOnToolsVersion = 12.5.1;
 					};
 				};
 			};
@@ -825,6 +968,7 @@
 			targets = (
 				2B88BFB024B32414003B96EE /* Glarm */,
 				2BB99DA224D2D23D0002DDC8 /* NotificationContentExtension */,
+				30D14D1E268B2A7000B4C983 /* GlarmWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -857,6 +1001,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		30D14D1D268B2A7000B4C983 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30B02478268F4ADA0059A6F4 /* Assets.xcassets in Resources */,
+				30D14D28268B2A7300B4C983 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -867,12 +1020,12 @@
 				2BF4A69A24BBCC3800F52A4D /* UnlockManager.swift in Sources */,
 				2BF6112124B72FA300D01007 /* UIView.swift in Sources */,
 				2BF13DBF24B4905D00B40D4E /* DrawerNavigationController.swift in Sources */,
-				30D14D1A268B1F4300B4C983 /* WidgetAlarmsManager.swift in Sources */,
 				2BF76A3C24C435FE00A3BAB8 /* NoteCell.swift in Sources */,
 				30165100268320DB00388390 /* AlarmEntryProtocol.swift in Sources */,
 				2BE2691524BD28E0000299A3 /* CLLocation.swift in Sources */,
 				2B0F753F24B5E06800EE9876 /* UIColor.swift in Sources */,
 				2BCA121424B33A3A009965E4 /* BrowseViewModel.swift in Sources */,
+				30F22D24268C99F8006E9A9F /* SimpleAlarmEntry.swift in Sources */,
 				2BEDCCFF24BB5A45009EED08 /* LanguageTableKey.swift in Sources */,
 				302FCA3D2680D09C00D4461E /* AlarmEntry+CoreDataClass.swift in Sources */,
 				2B2DDA1424C9A95400A8791E /* Notification.Name.swift in Sources */,
@@ -885,8 +1038,8 @@
 				2BB99DB824D2D5E80002DDC8 /* MKMapRect.swift in Sources */,
 				2B0DBDDF24B38025005B6A6A /* AlarmMapController.swift in Sources */,
 				2B43646824DD6C8A00110F09 /* UIFont.swift in Sources */,
+				30D14D45268B2CAC00B4C983 /* NumberFormatter.swift in Sources */,
 				2BF13DC124B4BDD400B40D4E /* CLLocationDistance.swift in Sources */,
-				2B4E9DA224C5B82A00A2D5EC /* Cacher.swift in Sources */,
 				2B0DBDE124B386D1005B6A6A /* Array.swift in Sources */,
 				302FCA422681FA0500D4461E /* Sequence.swift in Sources */,
 				2BD8EF7124E524480084B64B /* CategoriesViewModel.swift in Sources */,
@@ -907,7 +1060,6 @@
 				2BF4A69824BBCB8800F52A4D /* UIAlertAction.swift in Sources */,
 				2BE7404C24D876E80062EA58 /* VariSlider.swift in Sources */,
 				2BF6111D24B628BE00D01007 /* UIApplication.swift in Sources */,
-				2BDAD7AE24C2478C00BA4AF9 /* ImageLoader.swift in Sources */,
 				2BDAD7A724C2452800BA4AF9 /* SoundsManager.swift in Sources */,
 				2B86871C24C6CE8700664892 /* SoundCell.swift in Sources */,
 				2BF6111F24B72E9D00D01007 /* UIBlurStyle.swift in Sources */,
@@ -933,6 +1085,7 @@
 				2BF13DBB24B48A6500B40D4E /* UIButton.swift in Sources */,
 				2B8815F724BE130A001DD905 /* LocationManager.swift in Sources */,
 				2BB99DBD24D2D6AA0002DDC8 /* MKPointAnnotation.swift in Sources */,
+				30E629A1268BC28E003655AB /* CGRect.swift in Sources */,
 				2BD8EF7924E674B90084B64B /* String.swift in Sources */,
 				2BF4A69424BBC9B300F52A4D /* AWAlertController.swift in Sources */,
 				2B0DBDDB24B37C7E005B6A6A /* UIImage+Assets.swift in Sources */,
@@ -944,6 +1097,7 @@
 				2BF76A3A24C4242300A3BAB8 /* LocationSettingsController.swift in Sources */,
 				302FCA3E2680D09C00D4461E /* AlarmEntry+CoreDataProperties.swift in Sources */,
 				302FCA1F2680B84000D4461E /* Glarm.xcdatamodeld in Sources */,
+				30A783DC268CCBF00066795E /* SimpleAlarmEntryProtocol.swift in Sources */,
 				2B0F173824B9D9E200DD8AB9 /* AlarmMapCell.swift in Sources */,
 				2BEDCD0124BB5A45009EED08 /* LocalizedStringKey.swift in Sources */,
 				2B0F753B24B59FEE00EE9876 /* PermissionsManager.swift in Sources */,
@@ -951,7 +1105,6 @@
 				2BF4A69C24BBCD0F00F52A4D /* Date.swift in Sources */,
 				302FCA44268206AA00D4461E /* URL.swift in Sources */,
 				30165102268320E600388390 /* AlarmsManagerProtocol.swift in Sources */,
-				30D14CEE268AF9BE00B4C983 /* ContentView.swift in Sources */,
 				2BF4A6A424BCE2D500F52A4D /* MKMapView.swift in Sources */,
 				2B0F173C24B9EE3500DD8AB9 /* EmptyLocationCell.swift in Sources */,
 				301651142683630E00388390 /* NSManagedObject.swift in Sources */,
@@ -967,31 +1120,61 @@
 			files = (
 				2B58487C24DC3DDC0043BB59 /* UIView.swift in Sources */,
 				2BB99DB924D2D5F80002DDC8 /* MKMapRect.swift in Sources */,
+				30B02475268F3B7D0059A6F4 /* SimpleAlarmEntryProtocol.swift in Sources */,
 				2B58487624DC3D2A0043BB59 /* UIViewController+Containment.swift in Sources */,
 				2BB99DC724D2DC660002DDC8 /* UIColor.swift in Sources */,
-				30D14CF7268AFE4900B4C983 /* AlarmEntryProtocol.swift in Sources */,
 				2BB99DBE24D2D6B10002DDC8 /* MKPointAnnotation.swift in Sources */,
 				2BB99DC324D2D7A10002DDC8 /* LocationNotificationInfo.swift in Sources */,
-				30D14D01268AFF1C00B4C983 /* Glarm.xcdatamodeld in Sources */,
 				2B58487B24DC3DCF0043BB59 /* UIButton.swift in Sources */,
-				30D14CF9268AFE6900B4C983 /* AlarmEntry+CoreDataProperties.swift in Sources */,
 				2BB99DC924D2E5110002DDC8 /* LocalizedStringKey.swift in Sources */,
 				2BB99DCD24D2E5310002DDC8 /* Locale.swift in Sources */,
-				30D14D19268B1EDE00B4C983 /* Sequence.swift in Sources */,
 				30D14D0F268B0AEA00B4C983 /* SharedConstants.swift in Sources */,
 				2B58488024DC3EC60043BB59 /* CLLocation.swift in Sources */,
 				2B58488224DC3F270043BB59 /* CLLocationDistance.swift in Sources */,
 				2B48A17B24DD352E00D74D9A /* NotificationViewController.swift in Sources */,
 				30165135268484CC00388390 /* UserDefaults.swift in Sources */,
-				30D14D18268B1EB500B4C983 /* CoreDataModel.swift in Sources */,
-				30D14CFA268AFE6900B4C983 /* AlarmEntry+CoreDataClass.swift in Sources */,
-				2B58488424DC41040043BB59 /* Cacher.swift in Sources */,
 				2BB99DBF24D2D7400002DDC8 /* CLLocationCoordinate2D.swift in Sources */,
+				30B02476268F3B7F0059A6F4 /* SimpleAlarmEntry.swift in Sources */,
 				2B43646924DD6D5E00110F09 /* UIFont.swift in Sources */,
 				2BB99DC824D2E5110002DDC8 /* LanguageTableKey.swift in Sources */,
 				2B58487124DC3C940043BB59 /* ExtensionViewController.swift in Sources */,
 				2BB99DC624D2D8F60002DDC8 /* MKCoordinateRegion.swift in Sources */,
+				30D14D47268B2D8C00B4C983 /* NumberFormatter.swift in Sources */,
 				30D14CF4268AFE0100B4C983 /* AlarmEntryRepresentation.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		30D14D1B268B2A7000B4C983 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				30D14D38268B2C0400B4C983 /* SharedConstants.swift in Sources */,
+				30B02473268F3B310059A6F4 /* SimpleAlarmEntry.swift in Sources */,
+				30B02487268F77BF0059A6F4 /* AlarmEntryWidget.swift in Sources */,
+				30E6299E268BC115003655AB /* WidgetAlarmsProvider.swift in Sources */,
+				30D14D41268B2C5800B4C983 /* CLLocation.swift in Sources */,
+				30B02489268F77EF0059A6F4 /* LargeWidgetEntryView.swift in Sources */,
+				30E62975268B5E56003655AB /* AuthorizationStatus.swift in Sources */,
+				30E62972268B5C54003655AB /* MKCoordinateRegion.swift in Sources */,
+				30E62976268B5E74003655AB /* UIDevice.swift in Sources */,
+				30E629A3268BC28E003655AB /* CGRect.swift in Sources */,
+				30D14D51268B364B00B4C983 /* SmallWidgetEntryView.swift in Sources */,
+				30D14D3F268B2C0800B4C983 /* Glarm.xcdatamodeld in Sources */,
+				30D14D48268B2D8D00B4C983 /* NumberFormatter.swift in Sources */,
+				30B02477268F4A110059A6F4 /* UIColor.swift in Sources */,
+				30D14D43268B2C6F00B4C983 /* Locale.swift in Sources */,
+				30D14D4E268B2FEF00B4C983 /* WidgetAlarmEntry.swift in Sources */,
+				30A783DF268CCC9D0066795E /* UserDefaults.swift in Sources */,
+				30D14D3D268B2C0400B4C983 /* LocationNotificationInfo.swift in Sources */,
+				30E62973268B5DA3003655AB /* LocationManager.swift in Sources */,
+				30D14D42268B2C5800B4C983 /* CLLocationCoordinate2D.swift in Sources */,
+				30B0247E268F721B0059A6F4 /* WidgetAlarmsProvider+MapDrawing.swift in Sources */,
+				30B02481268F76FC0059A6F4 /* WidgetMediumDetailsView.swift in Sources */,
+				30D14D3E268B2C0400B4C983 /* Sequence.swift in Sources */,
+				30D14D40268B2C5800B4C983 /* CLLocationDistance.swift in Sources */,
+				30A783DE268CCBF00066795E /* SimpleAlarmEntryProtocol.swift in Sources */,
+				30B02483268F77160059A6F4 /* LargeWidgetDetailsView.swift in Sources */,
+				30B0248B268F7A170059A6F4 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1002,6 +1185,11 @@
 			isa = PBXTargetDependency;
 			target = 2BB99DA224D2D23D0002DDC8 /* NotificationContentExtension */;
 			targetProxy = 2BB99DB024D2D23D0002DDC8 /* PBXContainerItemProxy */;
+		};
+		30D14D2B268B2A7300B4C983 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 30D14D1E268B2A7000B4C983 /* GlarmWidgetExtension */;
+			targetProxy = 30D14D2A268B2A7300B4C983 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1029,7 +1217,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BUILD_NUMBER = 2;
+				BUILD_NUMBER = 3;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1093,7 +1281,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BUILD_NUMBER = 2;
+				BUILD_NUMBER = 3;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1166,7 +1354,7 @@
 				MARKETING_VERSION = "${PROJECT_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adw.glarm;
 				PRODUCT_NAME = Glarm;
-				PROJECT_VERSION = 3.0.0;
+				PROJECT_VERSION = "${PROJECT_VERSION}";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1192,7 +1380,7 @@
 				MARKETING_VERSION = "${PROJECT_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = com.adw.glarm;
 				PRODUCT_NAME = Glarm;
-				PROJECT_VERSION = 3.0.0;
+				PROJECT_VERSION = "${PROJECT_VERSION}";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1245,6 +1433,56 @@
 			};
 			name = Release;
 		};
+		30D14D2D268B2A7300B4C983 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = GlarmWidget/GlarmWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "${BUILD_NUMBER}";
+				DEVELOPMENT_TEAM = 5346R7RC8E;
+				INFOPLIST_FILE = GlarmWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adw.glarm.GlarmWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		30D14D2E268B2A7300B4C983 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = GlarmWidget/GlarmWidgetExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "${BUILD_NUMBER}";
+				DEVELOPMENT_TEAM = 5346R7RC8E;
+				INFOPLIST_FILE = GlarmWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.adw.glarm.GlarmWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1271,6 +1509,15 @@
 			buildConfigurations = (
 				2BB99DB424D2D23D0002DDC8 /* Debug */,
 				2BB99DB524D2D23D0002DDC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		30D14D2F268B2A7300B4C983 /* Build configuration list for PBXNativeTarget "GlarmWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				30D14D2D268B2A7300B4C983 /* Debug */,
+				30D14D2E268B2A7300B4C983 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1327,10 +1574,6 @@
 		302FCA562682946C00D4461E /* EmptyBackgroundView */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = EmptyBackgroundView;
-		};
-		30D14D02268AFFC500B4C983 /* CoreDataManager */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CoreDataManager;
 		};
 /* End XCSwiftPackageProductDependency section */
 

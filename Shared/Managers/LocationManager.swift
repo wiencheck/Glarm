@@ -13,21 +13,7 @@ final class LocationManager: NSObject {
     
     private let manager = CLLocationManager()
     
-    private(set) var latitude: CLLocationDegrees = 0
-    private(set) var longitude: CLLocationDegrees = 0
-    
-    private(set)var coordinate: CLLocationCoordinate2D {
-        get {
-            return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        } set {
-            latitude = newValue.latitude
-            longitude = newValue.longitude
-        }
-    }
-    
-    var location: CLLocation {
-        CLLocation(coordinate: coordinate)
-    }
+    private(set) var location: CLLocation?
     
     private override init() {
         super.init()
@@ -47,18 +33,25 @@ final class LocationManager: NSObject {
     }
     
     func distance(from location: CLLocation) -> CLLocationDistance {
-        let distance = self.location.distance(from: location)
+        let distance = self.location?.distance(from: location) ?? 0
         return distance
     }
     
     func distance(from coordinate: CLLocationCoordinate2D) -> CLLocationDistance {
-        let distance = self.location.distance(from: CLLocation(coordinate: coordinate))
+        let distance = self.location?.distance(from: CLLocation(coordinate: coordinate)) ?? 0
         return distance
     }
     
     private var onLocationAuthorizationStatusChange: ((AuthorizationStatus) -> Void)?
     func requestAuthorization(completion: @escaping (AuthorizationStatus) -> Void) {
-        switch CLLocationManager.authorizationStatus() {
+        let status: CLAuthorizationStatus
+        if #available(iOS 14.0, *) {
+            status = manager.authorizationStatus
+        } else {
+            status = CLLocationManager.authorizationStatus()
+        }
+        
+        switch status {
         case .notDetermined:
             onLocationAuthorizationStatusChange = completion
             manager.requestWhenInUseAuthorization()
@@ -73,10 +66,8 @@ final class LocationManager: NSObject {
 
 extension LocationManager: CLLocationManagerDelegate {
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = manager.location else {
-            return
-        }
-        coordinate = location.coordinate
+        
+        location = locations.last
         onLocationAuthorizationStatusChange?(.authorized)
         onLocationAuthorizationStatusChange = nil
     }

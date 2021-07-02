@@ -9,19 +9,7 @@
 import Foundation
 import CoreLocation
 
-protocol AlarmEntryProtocol {
-    /// Unique identifier of the alarm.
-    var uid: String { get }
-    
-    /// Date when alarm was created/scheduled.
-    var dateCreated: Date { get set }
-    
-    /// Object holding information about location and radius of the alarm.
-    var locationInfo: LocationNotificationInfo? { get set }
-    
-    /// User-defined note attached to the alarm.
-    var note: String { get set }
-    
+protocol AlarmEntryProtocol: SimpleAlarmEntryProtocol {
     /// Name of the audio file to be played alongside the alarm.
     var soundName: String { get set }
     
@@ -36,4 +24,13 @@ protocol AlarmEntryProtocol {
     
     /// Value indicating whether alarm was saved to the database.
     var isSaved: Bool { get }
+}
+
+extension AlarmEntryProtocol {
+    func makeSimplified() -> SimpleAlarmEntry {
+        return SimpleAlarmEntry(uid: uid,
+                                dateCreated: dateCreated,
+                                locationInfo: locationInfo,
+                                note: note)
+    }
 }

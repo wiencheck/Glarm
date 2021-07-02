@@ -78,11 +78,12 @@ final class AlarmMapCell: AlarmCell {
     private func updateDetailText() {
         guard let text = radiusText,
            let info = locationInfo,
-            LocationManager.shared.coordinate != .zero else {
+           let location = LocationManager.shared.location,
+            location.coordinate != .zero else {
             return
         }
         let destination = CLLocation(coordinate: info.coordinate)
-        let distance = LocationManager.shared.location.distance(from: destination)
+        let distance = location.distance(from: destination)
         detailLabel.text = text + ", \(LocalizedStringKey.notification_youAre.localized) \(distance.readableRepresentation()) \(LocalizedStringKey.notification_awayFromDestination.localized)"
     }
         

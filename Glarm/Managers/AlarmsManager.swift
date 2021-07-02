@@ -84,10 +84,25 @@ class AlarmsManager: CoreDatabaseManager<AlarmEntry>, AlarmsManagerProtocol {
         }
     }
     
+    override func fetchAll() -> [AlarmEntry]? {
+        let alarms = super.fetchAll()
+        updateRecentAlarms(withAlarms: alarms)
+        
+        return alarms
+    }
+    
     override func postNotification(_ sender: Notification) {
         super.postNotification(sender)
         if isScheduling { return }
         NotificationCenter.default.post(name: Self.alarmsUpdatedNotification, object: self)
+    }
+    
+    private func updateRecentAlarms(withAlarms alarms: [AlarmEntry]?) {
+        let recentAlarms = alarms?.map { entry in
+            entry.makeSimplified()
+        }
+        UserDefaults.appGroupSuite.recentAlarms = recentAlarms
+        UserDefaults.appGroupSuite.synchronize()
     }
 }
 

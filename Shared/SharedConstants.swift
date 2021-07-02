@@ -7,16 +7,18 @@
 //
 
 import Foundation
+import UIKit
 
 enum SharedConstants {
+    static let radiusOverlayAlpha: CGFloat = 0.4
+    
     static let appGroupIdentifier = "group.adw.glarm"
     
     static var appGroupContainerURL: URL {
         return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroupIdentifier)!
     }
     
-    /// Key under `SimplifiedAlarmEntry` object data is placed.
-    static let activeAlarmDefaultsKey = "ActiveAlarmDefaultsKey"
+    static let recentAlarmsUserDefaultsKey = "recentAlarms"
     
     static let widgetTargetBundleIdentifier = "com.adw.glarm.TodayWidgetExtension"
     

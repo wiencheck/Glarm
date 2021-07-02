@@ -10,7 +10,10 @@ import MapKit
 
 extension MKMapView {
     func showUserLocation(and coordinate: CLLocationCoordinate2D, animated: Bool) {
-        let userCoordinate = LocationManager.shared.coordinate
+        guard let userCoordinate = LocationManager.shared.location?.coordinate else {
+            setCenter(coordinate, animated: animated)
+            return
+        }
         
         if userCoordinate == .zero {
             setCenter(coordinate, animated: animated)

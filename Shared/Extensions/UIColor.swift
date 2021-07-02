@@ -13,6 +13,10 @@ extension UIColor {
         return UIColor(named: "Tint")!
     }
     
+    class var userRing: UIColor {
+        return UIColor(named: "User Ring")!
+    }
+    
     class var background: UIColor {
         if #available(iOS 13.0, *) {
             return .systemBackground

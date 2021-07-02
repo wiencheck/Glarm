@@ -11,12 +11,8 @@ import CoreLocation
 extension CLLocationDistance {
     func readableRepresentation(usingSpaces: Bool = false) -> String {
         
-        var formatter: NumberFormatter! = Cacher.object(key: "CLLocationDistanceFormatter") as? NumberFormatter
-        if formatter == nil {
-            formatter = NumberFormatter()
-            formatter!.minimumFractionDigits = 0
-            Cacher.set(object: formatter, at: "CLLocationDistanceFormatter")
-        }
+        let formatter: NumberFormatter = .cached()
+        formatter.minimumFractionDigits = 0
         
         switch Locale.preferredUnitLength {
         case .miles:

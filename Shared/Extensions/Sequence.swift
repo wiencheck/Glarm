@@ -9,15 +9,19 @@
 import Foundation
 
 extension Sequence {
-    func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>, ascending: Bool = true) -> [Element] {
-        if ascending {
+    
+    func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>, _ order: ComparisonResult = .orderedAscending) -> [Element] {
+        switch order {
+        case .orderedAscending:
             return sorted { a, b in
                 return a[keyPath: keyPath] < b[keyPath: keyPath]
             }
-        } else {
+        case .orderedDescending:
             return sorted { a, b in
                 return a[keyPath: keyPath] > b[keyPath: keyPath]
             }
+        default:
+            return Array(self)
         }
     }
 }

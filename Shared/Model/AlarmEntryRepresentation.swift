@@ -13,9 +13,3 @@ struct AlarmEntryRepresentation: Codable {
     let locationInfo: LocationNotificationInfo?
     let note: String
 }
-
-extension AlarmEntryRepresentation {
-    init(alarm: AlarmEntryProtocol) {
-        self.init(locationInfo: alarm.locationInfo, note: alarm.note)
-    }
-}

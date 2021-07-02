@@ -44,10 +44,10 @@ final class BrowseViewModel {
     }
     
     private func sort(alarms: [AlarmEntryProtocol]) {
-        var newAlarms = [String: [AlarmEntryProtocol]]()
+        var newAlarms: [String: [AlarmEntryProtocol]] = [:]
         var categoryNames = [String]()
         
-        for alarm in alarms.sorted(by: \.dateCreated, ascending: false) {
+        for alarm in alarms.sorted(by: \.dateCreated, .orderedDescending) {
             let key: String
             if alarm.isActive {
                 key = activeSection.title

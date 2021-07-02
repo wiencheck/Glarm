@@ -131,7 +131,7 @@ class MapController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         mapView.showUserLocation(and: coordinate, animated: false)
-
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -204,18 +204,18 @@ extension MapController: MKMapViewDelegate {
             view.setDragState(.none, animated: true)
         }
         guard newState == .ending,
-            let droppedCoordinate = view.annotation?.coordinate else { return }
+              let droppedCoordinate = view.annotation?.coordinate else { return }
         geocode(coordinate: droppedCoordinate)
     }
     
-        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-            maximumDistanceWork?.cancel()
-            maximumDistanceWork = DispatchWorkItem {
-                self.updateLocationName(name: self.locationFullAddress, city: nil, distance: mapView.visibleDistance)
-                self.settingsController.updateDistanceFromLocation(mapView.visibleDistance)
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: maximumDistanceWork!)
+    func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+        maximumDistanceWork?.cancel()
+        maximumDistanceWork = DispatchWorkItem {
+            self.updateLocationName(name: self.locationFullAddress, city: nil, distance: mapView.visibleDistance)
+            self.settingsController.updateDistanceFromLocation(mapView.visibleDistance)
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: maximumDistanceWork!)
+    }
 }
 
 extension MapController: LocationSettingsControllerDelegate {
