@@ -9,15 +9,22 @@
 import Foundation
 
 extension Date {
-    public static func daysBetween(start: Date, end: Date) -> Int {
+    static func daysBetween(start: Date, end: Date) -> Int {
         return Calendar.current.dateComponents([.day], from: start, to: end).day!
     }
     
-    public func daysBetween(end: Date) -> Int {
+    func daysBetween(end: Date) -> Int {
         return Calendar.current.dateComponents([.day], from: self, to: end).day!
     }
     
-    public static func secondsBetween(start: Date, end: Date) -> Int {
+    static func secondsBetween(start: Date, end: Date) -> Int {
         return Calendar.current.dateComponents([.second], from: start, to: end).second!
+    }
+    
+    var timeDescription: String {
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: self)
+        let minutes = calendar.component(.minute, from: self)
+        return "\(hour):\(minutes)"
     }
 }

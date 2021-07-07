@@ -150,6 +150,11 @@ enum LocalizedStringKey: String, LocalizableString {
     case unlock_purchaseAction
     case unlock_restoreAction
     
+    // MARK: Units
+    case unit_menuTitle
+    case unit_kilometers
+    case unit_miles
+    
     // MARK: Other
     case cancel
     case dismiss

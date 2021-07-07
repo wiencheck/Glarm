@@ -96,14 +96,6 @@ class AlarmsManager: CoreDatabaseManager<AlarmEntry>, AlarmsManagerProtocol {
         if isScheduling { return }
         NotificationCenter.default.post(name: Self.alarmsUpdatedNotification, object: self)
     }
-    
-    private func updateRecentAlarms(withAlarms alarms: [AlarmEntry]?) {
-        let recentAlarms = alarms?.map { entry in
-            entry.makeSimplified()
-        }
-        UserDefaults.appGroupSuite.recentAlarms = recentAlarms
-        UserDefaults.appGroupSuite.synchronize()
-    }
 }
 
 private extension AlarmsManager {
@@ -137,6 +129,7 @@ private extension AlarmsManager {
             
             var err = error
             outerif: if err == nil {
+                alarm.dateCreated = Date()
                 if let uuid = alarm.value(forKey: "uuid") as? UUID,
                    self.contains(recordKey: uuid) {
                     break outerif
@@ -154,7 +147,7 @@ private extension AlarmsManager {
 extension AlarmsManager: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
-        completionHandler([.alert])
+        completionHandler(.banner)
         delegate?.alarmsManager(notificationWasPresented: self)
     }
 }

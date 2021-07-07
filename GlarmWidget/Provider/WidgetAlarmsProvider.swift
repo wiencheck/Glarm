@@ -10,26 +10,28 @@ import SwiftUI
 import WidgetKit
 import CoreLocation
 
-class WidgetAlarmsProvider: TimelineProvider {
+class WidgetAlarmsProvider: NSObject, TimelineProvider {
     typealias Entry = WidgetAlarmEntry
     
-    let locationManager = CLLocationManager()
+    let locationManager: CLLocationManager
+    
+    override init() {
+        locationManager = CLLocationManager()
+        super.init()
+        locationManager.delegate = self
+    }
     
     deinit {
         locationManager.stopUpdatingLocation()
     }
     
-    private var location: CLLocation? { locationManager.location }
+    private var location: CLLocation? { locationManager.location ?? UserDefaults.appGroupSuite.lastLocation }
         
     func getSnapshot(in context: Context, completion: @escaping (WidgetAlarmEntry) -> Void) {
         print("Snapshot")
         
-        fetchMostRecentAlarm { alarmEntry in
-            guard let alarmEntry = alarmEntry else {
-                completion(.placeholder)
-                return
-            }
-            self.prepareWidgetEntry(inContext: context, withAlarmEntry: alarmEntry, completion: completion)
+        prepareWidgetEntry(inContext: context, withAlarmEntry: .placeholder) { widgetEntry in
+            completion(widgetEntry)
         }
     }
     
@@ -46,7 +48,7 @@ class WidgetAlarmsProvider: TimelineProvider {
             self.prepareWidgetEntry(inContext: context, withAlarmEntry: alarmEntry) { widgetEntry in
                 let policy: TimelineReloadPolicy
                 if let refreshDate = Calendar.current.date(byAdding: .second,
-                                                        value: 45,
+                                                        value: 30,
                                                         to: Date()) {
                     policy = .after(refreshDate)
                 } else {
@@ -64,19 +66,32 @@ class WidgetAlarmsProvider: TimelineProvider {
     }
     
     private func prepareWidgetEntry(inContext context: Context, withAlarmEntry alarmEntry: SimpleAlarmEntry, completion: @escaping (WidgetAlarmEntry) -> Void) {
-        guard let locationInfo = alarmEntry.locationInfo else {
+        let userLocation: CLLocation? = context.isPreview ? .cupertinoUser : location
+        
+        guard let locationInfo = alarmEntry.locationInfo,
+              let distance = userLocation?.distance(from: locationInfo.location) else {
             completion(.placeholder)
             return
         }
+        var timeOfArrival: Date?
+        
+        if let speed = userLocation?.speed,
+           speed > 0 {
+            let seconds = distance / speed
+            timeOfArrival = Calendar.current.date(byAdding: .second, value: Int(seconds), to: Date())
+        }
         
         createImage(locationInfo: locationInfo,
-                    userLocation: locationManager.location,
+                    userLocation: userLocation,
                     size: calculateImageSize(inContext: context)) { snapshot in
             guard let snapshot = snapshot else {
                 completion(.placeholder)
                 return
             }
-            let widgetEntry = WidgetAlarmEntry(snapshot: snapshot, alarm: alarmEntry)
+            let widgetEntry = WidgetAlarmEntry(snapshot: snapshot,
+                                               alarm: alarmEntry,
+                                               distance: distance,
+                                               timeOfArrival: timeOfArrival)
             completion(widgetEntry)
         }
     }
@@ -116,4 +131,11 @@ class WidgetAlarmsProvider: TimelineProvider {
         }
     }
     
+}
+
+extension WidgetAlarmsProvider: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        UserDefaults.appGroupSuite.lastLocation = locations.last
+    }
 }

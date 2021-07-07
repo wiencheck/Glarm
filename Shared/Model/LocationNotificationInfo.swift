@@ -23,6 +23,8 @@ struct LocationNotificationInfo: Codable {
         self.init(name: "", coordinate: .zero, radius: .default)
     }
     
+    var location: CLLocation { .init(coordinate: coordinate) }
+    
     static let `default` = LocationNotificationInfo()
 }
 

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 extension UserDefaults {
     class var appGroupSuite: UserDefaults {
@@ -31,6 +32,40 @@ extension UserDefaults {
             } else {
                 set(arr, forKey: Self.recentAlarmsUserDefaultsKey)
             }
+        }
+    }
+    
+    private static let lastLocationUserDefaultsKey = "lastSpeedUserDefaultsKey"
+    var lastLocation: CLLocation? {
+        get {
+            guard let data = data(forKey: Self.lastLocationUserDefaultsKey) else {
+                return nil
+            }
+            return try? NSKeyedUnarchiver.unarchivedObject(ofClass: CLLocation.self, from: data)
+        } set {
+            guard let location = newValue else {
+                removeObject(forKey: Self.lastLocationUserDefaultsKey)
+                return
+            }
+            let encoded = try? NSKeyedArchiver.archivedData(withRootObject: location, requiringSecureCoding: false)
+            set(encoded, forKey: Self.lastLocationUserDefaultsKey)
+        }
+    }
+    
+    private static let preferredUnitLengthUserDefaultsKey = "preferredUnitLengthUserDefaultsKey"
+    var preferredUnitLength: UnitLength {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: Self.preferredUnitLengthUserDefaultsKey),
+                  let unarchived = try? NSKeyedUnarchiver.unarchivedObject(ofClass: UnitLength.self, from: data) else {
+                return .kilometers
+            }
+            return unarchived
+        } set {
+            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: false) else {
+                removeObject(forKey: Self.preferredUnitLengthUserDefaultsKey)
+                return
+            }
+            UserDefaults.standard.set(data, forKey: Self.preferredUnitLengthUserDefaultsKey)
         }
     }
 }

@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2B48A18124DD35FC00D74D9A"
-               BuildableName = "TodayWidgetExtension.appex"
-               BlueprintName = "TodayWidgetExtension"
+               BlueprintIdentifier = "30D14D1E268B2A7000B4C983"
+               BuildableName = "GlarmWidgetExtension.appex"
+               BlueprintName = "GlarmWidgetExtension"
                ReferencedContainer = "container:Glarm.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -62,9 +62,9 @@
          BundleIdentifier = "com.apple.springboard">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2B48A18124DD35FC00D74D9A"
-            BuildableName = "TodayWidgetExtension.appex"
-            BlueprintName = "TodayWidgetExtension"
+            BlueprintIdentifier = "30D14D1E268B2A7000B4C983"
+            BuildableName = "GlarmWidgetExtension.appex"
+            BlueprintName = "GlarmWidgetExtension"
             ReferencedContainer = "container:Glarm.xcodeproj">
          </BuildableReference>
       </RemoteRunnable>
@@ -77,6 +77,23 @@
             ReferencedContainer = "container:Glarm.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "_XCWidgetKind"
+            value = ""
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "_XCWidgetDefaultView"
+            value = "timeline"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "_XCWidgetFamily"
+            value = "medium"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

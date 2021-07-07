@@ -13,26 +13,51 @@ import MapKit
 struct WidgetAlarmEntry: TimelineEntry {
     let date: Date
     let snapshot: UIImage
-    let alarm: SimpleAlarmEntryProtocol
+    let distance: CLLocationDistance
+    let timeOfArrival: Date?
     
-    init(date: Date = Date(), snapshot: UIImage, alarm: SimpleAlarmEntryProtocol) {
+    private let alarm: SimpleAlarmEntryProtocol
+    
+    init(date: Date = Date(), snapshot: UIImage, alarm: SimpleAlarmEntryProtocol, distance: CLLocationDistance, timeOfArrival: Date?) {
         self.date = date
         self.snapshot = snapshot
         self.alarm = alarm
+        self.distance = distance
+        self.timeOfArrival = timeOfArrival
     }
+    
+    var name: String { alarm.locationInfo?.name ?? "None" }
+    
+    var note: String { alarm.note }
     
     var url: URL? { URL(string: "//:\(alarm.uid)") }
 }
 
+extension SimpleAlarmEntry {
+    static var placeholder: SimpleAlarmEntry {
+        /* Cupertino, of course. */
+        let locationInfo = LocationNotificationInfo(name: "Cupertino",
+                                                    coordinate: .cupertino,
+                                                    radius: 20000)
+        let alarm = SimpleAlarmEntry(locationInfo: locationInfo, note: "Say hello to Mr Cook!")
+        
+        return alarm
+    }
+}
+
 extension WidgetAlarmEntry {
     static var placeholder: WidgetAlarmEntry {
+        let snapshot = UIImage(named: "Notification_Thumbnail")!
         /* Cupertino, of course. */
-        let coordinate = CLLocationCoordinate2D(latitude: 4131143.90984374, longitude: 585748.287490468)
         let locationInfo = LocationNotificationInfo(name: "Cupertino",
-                                                    coordinate: coordinate,
-                                                    radius: 20000)
-        let alarm = SimpleAlarmEntry(locationInfo: locationInfo, note: "Placeholder")
-        return WidgetAlarmEntry(snapshot: .add, alarm: alarm)
+                                                    coordinate: .cupertino,
+                                                    radius: 5500)
+        let alarm = SimpleAlarmEntry(locationInfo: locationInfo, note: "Say hello to Mr Cook!")
+        let timeOfArrival = Calendar.current.date(byAdding: .minute, value: 40, to: Date())
+        return WidgetAlarmEntry(snapshot: snapshot,
+                                alarm: alarm,
+                                distance: 10000,
+                                timeOfArrival: timeOfArrival)
     }
     /*
      placeholder

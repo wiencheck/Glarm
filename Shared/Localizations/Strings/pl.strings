@@ -129,6 +129,11 @@
 "unlock_purchaseAction" = "Odblokuj";
 "unlock_restoreAction" = "Przywróć zakupy";
 
+// MARK: Units
+"unit_menuTitle" = "Wybierz preferowaną jednostkę długości";
+"unit_kilometers" = "Kilometry";
+"unit_miles" = "Mile";
+
 // MARK: Other
 "cancel" = "Anuluj";
 "dismiss" = "Zamknij";

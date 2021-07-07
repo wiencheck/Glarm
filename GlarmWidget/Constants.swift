@@ -12,5 +12,5 @@ import CoreGraphics
 enum Constants {
     static let smallWidgetImageSizeRatio = CGSize(width: 1, height: 1)
     static let mediumWidgetImageSizeRatio = CGSize(width: 0.64, height: 1)
-    static let largeWidgetImageSizeRatio = CGSize(width: 0.64, height: 0.78)
+    static let largeWidgetImageSizeRatio = CGSize(width: 0.64, height: 1)
 }

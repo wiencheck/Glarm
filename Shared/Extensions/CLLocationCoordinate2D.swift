@@ -10,6 +10,14 @@ import CoreLocation
 
 extension CLLocationCoordinate2D {
     static let zero = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+    
+    static var cupertino: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: 37.3228934, longitude: -122.032289)
+    }
+    
+    static var cupertinoUser: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: 37.241414, longitude: -121.773077)
+    }
 }
 
 extension CLLocationCoordinate2D: Codable {

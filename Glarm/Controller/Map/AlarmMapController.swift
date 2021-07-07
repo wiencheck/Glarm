@@ -19,12 +19,13 @@ class MapController: UIViewController {
     private lazy var locationFullAddress = locationName
     func updateLocationName(name: String, city: String?, distance: CLLocationDistance) {
         // Avoid addresses like "Warszawa Centralna, Warszawa"
-        if let city = city, !name.lowercased().contains(city.lowercased()) {
+        if let city = city,
+           !name.lowercased().contains(city.lowercased()) {
             locationFullAddress = [name, city].joined(separator: ", ")
         } else {
             locationFullAddress = name
         }
-        if distance > 10*1000 {
+        if distance > 10 * 1000 {
             locationName = locationFullAddress
         } else {
             locationName = name
@@ -99,7 +100,7 @@ class MapController: UIViewController {
         }
     }
     
-    private var maximumDistanceWork: DispatchWorkItem?
+    private var zoomChangedWork: DispatchWorkItem?
     
     weak var delegate: AlarmMapControllerDelegate?
     
@@ -175,7 +176,7 @@ extension MapController: MKMapViewDelegate {
         }
         let renderer = MKCircleRenderer(circle: circle)
         renderer.fillColor = .tint
-        renderer.alpha = 0.4
+        renderer.alpha = SharedConstants.radiusOverlayAlpha
         return renderer
     }
     
@@ -209,16 +210,16 @@ extension MapController: MKMapViewDelegate {
     }
     
     func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-        maximumDistanceWork?.cancel()
-        maximumDistanceWork = DispatchWorkItem {
+        zoomChangedWork?.cancel()
+        zoomChangedWork = DispatchWorkItem {
             self.updateLocationName(name: self.locationFullAddress, city: nil, distance: mapView.visibleDistance)
-            self.settingsController.updateDistanceFromLocation(mapView.visibleDistance)
+            self.settingsController.mapZoomScale = mapView.zoomScale
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: maximumDistanceWork!)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: zoomChangedWork!)
     }
 }
 
-extension MapController: LocationSettingsControllerDelegate {
+extension MapController: LocationSettingsControllerDelegate, UIPopoverPresentationControllerDelegate {
     func searchBarPressed() {
         let nav = UINavigationController(rootViewController: resultsController)
         nav.modalPresentationStyle = .overFullScreen
@@ -233,6 +234,10 @@ extension MapController: LocationSettingsControllerDelegate {
     func radiusChanged(_ radius: CLLocationDistance) {
         self.radius = radius
         //setRadius(radius, interactive: true)
+    }
+    
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
     }
 }
 

@@ -9,11 +9,17 @@
 import UIKit
 import CoreLocation
 import AWAlertController
+import MapKit.MKMapView
 
 protocol LocationSettingsControllerDelegate: AnyObject {
+    var selectedUnit: UnitLength { get }
     func radiusChanged(_ radius: CLLocationDistance)
     func searchBarPressed()
     func searchButtonPressed()
+}
+
+extension LocationSettingsControllerDelegate {
+    var selectedUnit: UnitLength { UserDefaults.appGroupSuite.preferredUnitLength }
 }
 
 final class LocationSettingsController: UIViewController {
@@ -21,7 +27,13 @@ final class LocationSettingsController: UIViewController {
     
     private lazy var sliderContainer = UIView()
     
-    private var segmentDistances: [CLLocationDistance] = []
+    private var segmentFullDistances: [Double] = [] {
+        didSet {
+            updateSuggestedDistances()
+        }
+    }
+    
+    private var segmentTitles: [String] = []
     
     weak var delegate: LocationSettingsControllerDelegate?
     
@@ -36,6 +48,13 @@ final class LocationSettingsController: UIViewController {
     var locationName: String? {
         didSet {
             searchBar.text = locationName
+        }
+    }
+    
+    var mapZoomScale: MKMapView.MapZoomScale! {
+        didSet {
+            if oldValue == mapZoomScale { return }
+            segmentFullDistances = makeSuggestedDistances(withZoomScale: mapZoomScale)
         }
     }
     
@@ -90,13 +109,15 @@ final class LocationSettingsController: UIViewController {
         return l
     }()
     
-    lazy var unitSegment: UISegmentedControl = {
-        let units: [UnitLength] = [.meters, .miles]
-        let s = UISegmentedControl(items: units.map{$0.symbol})
-        s.selectedSegmentIndex = units.firstIndex(of: Locale.preferredUnitLength) ?? 0
-        s.addTarget(self, action: #selector(unitSegmentChanged(_:)), for: .valueChanged)
-        return s
+    lazy var unitButton: UIButton = {
+        let b = UIButton(type: .system)
+        b.text = delegate?.selectedUnit.symbol
+        b.menu = unitMenu
+        b.showsMenuAsPrimaryAction = true
+        return b
     }()
+    
+    private lazy var unitMenu: UIMenu = UIMenu(title: .localized(.unit_menuTitle), image: .download, identifier: .init("units"), options: [], children: unitMenuItems)
     
     private lazy var unlockButton: UIButton = {
         let b = UIButton(type: .system)
@@ -128,6 +149,7 @@ final class LocationSettingsController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        segmentFullDistances = makeSuggestedDistances(withZoomScale: .large)
         setupView()
     }
     
@@ -135,6 +157,8 @@ final class LocationSettingsController: UIViewController {
         super.viewDidLayoutSubviews()
         unlockButton.layer.cornerRadius = 12
     }
+    
+    private var segmentDistances: [CLLocationDistance] = []
     
     @objc private func sliderChanged(_ sender: UISlider) {
         if distanceSegment.isEnabled {
@@ -173,46 +197,37 @@ final class LocationSettingsController: UIViewController {
         guard let selectedTitle = sender.titleForSegment(at: sender.selectedSegmentIndex) else {
             return
         }
-        Locale.preferredUnitLength = UnitLength(symbol: selectedTitle)
+        UserDefaults.appGroupSuite.preferredUnitLength = UnitLength(symbol: selectedTitle)
         radiusLabel.text = radius.readableRepresentation()
-        updateSegmentTitles()
+        updateSuggestedDistances()
     }
 }
 
 extension LocationSettingsController {
-    private var segmentTitles: [String] {
-        return segmentDistances.map { distance in
+    private func makeSuggestedDistances(withZoomScale scale: MKMapView.MapZoomScale) -> [Double] {
+        switch scale {
+        case .small:
+            return [0.5, 1, 2, 4, 8]
+        case .medium:
+            return [2, 5, 10, 15, 20]
+        case .large:
+            return [5, 10, 15, 20, 25, 40]
+        }
+    }
+    
+    private func updateSuggestedDistances() {
+        let unit = UserDefaults.appGroupSuite.preferredUnitLength
+        var measurement = Measurement(value: 0, unit: unit)
+        segmentDistances = segmentFullDistances.map { distance in
+            print("Unit: \(distance) \(unit.symbol)")
+            measurement.value = distance
+            let meters = measurement.converted(to: .meters).value
+            return meters
+        }
+        segmentTitles = segmentDistances.map { distance in
             distance.readableRepresentation(usingSpaces: false)
         }
-    }
-    
-    private func spitOutRadiusSuggestions(basedOn distance: Double, floor: Double) -> [Double] {
-        let d: Double
-        if distance > floor * 5 {
-            d = (distance / 5).floor(nearest: floor)
-        } else {
-            d = (distance / 5).floor(nearest: floor / 5)
-        }
-        return [
-            (d / 2).floor(nearest: 500),
-            d, d*2, d*3, d*4
-        ]
-    }
-    
-    func updateDistanceFromLocation(_ distance: CLLocationDistance) {
-        // Ensure it's at least 5km
-        let adjustedDistance = max(5*1000, min(100*1000, distance.floor(nearest: 1)))
-        let newDistances = spitOutRadiusSuggestions(basedOn: adjustedDistance, floor: 5000)
         
-        // Avoid updating titles with same values
-        if newDistances.last == segmentDistances.last {
-            return
-        }
-        segmentDistances = newDistances
-        updateSegmentTitles()
-    }
-    
-    private func updateSegmentTitles() {
         UIView.transition(with: distanceSegment, duration: 0.2, options: .transitionCrossDissolve, animations: {
             self.distanceSegment.removeAllSegments()
             self.segmentTitles.reversed().forEach { title in
@@ -224,6 +239,31 @@ extension LocationSettingsController {
                 self.distanceSegment.selectedSegmentIndex = index
             }
         })
+    }
+    
+    private var unitMenuItems: [UIMenuElement] {
+        let units: [UnitLength] = [
+            .kilometers, .miles,
+        ]
+        return units.reversed().map { unit in
+            let selected = unit == UserDefaults.appGroupSuite.preferredUnitLength
+            print("\(unit.symbol) \(selected)")
+            return UIAction(title: unit.localizedDescription,
+                            discoverabilityTitle: unit.symbol,
+                            state: selected ? .on : .off, handler: { [weak self] _ in
+                self?.didSelectUnit(unit)
+            })
+        }
+    }
+    
+    private func didSelectUnit(_ unit: UnitLength) {
+        UserDefaults.appGroupSuite.preferredUnitLength = unit
+        updateSuggestedDistances()
+        unitButton.text = unit.symbol
+        // Resetting menu completely was necessary to fix the issue of correct state not being updated for actions.
+        unitButton.menu = nil
+        unitButton.menu = unitMenu.replacingChildren(unitMenuItems)
+        radiusLabel.text = radius.readableRepresentation()
     }
 }
 
@@ -271,9 +311,9 @@ private extension LocationSettingsController {
             make.leading.equalTo(radiusDummyLabel.snp.trailing).offset(4)
         }
         
-        unitSegment.setContentHuggingPriority(.defaultHigh, for: .vertical)
-        radiusContainer.addSubview(unitSegment)
-        unitSegment.snp.makeConstraints { make in
+        unitButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        radiusContainer.addSubview(unitButton)
+        unitButton.snp.makeConstraints { make in
             make.centerY.trailing.equalToSuperview()
         }
         
@@ -284,7 +324,7 @@ private extension LocationSettingsController {
         radiusContainer.addSubview(unitDummyLabel)
         unitDummyLabel.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.trailing.equalTo(unitSegment.snp.leading).offset(-6)
+            make.trailing.equalTo(unitButton.snp.leading).offset(-6)
         }
         
         let sliderStack: UIStackView = {
@@ -374,7 +414,7 @@ fileprivate class SettingView: UIView {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
-            make.leading.equalToSuperview().offset(24).priority(.required)
+            make.leading.equalToSuperview().offset(24)
         }
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct SmallWidgetEntryView: View {
     let entry: WidgetAlarmsProvider.Entry
@@ -15,15 +16,22 @@ struct SmallWidgetEntryView: View {
         GeometryReader { gp in
             HStack {
                 Image(uiImage: entry.snapshot)
+                VStack {
+                    Text("To go")
+                        .foregroundColor(Color(.tint))
+                        .font(.title3)
+                    Text(entry.distance.readableRepresentation())
+                }
                     //.frame(width: gp.size.width * Constants.smallWidgetImageSizeRatio.width, height: Constants.smallWidgetImageSizeRatio.height)
             }
         }
-        .widgetURL(entry.url)
     }
 }
 
 struct SmallWidgetEntryView_Previews: PreviewProvider {
-    static var previews: some View {
-        SmallWidgetEntryView(entry: .placeholder)
-    }
+
+  static var previews: some View {
+    SmallWidgetEntryView(entry: .placeholder)
+    .previewContext(WidgetPreviewContext(family: .systemSmall))
+  }
 }

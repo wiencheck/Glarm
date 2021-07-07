@@ -16,22 +16,4 @@ extension Locale {
             return .current
         }
     }
-    
-    static var preferredUnitLength: UnitLength {
-        get {
-            guard let symbol = UserDefaults.standard.string(forKey: "preferredUnitLength") else {
-                return .meters
-            }
-            switch symbol {
-            case "m":
-                return .meters
-            case "mi":
-                return .miles
-            default:
-                return UnitLength(symbol: symbol)
-            }
-        } set {
-            UserDefaults.standard.set(newValue.symbol, forKey: "preferredUnitLength")
-        }
-    }
 }

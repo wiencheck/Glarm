@@ -11,13 +11,14 @@ import UserNotifications
 
 final class PermissionsManager: NSObject {
     static let shared = PermissionsManager()
+    private lazy var locationManager = CLLocationManager()
     
     private override init() {
         super.init()
     }
     
     func getLocationPermissionStatus(completion: @escaping (AuthorizationStatus) -> Void) {
-        completion(AuthorizationStatus(status: CLLocationManager.authorizationStatus()))
+        completion(AuthorizationStatus(status: locationManager.authorizationStatus))
     }
     
     func requestLocationPermission(completion: @escaping (AuthorizationStatus) -> Void) {

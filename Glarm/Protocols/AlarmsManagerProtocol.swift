@@ -9,6 +9,7 @@
 import UIKit
 import UserNotifications
 import CoreLocation
+import WidgetKit
 
 protocol AlarmsManagerProtocol {
     var delegate: AlarmsManagerDelegate? { get set }
@@ -40,6 +41,16 @@ protocol AlarmsManagerProtocol {
 
 extension AlarmsManagerProtocol {
     private var notificationCenter: UNUserNotificationCenter { .current() }
+    
+    func updateRecentAlarms(withAlarms alarms: [AlarmEntry]?) {
+        let recentAlarms = alarms?.map { entry in
+            entry.makeSimplified()
+        }
+        UserDefaults.appGroupSuite.recentAlarms = recentAlarms
+        UserDefaults.appGroupSuite.synchronize()
+        
+        WidgetCenter.shared.reloadAllTimelines()
+    }
     
     /// Schedules new notification to fire fot given alarm.
     func scheduleNotification(forAlarm alarm: AlarmEntryProtocol, completion: ((Error?) -> Void)?) {

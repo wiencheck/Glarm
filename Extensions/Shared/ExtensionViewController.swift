@@ -302,5 +302,6 @@ private extension ExtensionViewController {
 extension ExtensionViewController: CLLocationManagerDelegate {
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         updateDetailText()
+        UserDefaults.appGroupSuite.lastLocation = locations.last
     }
 }

@@ -11,11 +11,18 @@ import MapKit
 
 extension WidgetAlarmsProvider {
     func createImage(locationInfo: LocationNotificationInfo, userLocation: CLLocation?, size: CGSize, completion: @escaping (UIImage?) -> Void) {
-        let coordinates = [userLocation?.coordinate, locationInfo.coordinate].compactMap({ $0 })
+        let coordinates: [CLLocationCoordinate2D] = [userLocation?.coordinate, locationInfo.coordinate].compactMap { $0
+        }
+        
+//        if var maxCoordinate = coordinates.max(by: {
+//            $0.longitude > $1.longitude
+//        }) {
+//            maxCoordinate.longitude *= 1.4
+//            coordinates.append(maxCoordinate)
+//        }
         
         createSnapshot(fromCoordinates: coordinates,
-                       withSize: size,
-                       traitCollection: UITraitCollection(userInterfaceStyle: .light)) { snapshot in
+                       withSize: size) { snapshot in
             guard let snapshot = snapshot else {
                 completion(nil)
                 return
@@ -41,6 +48,7 @@ extension WidgetAlarmsProvider {
         /* Set snapshotter options */
         options.region = MKCoordinateRegion(coordinates: coordinates, spanMultiplier: 1.2)
         options.size = size
+        options.pointOfInterestFilter = .excludingAll
         if let traitCollection = traitCollection {
             options.traitCollection = UITraitCollection(traitsFrom: [
                 options.traitCollection,
@@ -65,8 +73,19 @@ extension WidgetAlarmsProvider {
         /* Calculate overlay size */
         var overlaySize: CGSize?
         if let radius = destinationRadius {
+            var dimension = image.size.width
+            /* To correctly calculate scale, we need to figure out if vertical distance is larger than horizontal. */
+            if let destinationCoordinate = destinationCoordinate,
+               let userCoordinate = userCoordinate {
+                let verticalDistance = userCoordinate.latitude - destinationCoordinate.latitude
+                let horizontalDistance = userCoordinate.longitude - destinationCoordinate.longitude
+                if verticalDistance > horizontalDistance {
+                    dimension = image.size.height
+                }
+            }
+            
             /* Map span is necessary for calculating snapshot's scale. */
-            let scale = min(image.size.height, image.size.width) / CGFloat(mapSpan)
+            let scale = dimension / CGFloat(mapSpan)
             let normalizedRadius = CGFloat(radius) * scale
             overlaySize = CGSize(width: normalizedRadius * 2,
                                  height: normalizedRadius * 2)
@@ -89,10 +108,7 @@ extension WidgetAlarmsProvider {
                                             inContext: context.cgContext)
                 
                 /* Draw destination pin */
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = destinationCoordinate
-                self.drawPin(point: destinationPoint,
-                             annotation: annotation)
+                self.drawPin(point: destinationPoint)
                 
                 /* Draw destination name */
                 if false, let title = destinationName {
@@ -172,28 +188,24 @@ extension WidgetAlarmsProvider {
                      .paragraphStyle: paragraphStyle]
     }
     
-    private func drawPin(point: CGPoint, annotation: MKAnnotation) {
-        let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "test")
-        annotationView.contentMode = .scaleAspectFit
-        annotationView.bounds = CGRect(x: 0, y: 0, width: 40, height: 40)
-        annotationView.drawHierarchy(in: CGRect(
-            x: point.x - annotationView.bounds.size.width / 2.0,
-            y: point.y - annotationView.bounds.size.height,
-            width: annotationView.bounds.width,
-            height: annotationView.bounds.height),
-                                     afterScreenUpdates: true)
+    private func drawPin(point: CGPoint) {
+        let pinImage = UIImage(named: "mapPin")
+        let size = CGSize(width: 34, height: 34)
+        var rectangle = CGRect(center: point, size: size)
+        rectangle.center.y -= (size.height / 2)
+        pinImage?.draw(in: rectangle)
     }
     
     private func drawUserLocation(atPoint point: CGPoint, inContext context: CGContext) {
         let size = CGSize(width: 20, height: 20)
         
         /* Set overlay position and size */
-        let rectangle = CGRect(center: point, size: size)
-        context.setFillColor(UIColor.tint.cgColor)
         context.setStrokeColor(UIColor.userRing.cgColor)
-        context.setLineWidth(3.6)
-        context.setShadow(offset: CGSize(width: 1, height: 1), blur: 4)
+        context.setLineWidth(3)
+        context.setShadow(offset: CGSize(width: 1, height: 1), blur: 6)
+        context.setFillColor(UIColor.tint.cgColor)
         
+        let rectangle = CGRect(center: point, size: size)
         context.addEllipse(in: rectangle)
         context.drawPath(using: .fillStroke)
     }

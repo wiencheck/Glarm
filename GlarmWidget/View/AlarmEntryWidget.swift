@@ -15,18 +15,23 @@ struct WidgetEntryView: View {
     @Environment(\.widgetFamily) var family
     
     var body: some View {
-        switch family {
-        case .systemLarge:
-            LargeWidgetEntryView(entry: entry)
-        default:
-            SmallWidgetEntryView(entry: entry)
+        ZStack {
+            Color(.secondarySystemGroupedBackground)
+            switch family {
+            case .systemLarge:
+                LargeWidgetEntryView(entry: entry)
+            case .systemMedium:
+                MediumWidgetEntryView(entry: entry)
+            default:
+                SmallWidgetEntryView(entry: entry)
+            }
         }
     }
 }
 
 @main
 struct AlarmEntryWidget: Widget {
-    private let kind = "My_widget"
+    private let kind = "com.glarm.map-widget"
     
     var body: some WidgetConfiguration {
         StaticConfiguration(
@@ -34,6 +39,8 @@ struct AlarmEntryWidget: Widget {
             provider: WidgetAlarmsProvider()) { entry in
             WidgetEntryView(entry: entry)
         }
+        .configurationDisplayName("Map Widget")
+        .description("Displays your position on the map.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }

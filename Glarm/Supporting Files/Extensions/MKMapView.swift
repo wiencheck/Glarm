@@ -30,4 +30,20 @@ extension MKMapView {
         let eastMapPoint = MKMapPoint(x: visibleMapRect.maxX, y: visibleMapRect.midY)
         return westMapPoint.distance(to: eastMapPoint)
     }
+    
+    enum MapZoomScale {
+        case small, medium, large
+        
+        fileprivate init(span: MKCoordinateSpan) {
+            if span.latitudeDelta <= 0 {
+                self = .small
+            } else if span.latitudeDelta <= 2.5 {
+                self = .medium
+            } else {
+                self = .large
+            }
+        }
+    }
+    
+    var zoomScale: MapZoomScale { MapZoomScale(span: region.span) }
 }
