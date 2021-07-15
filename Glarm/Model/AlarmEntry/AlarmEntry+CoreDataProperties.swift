@@ -26,6 +26,7 @@ extension AlarmEntry {
     @NSManaged public var soundName: String
     @NSManaged public var isMarked: Bool
     @NSManaged public var isSaved: Bool
+    @NSManaged public var isRecurring: Bool
     @NSManaged public var dateCreated: Date
     @NSManaged public var category: Category?
     
@@ -33,20 +34,18 @@ extension AlarmEntry {
         uuid.uuidString
     }
     
-    var location: CLLocationCoordinate2D? {
-        guard latitude >= 0 && longitude >= 0 else {
-            return nil
-        }
-        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    var coordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
     var locationInfo: LocationNotificationInfo? {
         get {
-            guard let name = name,
-                  let location = location else {
+            guard let name = name else {
                 return nil
             }
-            return LocationNotificationInfo(name: name, coordinate: location, radius: radius)
+            return LocationNotificationInfo(name: name,
+                                            coordinate: coordinate,
+                                            radius: radius)
         } set {
             latitude = newValue?.coordinate.latitude ?? 0
             longitude = newValue?.coordinate.longitude ?? 0

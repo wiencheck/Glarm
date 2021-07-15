@@ -37,10 +37,12 @@
 "edit_backButton" = "Edytuj Alarm";
 "edit_locationHeader" = "Lokacja";
 "edit_toneCell" = "Dźwięk";
+"edit_repeatsCell" = "Powtarzaj";
 "edit_scheduleButton" = "Zaplanuj Alarm";
 "edit_clearNoteButton" = "Wyczyść";
 "edit_noteHeader" = "Notatka";
 "edit_categoryHeader" = "Kategoria";
+"edit_settingsHeader" = "Ustawienia";
 "edit_notePlaceholder" = "Dodaj notatkę";
 "edit_exactScrubbingMessage" = "Przesuń palec do góry trzymając suwak, aby zmienić jego czułość";
 

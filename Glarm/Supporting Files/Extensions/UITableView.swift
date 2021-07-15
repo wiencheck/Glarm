@@ -37,4 +37,12 @@ extension UITableView {
         }
         return number == 0
     }
+    
+    func dequeueReusableCell(withIdentifier identifier: String, style: UITableViewCell.CellStyle) -> UITableViewCell {
+        var cell: UITableViewCell! = dequeueReusableCell(withIdentifier: identifier)
+        if cell == nil {
+            cell = UITableViewCell(style: style, reuseIdentifier: identifier)
+        }
+        return cell
+    }
 }

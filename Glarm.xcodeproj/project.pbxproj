@@ -147,6 +147,7 @@
 		3038FDF12695B80A006C3C0B /* de.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2BAF05ED24C60D9D00AB7FF4 /* de.strings */; };
 		3038FDF22695B8F9006C3C0B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD8EF7824E674B90084B64B /* String.swift */; };
 		3038FDF32695B8F9006C3C0B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD8EF7824E674B90084B64B /* String.swift */; };
+		3038FDF62695EE5A006C3C0B /* EmptyWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3038FDF52695EE5A006C3C0B /* EmptyWidgetEntryView.swift */; };
 		30A783DC268CCBF00066795E /* SimpleAlarmEntryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A783DB268CCBF00066795E /* SimpleAlarmEntryProtocol.swift */; };
 		30A783DE268CCBF00066795E /* SimpleAlarmEntryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30A783DB268CCBF00066795E /* SimpleAlarmEntryProtocol.swift */; };
 		30A783DF268CCC9D0066795E /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30165133268483CC00388390 /* UserDefaults.swift */; };
@@ -160,8 +161,6 @@
 		30B02489268F77EF0059A6F4 /* LargeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B02488268F77EF0059A6F4 /* LargeWidgetEntryView.swift */; };
 		30B0248B268F7A170059A6F4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B0248A268F7A170059A6F4 /* Constants.swift */; };
 		30CF55A2269329EC00EDC501 /* MediumWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CF55A0269329E800EDC501 /* MediumWidgetEntryView.swift */; };
-		30D14CF2268AFDF700B4C983 /* AlarmEntryRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14CF1268AFDF700B4C983 /* AlarmEntryRepresentation.swift */; };
-		30D14CF4268AFE0100B4C983 /* AlarmEntryRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14CF1268AFDF700B4C983 /* AlarmEntryRepresentation.swift */; };
 		30D14D0E268B0AB600B4C983 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D0D268B0AB600B4C983 /* SharedConstants.swift */; };
 		30D14D0F268B0AEA00B4C983 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D0D268B0AB600B4C983 /* SharedConstants.swift */; };
 		30D14D17268B1E9300B4C983 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D16268B1E9300B4C983 /* CoreDataModel.swift */; };
@@ -172,7 +171,6 @@
 		30D14D38268B2C0400B4C983 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D0D268B0AB600B4C983 /* SharedConstants.swift */; };
 		30D14D3D268B2C0400B4C983 /* LocationNotificationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BB99DC124D2D7820002DDC8 /* LocationNotificationInfo.swift */; };
 		30D14D3E268B2C0400B4C983 /* Sequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA412681FA0500D4461E /* Sequence.swift */; };
-		30D14D3F268B2C0800B4C983 /* Glarm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA1D2680B84000D4461E /* Glarm.xcdatamodeld */; };
 		30D14D40268B2C5800B4C983 /* CLLocationDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF13DC024B4BDD400B40D4E /* CLLocationDistance.swift */; };
 		30D14D41268B2C5800B4C983 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE2691424BD28E0000299A3 /* CLLocation.swift */; };
 		30D14D42268B2C5800B4C983 /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BCA122024B34538009965E4 /* CLLocationCoordinate2D.swift */; };
@@ -338,6 +336,7 @@
 		302FCA552682946500D4461E /* EmptyBackgroundView */ = {isa = PBXFileReference; lastKnownFileType = folder; name = EmptyBackgroundView; path = ../EmptyBackgroundView; sourceTree = "<group>"; };
 		302FCA582682954000D4461E /* AWTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AWTableView.swift; sourceTree = "<group>"; };
 		3038FDE92695B7AC006C3C0B /* Unit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unit.swift; sourceTree = "<group>"; };
+		3038FDF52695EE5A006C3C0B /* EmptyWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyWidgetEntryView.swift; sourceTree = "<group>"; };
 		305F8F6A2673878800BB328B /* Hamburg.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Hamburg.gpx; sourceTree = "<group>"; };
 		30A783DB268CCBF00066795E /* SimpleAlarmEntryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAlarmEntryProtocol.swift; sourceTree = "<group>"; };
 		30B0247D268F721B0059A6F4 /* WidgetAlarmsProvider+MapDrawing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "WidgetAlarmsProvider+MapDrawing.swift"; sourceTree = "<group>"; };
@@ -345,7 +344,6 @@
 		30B02488268F77EF0059A6F4 /* LargeWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeWidgetEntryView.swift; sourceTree = "<group>"; };
 		30B0248A268F7A170059A6F4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		30CF55A0269329E800EDC501 /* MediumWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediumWidgetEntryView.swift; sourceTree = "<group>"; };
-		30D14CF1268AFDF700B4C983 /* AlarmEntryRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmEntryRepresentation.swift; sourceTree = "<group>"; };
 		30D14D0D268B0AB600B4C983 /* SharedConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedConstants.swift; sourceTree = "<group>"; };
 		30D14D16268B1E9300B4C983 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		30D14D1F268B2A7000B4C983 /* GlarmWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GlarmWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -433,6 +431,7 @@
 		2B0DBDD924B37B73005B6A6A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				302FCA1D2680B84000D4461E /* Glarm.xcdatamodeld */,
 				305F8F692673877700BB328B /* Locations */,
 				2B86871D24C6EA8800664892 /* Sounds */,
 				2B88BFBD24B32415003B96EE /* Assets.xcassets */,
@@ -775,6 +774,7 @@
 				30CF55A0269329E800EDC501 /* MediumWidgetEntryView.swift */,
 				30B02488268F77EF0059A6F4 /* LargeWidgetEntryView.swift */,
 				30B02486268F77BF0059A6F4 /* AlarmEntryWidget.swift */,
+				3038FDF52695EE5A006C3C0B /* EmptyWidgetEntryView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -799,7 +799,6 @@
 			isa = PBXGroup;
 			children = (
 				2BB99DC124D2D7820002DDC8 /* LocationNotificationInfo.swift */,
-				30D14CF1268AFDF700B4C983 /* AlarmEntryRepresentation.swift */,
 				30F22D23268C99F8006E9A9F /* SimpleAlarmEntry.swift */,
 			);
 			path = Model;
@@ -816,7 +815,6 @@
 		30D14CFC268AFE7F00B4C983 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				302FCA1D2680B84000D4461E /* Glarm.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -1108,7 +1106,6 @@
 				301651142683630E00388390 /* NSManagedObject.swift in Sources */,
 				2BF0E0E024B9B29D00653D27 /* AudioBrowserViewController.swift in Sources */,
 				302FCA592682954000D4461E /* AWTableView.swift in Sources */,
-				30D14CF2268AFDF700B4C983 /* AlarmEntryRepresentation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1140,7 +1137,6 @@
 				2BB99DC624D2D8F60002DDC8 /* MKCoordinateRegion.swift in Sources */,
 				3038FDEB2695B7AC006C3C0B /* Unit.swift in Sources */,
 				30D14D47268B2D8C00B4C983 /* NumberFormatter.swift in Sources */,
-				30D14CF4268AFE0100B4C983 /* AlarmEntryRepresentation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1162,13 +1158,13 @@
 				30E62976268B5E74003655AB /* UIDevice.swift in Sources */,
 				30E629A3268BC28E003655AB /* CGRect.swift in Sources */,
 				30D14D51268B364B00B4C983 /* SmallWidgetEntryView.swift in Sources */,
-				30D14D3F268B2C0800B4C983 /* Glarm.xcdatamodeld in Sources */,
 				30D14D48268B2D8D00B4C983 /* NumberFormatter.swift in Sources */,
 				30B02477268F4A110059A6F4 /* UIColor.swift in Sources */,
 				30D14D43268B2C6F00B4C983 /* Locale.swift in Sources */,
 				30D14D4E268B2FEF00B4C983 /* WidgetAlarmEntry.swift in Sources */,
 				30CF55A2269329EC00EDC501 /* MediumWidgetEntryView.swift in Sources */,
 				3038FDEC2695B7AC006C3C0B /* Unit.swift in Sources */,
+				3038FDF62695EE5A006C3C0B /* EmptyWidgetEntryView.swift in Sources */,
 				30A783DF268CCC9D0066795E /* UserDefaults.swift in Sources */,
 				30D14D3D268B2C0400B4C983 /* LocationNotificationInfo.swift in Sources */,
 				30E62973268B5DA3003655AB /* LocationManager.swift in Sources */,
@@ -1221,7 +1217,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BUILD_NUMBER = 4;
+				BUILD_NUMBER = 5;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1286,7 +1282,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BUILD_NUMBER = 4;
+				BUILD_NUMBER = 5;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

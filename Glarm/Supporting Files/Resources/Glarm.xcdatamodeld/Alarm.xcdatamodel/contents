@@ -3,6 +3,7 @@
     <entity name="AlarmEntry" representedClassName="AlarmEntry" syncable="YES">
         <attribute name="dateCreated" attributeType="Date" defaultDateTimeInterval="645976140" usesScalarValueType="NO"/>
         <attribute name="isMarked" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="isRecurring" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isSaved" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="latitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES"/>
         <attribute name="longitude" attributeType="Double" defaultValueString="-1" usesScalarValueType="YES"/>
@@ -20,7 +21,7 @@
         <relationship name="alarms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AlarmEntry" inverseName="category" inverseEntity="AlarmEntry"/>
     </entity>
     <elements>
-        <element name="AlarmEntry" positionX="-63" positionY="-18" width="128" height="194"/>
+        <element name="AlarmEntry" positionX="-63" positionY="-18" width="128" height="209"/>
         <element name="Category" positionX="-63" positionY="54" width="128" height="89"/>
     </elements>
 </model>

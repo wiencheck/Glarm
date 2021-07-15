@@ -17,14 +17,29 @@ struct WidgetEntryView: View {
     var body: some View {
         ZStack {
             Color(.secondarySystemGroupedBackground)
-            switch family {
-            case .systemLarge:
-                LargeWidgetEntryView(entry: entry)
-            case .systemMedium:
-                MediumWidgetEntryView(entry: entry)
-            default:
-                SmallWidgetEntryView(entry: entry)
+            if isEmpty {
+                EmptyWidgetEntryView()
+            } else {
+                switch family {
+                case .systemLarge:
+                    LargeWidgetEntryView(entry: entry)
+                case .systemMedium:
+                    MediumWidgetEntryView(entry: entry)
+                default:
+                    SmallWidgetEntryView(entry: entry)
+                }
             }
+        }
+        .widgetURL(url)
+    }
+    
+    private var isEmpty: Bool { entry.name == "None" }
+    
+    private var url: URL? {
+        if isEmpty {
+            return SharedConstants.URLs.newAlarmURL
+        } else {
+            return SharedConstants.URLs.alarmOpenedURL?.appendingPathComponent(entry.uid)
         }
     }
 }

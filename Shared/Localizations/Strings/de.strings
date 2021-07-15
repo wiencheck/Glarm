@@ -37,10 +37,12 @@
 "edit_backButton" = "Wecker";
 "edit_locationHeader" = "Standort";
 "edit_toneCell" = "Ton";
+"edit_repeatsCell" = "Repetieren";
 "edit_scheduleButton" = "Wecker planen";
 "edit_clearNoteButton" = " Löschen";
 "edit_noteHeader" = "Notizen";
 "edit_categoryHeader" = "Kategorie";
+"edit_settingsHeader" = "Einstellungen";
 "edit_notePlaceholder" = "Notizen erstellen";
 "edit_exactScrubbingMessage" = "Bewegen Sie Ihren Finger nach oben, während Sie den Schieberegler gedrückt halten, um die Empfindlichkeit anzupassen";
 

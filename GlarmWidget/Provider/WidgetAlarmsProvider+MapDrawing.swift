@@ -73,14 +73,14 @@ extension WidgetAlarmsProvider {
         /* Calculate overlay size */
         var overlaySize: CGSize?
         if let radius = destinationRadius {
-            var dimension = image.size.width
+            var dimension = image.size.height
             /* To correctly calculate scale, we need to figure out if vertical distance is larger than horizontal. */
             if let destinationCoordinate = destinationCoordinate,
                let userCoordinate = userCoordinate {
                 let verticalDistance = userCoordinate.latitude - destinationCoordinate.latitude
                 let horizontalDistance = userCoordinate.longitude - destinationCoordinate.longitude
                 if verticalDistance > horizontalDistance {
-                    dimension = image.size.height
+                    dimension = image.size.width
                 }
             }
             

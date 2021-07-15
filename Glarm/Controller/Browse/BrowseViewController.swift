@@ -78,7 +78,9 @@ final class BrowseViewController: UIViewController {
         
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //viewModel.manager.displayRandomAlarm()
+        #if DEBUG
+            viewModel.manager.displayRandomAlarm()
+        #endif
         guard shouldShowSwipeHint else {
             return
         }

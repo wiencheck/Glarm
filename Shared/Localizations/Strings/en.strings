@@ -35,12 +35,14 @@
 // MARK: Edit screen
 "edit_locationHeader" = "Location";
 "edit_toneCell" = "Sound";
+"edit_repeatsCell" = "Repeats";
 "edit_scheduleButton" = "Schedule Alarm";
 "edit_updateButton" = "Save changes";
 "edit_backButton" = "Edit Alarm";
 "edit_clearNoteButton" = "Clear";
 "edit_noteHeader" = "Note";
 "edit_categoryHeader" = "Category";
+"edit_settingsHeader" = "Settings";
 "edit_notePlaceholder" = "Add note";
 "edit_exactScrubbingMessage" = "Move your finger up while holding the slider to adjust its sensitivity";
 

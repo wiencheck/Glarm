@@ -215,10 +215,7 @@ extension SearchResultsController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "cell")
-        if cell == nil {
-            cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", style: .subtitle)
         
         let item = searchResults.at(indexPath.row)
         cell.textLabel?.text = item?.title

@@ -61,7 +61,7 @@ extension AlarmsManagerProtocol {
         
         let notification = notificationContent(for: alarm)
         let destRegion = destinationRegion(locationInfo: locationInfo)
-        let trigger = UNLocationNotificationTrigger(region: destRegion, repeats: false)
+        let trigger = UNLocationNotificationTrigger(region: destRegion, repeats: alarm.isRecurring)
         
         let request = UNNotificationRequest(identifier: alarm.uid,
                                             content: notification,
@@ -93,10 +93,17 @@ extension AlarmsManagerProtocol {
         notification.title = LocalizedStringKey.notification_title.localized
         notification.body = "\(alarm.locationInfo?.name ?? "–") \(LocalizedStringKey.notification_messageIsLessThan.localized) \(alarm.locationInfo?.radius.readableRepresentation() ?? "–") \(LocalizedStringKey.notification_messageAway.localized)."
         
-        if UnlockManager.unlocked, let thumbnailUrl = UIImage.createLocalUrl(forAssetNamed: UIImage.notificationThumbnailAssetName),
-            let thumbnailAttachment = try? UNNotificationAttachment(identifier: "thumbnail", url: thumbnailUrl, options: nil) {
-            notification.attachments = [thumbnailAttachment]
+        if UnlockManager.unlocked {
+            if let thumbnailUrl = UIImage.createLocalUrl(forAssetNamed: UIImage.notificationThumbnailAssetName),
+               let thumbnailAttachment = try? UNNotificationAttachment(identifier: "thumbnail", url: thumbnailUrl, options: nil) {
+                notification.attachments = [thumbnailAttachment]
+            }
+            let simplified = alarm.makeSimplified()
+            if let data = try? JSONEncoder().encode(simplified) {
+                notification.userInfo[SharedConstants.notificationContentAlarmDataKey] = data
+            }
         }
+        
         
         if let url = SoundsManager.url(forSoundNamed: alarm.soundName) {
             let soundName = UNNotificationSoundName(url.lastPathComponent)

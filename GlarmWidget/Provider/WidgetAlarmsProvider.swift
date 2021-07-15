@@ -30,20 +30,20 @@ class WidgetAlarmsProvider: NSObject, TimelineProvider {
     func getSnapshot(in context: Context, completion: @escaping (WidgetAlarmEntry) -> Void) {
         print("Snapshot")
         
-        prepareWidgetEntry(inContext: context, withAlarmEntry: .placeholder) { widgetEntry in
-            completion(widgetEntry)
+        fetchMostRecentAlarm { alarm in
+            let alarmEntry = alarm ?? .placeholder
+            
+            self.prepareWidgetEntry(inContext: context, withAlarmEntry: alarmEntry) { widgetEntry in
+                completion(widgetEntry)
+            }
         }
     }
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<WidgetAlarmEntry>) -> Void) {
         print("Timeline")
         
-        fetchMostRecentAlarm { alarmEntry in
-            guard let alarmEntry = alarmEntry else {
-                let timeline = Timeline<WidgetAlarmEntry>(entries: [.placeholder], policy: .never)
-                completion(timeline)
-                return
-            }
+        fetchMostRecentAlarm { alarm in
+            let alarmEntry = alarm ?? .empty
             
             self.prepareWidgetEntry(inContext: context, withAlarmEntry: alarmEntry) { widgetEntry in
                 let policy: TimelineReloadPolicy
@@ -70,7 +70,7 @@ class WidgetAlarmsProvider: NSObject, TimelineProvider {
         
         guard let locationInfo = alarmEntry.locationInfo,
               let distance = userLocation?.distance(from: locationInfo.location) else {
-            completion(.placeholder)
+            completion(.empty)
             return
         }
         var timeOfArrival: Date?
@@ -85,7 +85,6 @@ class WidgetAlarmsProvider: NSObject, TimelineProvider {
                     userLocation: userLocation,
                     size: calculateImageSize(inContext: context)) { snapshot in
             guard let snapshot = snapshot else {
-                completion(.placeholder)
                 return
             }
             let widgetEntry = WidgetAlarmEntry(snapshot: snapshot,

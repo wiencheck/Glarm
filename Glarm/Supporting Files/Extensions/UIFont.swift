@@ -13,7 +13,7 @@ extension UIFont {
     static let subtitle = UIFont.preferredFont(forTextStyle: .subheadline)
     static let noteButton = UIFont.preferredFont(forTextStyle: .footnote)
     static let noteText = UIFont.preferredFont(forTextStyle: .body)
-    static let headerTitle = UIFont.preferredFont(forTextStyle: .subheadline, weight: .medium)
+    static let headerTitle = UIFont.preferredFont(forTextStyle: .subheadline, weight: .semibold)
     
     static func preferredFont(forTextStyle style: TextStyle, weight: Weight) -> UIFont {
         let metrics = UIFontMetrics(forTextStyle: style)

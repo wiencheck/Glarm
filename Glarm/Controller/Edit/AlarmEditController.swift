@@ -22,24 +22,24 @@ final class AlarmEditController: UIViewController {
     
     weak var delegate: AlarmEditControllerDelegate?
     
-    internal var tableView: UITableView! {
-        didSet {
-            tableView.register(EmptyLocationCell.self, forCellReuseIdentifier: "empty")
-            tableView.register(NoteCell.self, forCellReuseIdentifier: "note")
-            tableView.register(AlarmMapCell.self, forCellReuseIdentifier: "location")
-            tableView.register(TableHeaderView.self, forHeaderFooterViewReuseIdentifier: "header")
-            tableView.dataSource = self
-            tableView.delegate = self
-            tableView.estimatedSectionFooterHeight = 0
-            tableView.estimatedSectionHeaderHeight = 0
-            tableView.backgroundView = {
-                let b = BackgroundTapView()
-                b.backgroundColor = .clear
-                b.delegate = self
-                return b
-            }()
-        }
-    }
+    internal lazy var tableView: UITableView = {
+        let t = UITableView(frame: .zero, style: .grouped)
+        t.register(EmptyLocationCell.self, forCellReuseIdentifier: "empty")
+        t.register(NoteCell.self, forCellReuseIdentifier: "note")
+        t.register(AlarmMapCell.self, forCellReuseIdentifier: "location")
+        t.register(TableHeaderView.self, forHeaderFooterViewReuseIdentifier: "header")
+        t.dataSource = self
+        t.delegate = self
+        t.estimatedSectionFooterHeight = 0
+        t.estimatedSectionHeaderHeight = 0
+        t.backgroundView = {
+            let b = BackgroundTapView()
+            b.backgroundColor = .clear
+            b.delegate = self
+            return b
+        }()
+        return t
+    }()
     
     private lazy var buttonController: BoldButtonViewController = {
         let b = BoldButtonViewController()
@@ -103,10 +103,13 @@ final class AlarmEditController: UIViewController {
     }
     
     @objc private func handleMarkButtonPressed(_ sender: UIBarButtonItem) {
-        let alarm = viewModel.alarm
-        let newStatus = !alarm.isMarked
+        let newStatus = !viewModel.alarm.isMarked
         viewModel.setAlarmMarked(newStatus)
-        markBarButton.image = .star(filled: alarm.isMarked)
+        markBarButton.image = .star(filled: newStatus)
+    }
+    
+    @objc private func handleRecurringSwitched(_ sender: UISwitch) {
+        viewModel.setAlarmRepeating(sender.isOn)
     }
 }
 
@@ -186,7 +189,8 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch ViewModel.Section(rawValue: indexPath.section)! {
+        let section = ViewModel.Section(rawValue: indexPath.section)!
+        switch section {
         case .location:
             guard let model = viewModel.cellModel(for: indexPath) else {
                 return tableView.dequeueReusableCell(withIdentifier: "empty", for: indexPath)
@@ -201,10 +205,7 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .category:
             let category = viewModel.alarmCategory
-            var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "category")
-            if cell == nil {
-                cell = UITableViewCell(style: .value1, reuseIdentifier: "category")
-            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "category", style: .value1)
             cell.textLabel?.text = category?.name ?? .localized(.category_none)
             if let imageName = category?.imageName,
                let image = UIImage(systemName: imageName) {
@@ -214,14 +215,25 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.accessoryType = .disclosureIndicator
             return cell
-        case .audio:
-            var cell: UITableViewCell! = tableView.dequeueReusableCell(withIdentifier: "audio")
-            if cell == nil {
-                cell = UITableViewCell(style: .value1, reuseIdentifier: "audio")
+        case .settings:
+            let cell: UITableViewCell
+            switch indexPath.row {
+            case section.repeatsRow:cell = tableView.dequeueReusableCell(withIdentifier: "repeating", style: .default)
+                cell.textLabel?.text = LocalizedStringKey.edit_repeatsCell.localized
+                cell.accessoryView = {
+                    let s = UISwitch()
+                    s.addTarget(self, action: #selector(handleRecurringSwitched(_:)), for: .valueChanged)
+                    s.isOn = viewModel.alarm.isRecurring
+                    return s
+                }()
+            case section.soundRow:
+                cell = tableView.dequeueReusableCell(withIdentifier: "audio", style: .value1)
+                cell.textLabel?.text = LocalizedStringKey.edit_toneCell.localized
+                cell.detailTextLabel?.text = viewModel.alarmToneName
+                cell.accessoryType = .disclosureIndicator
+            default:
+                cell = tableView.dequeueReusableCell(withIdentifier: "cell", style: .default)
             }
-            cell.textLabel?.text = LocalizedStringKey.edit_toneCell.localized
-            cell.detailTextLabel?.text = viewModel.alarmToneName
-            cell.accessoryType = .disclosureIndicator
             return cell
         }
     }
@@ -330,8 +342,6 @@ extension AlarmEditController: BackgroundTapViewDelegate {
 
 extension AlarmEditController {
     func setupView() {
-        tableView = UITableView(frame: .zero, style: .grouped)
-        
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()

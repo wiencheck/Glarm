@@ -202,7 +202,7 @@ final class ExtensionViewController: UIViewController {
         detailLabel.text = info.radius.readableRepresentation() + ", \(LocalizedStringKey.notification_youAre.localized) \(distance.readableRepresentation()) \(LocalizedStringKey.notification_awayFromDestination.localized)"
     }
     
-    public func configure(withAlarm alarm: AlarmEntryRepresentation) {
+    public func configure(withAlarm alarm: SimpleAlarmEntry) {
         guard let info = alarm.locationInfo else {
             return
         }
@@ -217,7 +217,7 @@ final class ExtensionViewController: UIViewController {
     }
     
     public func showNote(_ flag: Bool, animated: Bool) {
-        UIView.animate(withDuration: animated ? 0.4 : 0, animations: {
+        UIView.animate(withDuration: animated ? 0.24 : 0, animations: {
             self.noteStack.alpha = flag ? 1 : 0
             self.labelStack.alpha = !flag ? 1 : 0
             self.mapView?.alpha = 1

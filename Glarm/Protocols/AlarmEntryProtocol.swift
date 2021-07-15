@@ -19,6 +19,9 @@ protocol AlarmEntryProtocol: SimpleAlarmEntryProtocol {
     /// Category assigned to the alarm.
     var category: Category? { get set }
     
+    /// Value indicating whether alarm is delivered every time user enters a region.
+    var isRecurring: Bool { get set }
+    
     /// Value indicating whether alarm is currently scheduled and waiting to be fired.
     var isActive: Bool { get }
     

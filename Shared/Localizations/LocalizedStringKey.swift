@@ -55,9 +55,11 @@ enum LocalizedStringKey: String, LocalizableString {
     case edit_locationHeader
     case edit_noteHeader
     case edit_categoryHeader
+    case edit_settingsHeader
     case edit_clearNoteButton
     case edit_notePlaceholder
     case edit_toneCell
+    case edit_repeatsCell
     case edit_scheduleButton
     case edit_updateButton
     case edit_backButton

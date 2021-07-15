@@ -19,8 +19,14 @@ enum SharedConstants {
     }
     
     static let recentAlarmsUserDefaultsKey = "recentAlarms"
+    static let notificationContentAlarmDataKey = "alarm"
     
     static let widgetTargetBundleIdentifier = "com.adw.glarm.TodayWidgetExtension"
     
     static let notificationContentExtensionCategory = "NotificationContentExtension"
+    
+    enum URLs {
+        static let newAlarmURL = URL(string: "://newalarm")
+        static let alarmOpenedURL = URL(string: "://alarmOpenedWithUid:")
+    }
 }

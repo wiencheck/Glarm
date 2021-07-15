@@ -26,11 +26,24 @@ struct WidgetAlarmEntry: TimelineEntry {
         self.timeOfArrival = timeOfArrival
     }
     
+    var uid: String { alarm.uid }
+    
     var name: String { alarm.locationInfo?.name ?? "None" }
     
     var note: String { alarm.note }
     
     var url: URL? { URL(string: "//:\(alarm.uid)") }
+}
+
+extension SimpleAlarmEntry: Hashable {
+    static func == (lhs: SimpleAlarmEntry, rhs: SimpleAlarmEntry) -> Bool {
+        lhs.uid == rhs.uid
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(uid)
+        hasher.combine(dateCreated)
+    }
 }
 
 extension SimpleAlarmEntry {
@@ -43,6 +56,8 @@ extension SimpleAlarmEntry {
         
         return alarm
     }
+    
+    static var empty: SimpleAlarmEntry { .init(note: "") }
 }
 
 extension WidgetAlarmEntry {
@@ -58,6 +73,13 @@ extension WidgetAlarmEntry {
                                 alarm: alarm,
                                 distance: 10000,
                                 timeOfArrival: timeOfArrival)
+    }
+    
+    static var empty: WidgetAlarmEntry {
+        .init(snapshot: UIImage(),
+              alarm: SimpleAlarmEntry.empty,
+              distance: 0,
+              timeOfArrival: nil)
     }
     /*
      placeholder

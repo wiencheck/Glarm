@@ -89,6 +89,11 @@ final class AlarmEditViewModel {
         alarm.isMarked = marked
         manager.saveChanges(forAlarm: alarm)
     }
+    
+    func setAlarmRepeating(_ repeating: Bool) {
+        alarm.isRecurring = repeating
+        didMakeChanges = true
+    }
 }
 
 extension AlarmEditViewModel: AlarmsManagerDelegate {
@@ -124,7 +129,7 @@ extension AlarmEditViewModel: AudioBrowserViewControllerDelegate {
     private func updateAudio(withSoundName soundName: String) {
         didMakeChanges = true
         alarm.soundName = soundName
-        delegate?.model(didReloadRow: self, at: IndexPath(row: 0, section: Section.audio.rawValue))
+        delegate?.model(didReloadRow: self, at: IndexPath(row: 1, section: Section.settings.rawValue))
     }
 }
 
@@ -149,7 +154,26 @@ extension AlarmEditViewModel {
         case location
         case note
         case category
-        case audio
+        case settings
+        
+        var numberOfRows: Int {
+            switch self {
+            case .settings:
+                return 2
+            default:
+                return 1
+            }
+        }
+        
+        var repeatsRow: Int {
+            guard self == .settings else { return NSNotFound }
+            return 0
+        }
+        
+        var soundRow: Int {
+            guard self == .settings else { return NSNotFound }
+            return 1
+        }
     }
     
     var numberOfSections: Int {
@@ -157,11 +181,13 @@ extension AlarmEditViewModel {
     }
     
     func numberOfRows(in section: Int) -> Int {
-        return 1
+        let sec = Section(rawValue: section)!
+        return sec.numberOfRows
     }
     
     func didSelectRow(at path: IndexPath) {
-        switch Section(rawValue: path.section)! {
+        let section = Section(rawValue: path.section)!
+        switch section {
         case .location:
             PermissionsManager.shared.requestLocationPermission { status in
                 switch status {
@@ -182,12 +208,14 @@ extension AlarmEditViewModel {
                     break
                 }
             }
-        case .note:
-            break
         case .category:
             delegate?.model(didSelectCategory: self, category: alarm.category)
-        case .audio:
-            delegate?.model(didSelectAudio: self, soundName: alarm.soundName)
+        case .settings:
+            if path.row == section.soundRow {
+                delegate?.model(didSelectAudio: self, soundName: alarm.soundName)
+            }
+        default:
+            break
         }
     }
     
@@ -210,8 +238,8 @@ extension AlarmEditViewModel {
                 buttonTitle: noteClearButtonText)
         case .category:
             return .init(title: LocalizedStringKey.edit_categoryHeader.localized)
-        case .audio:
-            return nil
+        case .settings:
+            return .init(title: LocalizedStringKey.edit_settingsHeader.localized)
         }
     }
 }
