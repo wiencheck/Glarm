@@ -39,6 +39,8 @@ fileprivate struct MediumWidgetDetailsView: View {
             Text("Distance")
                 .font(.callout)
                 .foregroundColor(Color(UIColor.tint))
+                .lineLimit(2)
+            //Text(entry.uid)
             Text(entry.distance.readableRepresentation())
                 .font(.callout)
             

@@ -10,10 +10,10 @@ import CoreLocation
 
 extension CLLocationDistance {
     
-    func readableRepresentation(usingSpaces: Bool = false) -> String {
+    func readableRepresentation(usingSpaces: Bool = false, addingSymbol: Bool = true) -> String {
         let formatter: NumberFormatter = .cached()
         
-        var unit = UserDefaults.appGroupSuite.preferredUnitLength
+        var unit = UserDefaults.preferredUnitLength
         let one = Measurement(value: 1, unit: unit)
             .converted(to: .meters)
             .value
@@ -41,7 +41,10 @@ extension CLLocationDistance {
         if usingSpaces {
             representation += " "
         }
-        return representation + unit.symbol
+        if addingSymbol {
+            representation += unit.symbol
+        }
+        return representation
     }
     
     func converted(toUnit unit: UnitLength) -> Double {

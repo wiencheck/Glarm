@@ -79,7 +79,7 @@ final class BrowseViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         #if DEBUG
-            viewModel.manager.displayRandomAlarm()
+            //viewModel.manager.displayRandomAlarm()
         #endif
         guard shouldShowSwipeHint else {
             return
@@ -111,7 +111,7 @@ final class BrowseViewController: UIViewController {
         return UIApplication.shared.launchCount % 3 == 0
     }
     
-    private func openEditView(withAlarm alarm: AlarmEntryProtocol?) {
+    func openEditView(withAlarm alarm: AlarmEntryProtocol?) {
         // Open edit view if alarm exists
         // Go straight to the map otherwise.
         let editModel = AlarmEditViewModel(manager: viewModel.manager, alarm: alarm)
@@ -228,15 +228,20 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+        return 12
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard self.tableView(tableView, numberOfRowsInSection: section) > 0 else {
             return nil
         }
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? TableHeaderView
-        header?.title = viewModel.headerTitle(in: section)
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! TableHeaderView
+        let contents = viewModel.headerContents(in: section)
+        header.title = contents.title
+        if let imageName = contents.imageName {
+            header.image = UIImage(systemName: imageName)
+        }
+        
         return header
     }
     
@@ -267,7 +272,8 @@ extension BrowseViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard let alarm = viewModel.alarm(at: indexPath) else {
+        guard let alarm = viewModel.alarm(at: indexPath),
+              alarm.category == nil else {
             return nil
         }
         let isMarked = alarm.isMarked

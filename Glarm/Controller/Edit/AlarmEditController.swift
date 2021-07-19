@@ -75,6 +75,7 @@ final class AlarmEditController: UIViewController {
         tableView.reloadData()
         buttonController.isSelected = viewModel.scheduleButtonEnabled
         buttonController.isEnabled = viewModel.scheduleButtonEnabled
+        markBarButton.isEnabled = viewModel.alarm.category == nil
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -116,10 +117,6 @@ final class AlarmEditController: UIViewController {
 extension AlarmEditController: Drawerable {
     var drawerContentViewController: UIViewController? {
         return buttonController
-    }
-    
-    var shouldAdjustDrawerContentToKeyboard: Bool {
-        return true
     }
 }
 
@@ -204,16 +201,20 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
             cell.noteText = viewModel.alarmNoteText
             return cell
         case .category:
-            let category = viewModel.alarmCategory
             let cell = tableView.dequeueReusableCell(withIdentifier: "category", style: .value1)
-            cell.textLabel?.text = category?.name ?? .localized(.category_none)
+            var configuration = cell.defaultContentConfiguration()
+            
+            let category = viewModel.alarmCategory
+            configuration.text = category?.name ?? .localized(.category_none)
             if let imageName = category?.imageName,
                let image = UIImage(systemName: imageName) {
-                cell.imageView?.image = image
+                configuration.image = image
             } else {
-                cell.imageView?.image = nil
+                configuration.image = nil
             }
+            cell.contentConfiguration = configuration
             cell.accessoryType = .disclosureIndicator
+            
             return cell
         case .settings:
             let cell: UITableViewCell
@@ -243,7 +244,7 @@ extension AlarmEditController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+        return 12
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

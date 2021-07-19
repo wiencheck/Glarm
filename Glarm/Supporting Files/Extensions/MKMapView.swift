@@ -20,7 +20,7 @@ extension MKMapView {
         } else if coordinate == .zero {
             setCenter(userCoordinate, animated: animated)
         } else {
-            let region = regionThatFits(MKCoordinateRegion(coordinates: [userCoordinate, coordinate]))
+            let region = regionThatFits(MKCoordinateRegion(coordinates: [userCoordinate, coordinate], spanMultiplier: SharedConstants.mapRegionSpanMultiplier))
             setRegion(region, animated: animated)
         }
     }

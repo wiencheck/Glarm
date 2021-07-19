@@ -15,7 +15,7 @@ class RootController: UIViewController {
     private let manager: AlarmsManagerProtocol
     private let locationManager: CLLocationManager
     
-    private lazy var navigation: UINavigationController = {
+    private(set) lazy var navigation: UINavigationController = {
         let model = BrowseViewModel(manager: manager)
         let vc = BrowseViewController(model: model)
         return RootNavigationController(rootViewController: vc)
@@ -23,7 +23,14 @@ class RootController: UIViewController {
     
     private lazy var blurOverlayView = UIVisualEffectView(effect: nil)
     
-    fileprivate lazy var drawer = UIView()
+    fileprivate lazy var drawer: UIView = {
+        let v = UIView()
+        v.backgroundColor = .clear
+        v.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        v.layer.cornerRadius = 12
+        v.clipsToBounds = true
+        return v
+    }()
     fileprivate lazy var contentContainer = UIView()
     private var drawerContentController: UIViewController?
     
@@ -58,7 +65,6 @@ class RootController: UIViewController {
     
     private func setupView() {
         view.addSubview(drawer)
-        drawer.backgroundColor = .clear
         drawer.snp.makeConstraints { make in
             make.leading.bottom.trailing.equalToSuperview()
         }
@@ -71,8 +77,8 @@ class RootController: UIViewController {
         contentContainer.backgroundColor = .clear
         drawer.addSubview(contentContainer)
         contentContainer.snp.makeConstraints { make in
-            make.edges.equalTo(drawer.safeAreaLayoutGuide).priority(.high)
-            make.bottom.equalTo(drawer.safeAreaLayoutGuide).priority(.required)
+            make.edges.equalTo(drawer.safeAreaLayoutGuide)
+            make.bottom.equalTo(drawer.safeAreaLayoutGuide).priority(.high)
         }
     }
     
@@ -233,9 +239,7 @@ extension Drawerable {
         return root.drawer
     }
     
-    var shouldAdjustDrawerContentToKeyboard: Bool {
-        return false
-    }
+    var shouldAdjustDrawerContentToKeyboard: Bool { true }
     
     func updateDrawerContent(animated: Bool) {
         guard let root = UIApplication.shared.keyWindow()?.rootViewController as? RootController else {

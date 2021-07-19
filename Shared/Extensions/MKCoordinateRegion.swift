@@ -9,7 +9,7 @@
 import MapKit
 
 extension MKCoordinateRegion {
-    init(coordinates: [CLLocationCoordinate2D], spanMultiplier: CLLocationDistance = 1.8) {
+    init(coordinates: [CLLocationCoordinate2D], spanMultiplier: CLLocationDistance = 1) {
         var topLeftCoord = CLLocationCoordinate2D(latitude: -90, longitude: 180)
         var bottomRightCoord = CLLocationCoordinate2D(latitude: 90, longitude: -180)
 

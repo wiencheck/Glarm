@@ -78,4 +78,14 @@ fileprivate extension UITableViewCell {
         // Do the magic.
         firstAnimator.startAnimation()
     }
+    
+    func setTitle(text: String?) {
+//        if #available(iOS 14.0, *) {
+//            contentConfiguration
+//        }
+    }
+    
+    func setSubtitle(text: String?) {
+        
+    }
 }

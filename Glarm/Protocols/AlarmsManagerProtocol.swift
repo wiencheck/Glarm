@@ -46,8 +46,7 @@ extension AlarmsManagerProtocol {
         let recentAlarms = alarms?.map { entry in
             entry.makeSimplified()
         }
-        UserDefaults.appGroupSuite.recentAlarms = recentAlarms
-        UserDefaults.appGroupSuite.synchronize()
+        UserDefaults.recentAlarms = recentAlarms
         
         WidgetCenter.shared.reloadAllTimelines()
     }

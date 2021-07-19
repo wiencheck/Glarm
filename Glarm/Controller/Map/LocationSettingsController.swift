@@ -12,14 +12,15 @@ import AWAlertController
 import MapKit.MKMapView
 
 protocol LocationSettingsControllerDelegate: AnyObject {
-    var selectedUnit: UnitLength { get }
+    var currentUnit: UnitLength { get }
     func radiusChanged(_ radius: CLLocationDistance)
+    func radiusButtonPressed()
     func searchBarPressed()
     func searchButtonPressed()
 }
 
 extension LocationSettingsControllerDelegate {
-    var selectedUnit: UnitLength { UserDefaults.appGroupSuite.preferredUnitLength }
+    var currentUnit: UnitLength { UserDefaults.preferredUnitLength }
 }
 
 final class LocationSettingsController: UIViewController {
@@ -40,7 +41,7 @@ final class LocationSettingsController: UIViewController {
     /// Current radius in kilometers.
     private(set)var radius: CLLocationDistance {
         didSet {
-            radiusLabel.text = radius.readableRepresentation()
+            radiusButton.text = radius.readableRepresentation(addingSymbol: false)
             delegate?.radiusChanged(radius)
         }
     }
@@ -87,12 +88,12 @@ final class LocationSettingsController: UIViewController {
         return s
     }()
     
-    private lazy var radiusLabel: UILabel = {
-        let l = UILabel()
-        l.textColor = .label()
-        l.textAlignment = .center
-        l.font = .subtitle
-        l.text = radius.readableRepresentation()
+    private lazy var radiusButton: UIButton = {
+        let l = BorderedButton()
+        l.text = radius.readableRepresentation(addingSymbol: false)
+        l.pressHandler = { [weak self] sender in
+            self?.delegate?.radiusButtonPressed()
+        }
         l.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         return l
     }()
@@ -103,21 +104,19 @@ final class LocationSettingsController: UIViewController {
         l.numberOfLines = 2
         l.textColor = .label()
         l.textAlignment = .center
-        l.font = .headerTitle
+        l.font = .subtitle
         l.text = LocalizedStringKey.edit_exactScrubbingMessage.localized
         l.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         return l
     }()
     
     lazy var unitButton: UIButton = {
-        let b = UIButton(type: .system)
-        b.text = delegate?.selectedUnit.symbol
+        let b = BorderedButton()
+        b.text = delegate?.currentUnit.symbol
         b.menu = unitMenu
         b.showsMenuAsPrimaryAction = true
         return b
     }()
-    
-    private lazy var unitMenu: UIMenu = UIMenu(title: .localized(.unit_menuTitle), image: .download, identifier: .init("units"), options: [], children: unitMenuItems)
     
     private lazy var unlockButton: UIButton = {
         let b = UIButton(type: .system)
@@ -180,7 +179,6 @@ final class LocationSettingsController: UIViewController {
             rounded = newRadius.round(nearest: 5000)
         }
         radius = rounded
-        radiusLabel.text = rounded.readableRepresentation()
         delegate?.radiusChanged(rounded)
     }
     
@@ -191,15 +189,6 @@ final class LocationSettingsController: UIViewController {
         }
         radius = segmentDistances[index]
         slider.setDoubleValue(radius / maximumDistance, animated: true)
-    }
-    
-    @objc private func unitSegmentChanged(_ sender: UISegmentedControl) {
-        guard let selectedTitle = sender.titleForSegment(at: sender.selectedSegmentIndex) else {
-            return
-        }
-        UserDefaults.appGroupSuite.preferredUnitLength = UnitLength(symbol: selectedTitle)
-        radiusLabel.text = radius.readableRepresentation()
-        updateSuggestedDistances()
     }
 }
 
@@ -216,7 +205,7 @@ extension LocationSettingsController {
     }
     
     private func updateSuggestedDistances() {
-        let unit = UserDefaults.appGroupSuite.preferredUnitLength
+        let unit = UserDefaults.preferredUnitLength
         var measurement = Measurement(value: 0, unit: unit)
         segmentDistances = segmentFullDistances.map { distance in
             print("Unit: \(distance) \(unit.symbol)")
@@ -240,30 +229,22 @@ extension LocationSettingsController {
             }
         })
     }
-    
-    private var unitMenuItems: [UIMenuElement] {
-        let units: [UnitLength] = [
-            .kilometers, .miles,
-        ]
-        return units.reversed().map { unit in
-            let selected = unit == UserDefaults.appGroupSuite.preferredUnitLength
-            print("\(unit.symbol) \(selected)")
-            return UIAction(title: unit.localizedDescription,
-                            discoverabilityTitle: unit.symbol,
-                            state: selected ? .on : .off, handler: { [weak self] _ in
-                self?.didSelectUnit(unit)
-            })
-        }
-    }
-    
-    private func didSelectUnit(_ unit: UnitLength) {
-        UserDefaults.appGroupSuite.preferredUnitLength = unit
+}
+
+extension LocationSettingsController: UnitMenuSelectable, RadiusInputHandling {
+    func handleUnitChanged(from oldUnit: UnitLength, to unit: UnitLength) {
         updateSuggestedDistances()
+        
         unitButton.text = unit.symbol
         // Resetting menu completely was necessary to fix the issue of correct state not being updated for actions.
         unitButton.menu = nil
-        unitButton.menu = unitMenu.replacingChildren(unitMenuItems)
-        radiusLabel.text = radius.readableRepresentation()
+        unitButton.menu = unitMenu
+        
+        guard let text = radiusButton.text,
+              let input = translateInputToRadius(text, unit: unit) else {
+            return
+        }
+        radius = input
     }
 }
 
@@ -278,6 +259,11 @@ extension LocationSettingsController: VariSliderDelegate {
 
 private extension LocationSettingsController {
     func setupView() {
+        let container = SettingView()
+        view.addSubview(container)
+        container.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
         let searchContainer = SettingView()
         searchContainer.title = LocalizedStringKey.map_chooseDestination.localized
         
@@ -289,6 +275,11 @@ private extension LocationSettingsController {
             make.bottom.equalToSuperview().inset(8)
         }
         
+//        container.addSubview(searchBar, withTitle: .localized(.map_chooseDestination))
+//        container.addSubview(distanceSegment, withTitle: .localized(.map_setRadius))
+//        container.addSubview(slider, withTitle: nil)
+ //       return ()
+        
         let sliderContainer = SettingView()
         sliderContainer.title = LocalizedStringKey.map_setRadius.localized
         
@@ -297,7 +288,7 @@ private extension LocationSettingsController {
         
         let radiusDummyLabel = UILabel()
         radiusDummyLabel.text = "Radius"
-        radiusDummyLabel.font = radiusLabel.font
+        radiusDummyLabel.font = radiusButton.titleLabel?.font
         radiusDummyLabel.textColor = .secondaryLabel()
         radiusContainer.addSubview(radiusDummyLabel)
         radiusDummyLabel.snp.makeConstraints { make in
@@ -305,10 +296,10 @@ private extension LocationSettingsController {
             make.leading.equalToSuperview()
         }
         
-        radiusContainer.addSubview(radiusLabel)
-        radiusLabel.snp.makeConstraints { make in
+        radiusContainer.addSubview(radiusButton)
+        radiusButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
-            make.leading.equalTo(radiusDummyLabel.snp.trailing).offset(4)
+            make.leading.equalTo(radiusDummyLabel.snp.trailing).offset(6)
         }
         
         unitButton.setContentHuggingPriority(.defaultHigh, for: .vertical)
@@ -319,7 +310,7 @@ private extension LocationSettingsController {
         
         let unitDummyLabel = UILabel()
         unitDummyLabel.text = "Units"
-        unitDummyLabel.font = radiusLabel.font
+        unitDummyLabel.font = radiusButton.titleLabel?.font
         unitDummyLabel.textColor = .secondaryLabel()
         radiusContainer.addSubview(unitDummyLabel)
         unitDummyLabel.snp.makeConstraints { make in
@@ -377,6 +368,66 @@ private extension LocationSettingsController {
         view.addSubview(stack)
         stack.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+}
+
+fileprivate class SettingView2: UIView {
+    private let stackSpacing: CGFloat = 12
+    private let labelMargin: CGFloat = 8
+    private let contentMargin: CGFloat = 16
+    
+    private lazy var stackView: UIStackView = {
+        let s = UIStackView()
+        s.axis = .vertical
+        //s.alignment = .
+        s.spacing = stackSpacing
+        return s
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    private func setupView() {
+        backgroundColor = .clear
+        addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(labelMargin)
+            make.leading.equalToSuperview()
+            make.center.equalToSuperview()
+        }
+    }
+    
+    func addSubview(_ view: UIView, withTitle title: String?) {
+        if let title = title {
+            if !stackView.arrangedSubviews.isEmpty {
+                let separator = UIView()
+                stackView.addArrangedSubview(separator)
+                separator.snp.makeConstraints { make in
+                    make.height.equalTo(1)
+                    make.width.equalToSuperview()
+                }
+            }
+            let label = UILabel()
+            label.text = title
+            label.font = .subtitle
+            label.textColor = .secondaryLabel()
+            stackView.addArrangedSubview(label)
+            label.snp.makeConstraints { make in
+                make.leading.equalToSuperview().offset(labelMargin)
+            }
+        }
+        stackView.addArrangedSubview(view)
+        view.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(contentMargin)
         }
     }
 }

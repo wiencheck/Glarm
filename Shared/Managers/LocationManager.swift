@@ -70,7 +70,7 @@ extension LocationManager: CLLocationManagerDelegate {
         location = locations.last
         onLocationAuthorizationStatusChange?(.authorized)
         onLocationAuthorizationStatusChange = nil
-        UserDefaults.appGroupSuite.lastLocation = locations.last
+        UserDefaults.lastLocation = locations.last
     }
     
     internal func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {

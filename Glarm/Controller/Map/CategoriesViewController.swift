@@ -116,15 +116,19 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
         if cell == nil {
             cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         }
-        let config = viewModel.cellConfiguration(at: indexPath)
-        cell.textLabel?.text = config?.text
-        if let imageName = config?.imageName,
+        var configuration = cell.defaultContentConfiguration()
+        let contents = viewModel.cellContents(at: indexPath)
+        
+        configuration.text = contents?.text
+        if let imageName = contents?.imageName,
            let image = UIImage(systemName: imageName) {
-            cell.imageView?.image = image
+            configuration.image = image
         } else {
-            cell.imageView?.image = nil
+            configuration.image = nil
         }
-        cell.accessoryType = config?.selected == true ? .checkmark : .none
+        cell.contentConfiguration = configuration
+        cell.accessoryType = contents?.selected == true ? .checkmark : .none
+        
         return cell
     }
     

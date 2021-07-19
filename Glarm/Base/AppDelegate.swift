@@ -15,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private(set) static var shared: AppDelegate!
 
-    var window: UIWindow?
     private(set) lazy var alarmsManager = AlarmsManager()
     private(set) lazy var categoriesManager = AlarmCategoriesManager()
 
@@ -37,7 +36,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 private extension AppDelegate {
     func setupAppReviewRules() {
+        AppReviewManager.applicationiTunesIdentifier = "id1523237367"
         AppReviewManager.rules.numberOfActionsPerformed = 12
+        // AppReviewManager.rules.isDebugging = true
     }
     
     func customizeColors() {

@@ -146,12 +146,8 @@ final class AlarmMapCell: AlarmCell {
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
         
-        let categoryStack = UIStackView(arrangedSubviews: [categoryImageView, categoryLabel, markedImageView])
-        categoryStack.axis = .horizontal
-        categoryStack.spacing = 5
-        
-        contentView.addSubview(categoryStack)
-        categoryStack.snp.makeConstraints { make in
+        contentView.addSubview(categoryImageView)
+        categoryImageView.snp.makeConstraints { make in
             make.leading.greaterThanOrEqualTo(detailLabel.snp.trailing).offset(2)
             make.trailing.equalTo(contentView.layoutMarginsGuide)
             make.centerY.equalTo(detailLabel)

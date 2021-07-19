@@ -14,6 +14,7 @@ extension UIFont {
     static let noteButton = UIFont.preferredFont(forTextStyle: .footnote)
     static let noteText = UIFont.preferredFont(forTextStyle: .body)
     static let headerTitle = UIFont.preferredFont(forTextStyle: .subheadline, weight: .semibold)
+    static let roundedButton = UIFont.preferredFont(forTextStyle: .subheadline, weight: .medium)
     
     static func preferredFont(forTextStyle style: TextStyle, weight: Weight) -> UIFont {
         let metrics = UIFontMetrics(forTextStyle: style)

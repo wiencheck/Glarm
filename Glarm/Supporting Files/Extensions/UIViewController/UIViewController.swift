@@ -10,6 +10,7 @@ import UIKit
 import AWAlertController
 
 extension UIViewController {
+    
     func displayErrorMessage(title: String?, error: Error?) {
         let alert = AWAlertController(title: title ?? LocalizedStringKey.message_errorOccurred.localized, message: error?.localizedDescription ?? LocalizedStringKey.message_errorUnknown.localized, preferredStyle: .alert)
         alert.addAction(.cancel(text: LocalizedStringKey.dismiss.localized))

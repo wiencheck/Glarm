@@ -50,23 +50,6 @@ class AlarmCell: UITableViewCell {
         return l
     }()
     
-    internal lazy var categoryLabel: UILabel = {
-        let l = UILabel()
-        l.textColor = .tint
-        l.textAlignment = .right
-        l.setContentHuggingPriority(.required, for: .vertical)
-        l.font = .subtitle
-        return l
-    }()
-    
-    internal lazy var categoryImageView: UIImageView = {
-        let i = UIImageView(image: .folder)
-        i.tintColor = .tint
-        i.contentMode = .scaleAspectFit
-        i.setEqualAspectRatio()
-        return i
-    }()
-    
     internal lazy var indicatorView: UIImageView = {
         let i = UIImageView(image: .disclosure)
         i.tintColor = .gray
@@ -74,8 +57,8 @@ class AlarmCell: UITableViewCell {
         return i
     }()
     
-    internal lazy var markedImageView: UIImageView = {
-        let i = UIImageView(image: .star)
+    internal lazy var categoryImageView: UIImageView = {
+        let i = UIImageView()
         i.contentMode = .scaleAspectFit
         i.setEqualAspectRatio()
         return i
@@ -108,15 +91,14 @@ class AlarmCell: UITableViewCell {
         noteButton.isHidden = model.note == nil || model.note?.isEmpty == true
         detailLabel.text = model.locationInfo?.radius.readableRepresentation() ?? "–"
         rightDetailLabel.text = model.date
-        markedImageView.isHidden = !model.isMarked
-        
-        categoryLabel.isHidden = model.category == nil
-        categoryImageView.isHidden = model.category == nil
-        categoryLabel.text = model.category?.name
-        if let category = model.category {
-            categoryImageView.image = UIImage(systemName: category.imageName ?? "folder")
-        } else {
-            categoryImageView.image = nil
+        categoryImageView.isHidden = false
+        switch model.markedStateConfiguration {
+        case .marked:
+            categoryImageView.image = .star
+        case .image(let imageName):
+            categoryImageView.image = UIImage(systemName: imageName)
+        case .none:
+            categoryImageView.isHidden = true
         }
     }
     
@@ -150,12 +132,8 @@ class AlarmCell: UITableViewCell {
             make.trailing.equalTo(indicatorView.snp.leading).offset(-2)
         }
         
-        let categoryStack = UIStackView(arrangedSubviews: [categoryImageView, categoryLabel, markedImageView])
-        categoryStack.axis = .horizontal
-        categoryStack.spacing = 5
-        
-        contentView.addSubview(categoryStack)
-        categoryStack.snp.makeConstraints { make in
+        contentView.addSubview(categoryImageView)
+        categoryImageView.snp.makeConstraints { make in
             make.leading.greaterThanOrEqualTo(detailLabel.snp.trailing).offset(2)
             make.trailing.equalTo(contentView.layoutMarginsGuide)
             make.centerY.equalTo(detailLabel)
@@ -166,26 +144,37 @@ class AlarmCell: UITableViewCell {
 
 extension AlarmCell {
     struct Model {
-        init(locationInfo: LocationNotificationInfo?, note: String?, date: String? = nil, category: Category? = nil, isMarked: Bool = false) {
+        init(locationInfo: LocationNotificationInfo?, note: String?, date: String? = nil, markedStateConfiguration: MarkedStateConfiguration = .none) {
             self.locationInfo = locationInfo
             self.note = note
             self.date = date
-            if let category = category {
-                self.category = (category.name, category.imageName)
-            } else {
-                self.category = nil
-            }
-            self.isMarked = isMarked
+            self.markedStateConfiguration = markedStateConfiguration
         }
         
         init(alarm: AlarmEntryProtocol) {
-            self.init(locationInfo: alarm.locationInfo, note: alarm.note, date: DateFormatter.localizedString(from: alarm.dateCreated, dateStyle: .short, timeStyle: .none), category: alarm.category, isMarked: alarm.isMarked)
+            var markedStateConfiguration: MarkedStateConfiguration = .none
+            if alarm.isMarked {
+                markedStateConfiguration = .marked
+            } else if let imageName = alarm.category?.imageName {
+                markedStateConfiguration = .image(imageName: imageName)
+            }
+            self.init(locationInfo: alarm.locationInfo,
+                      note: alarm.note,
+                      date: DateFormatter.localizedString(from: alarm.dateCreated,
+                                                          dateStyle: .short,
+                                                          timeStyle: .none),
+                      markedStateConfiguration: markedStateConfiguration)
         }
         
         var locationInfo: LocationNotificationInfo?
         var note: String?
         var date: String?
-        var category: (name: String, imageName: String?)?
-        var isMarked: Bool
+        var markedStateConfiguration: MarkedStateConfiguration
+    }
+    
+    enum MarkedStateConfiguration {
+        case none
+        case marked
+        case image(imageName: String)
     }
 }

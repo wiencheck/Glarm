@@ -160,6 +160,12 @@
 		30B02487268F77BF0059A6F4 /* AlarmEntryWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B02486268F77BF0059A6F4 /* AlarmEntryWidget.swift */; };
 		30B02489268F77EF0059A6F4 /* LargeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B02488268F77EF0059A6F4 /* LargeWidgetEntryView.swift */; };
 		30B0248B268F7A170059A6F4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B0248A268F7A170059A6F4 /* Constants.swift */; };
+		30CDADAD26A44F20009DF2EB /* RadiusInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CDADAC26A44F20009DF2EB /* RadiusInputController.swift */; };
+		30CDADAF26A574AE009DF2EB /* UnitMenuSelectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CDADAE26A574AE009DF2EB /* UnitMenuSelectable.swift */; };
+		30CDADB126A57BFC009DF2EB /* RadiusInputHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CDADB026A57BFC009DF2EB /* RadiusInputHandling.swift */; };
+		30CDADB326A583C3009DF2EB /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CDADB226A583C3009DF2EB /* RoundedButton.swift */; };
+		30CDADB426A5A4A7009DF2EB /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA43268206AA00D4461E /* URL.swift */; };
+		30CDADB526A5A4A8009DF2EB /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 302FCA43268206AA00D4461E /* URL.swift */; };
 		30CF55A2269329EC00EDC501 /* MediumWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30CF55A0269329E800EDC501 /* MediumWidgetEntryView.swift */; };
 		30D14D0E268B0AB600B4C983 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D0D268B0AB600B4C983 /* SharedConstants.swift */; };
 		30D14D0F268B0AEA00B4C983 /* SharedConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D14D0D268B0AB600B4C983 /* SharedConstants.swift */; };
@@ -343,6 +349,10 @@
 		30B02486268F77BF0059A6F4 /* AlarmEntryWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmEntryWidget.swift; sourceTree = "<group>"; };
 		30B02488268F77EF0059A6F4 /* LargeWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeWidgetEntryView.swift; sourceTree = "<group>"; };
 		30B0248A268F7A170059A6F4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		30CDADAC26A44F20009DF2EB /* RadiusInputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiusInputController.swift; sourceTree = "<group>"; };
+		30CDADAE26A574AE009DF2EB /* UnitMenuSelectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitMenuSelectable.swift; sourceTree = "<group>"; };
+		30CDADB026A57BFC009DF2EB /* RadiusInputHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadiusInputHandling.swift; sourceTree = "<group>"; };
+		30CDADB226A583C3009DF2EB /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		30CF55A0269329E800EDC501 /* MediumWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediumWidgetEntryView.swift; sourceTree = "<group>"; };
 		30D14D0D268B0AB600B4C983 /* SharedConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedConstants.swift; sourceTree = "<group>"; };
 		30D14D16268B1E9300B4C983 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
@@ -421,7 +431,6 @@
 				2BAF05EB24C5F83900AB7FF4 /* UITableViewCell.swift */,
 				2BF6112024B72FA300D01007 /* UIView.swift */,
 				2B58487324DC3CFE0043BB59 /* UIViewController */,
-				302FCA43268206AA00D4461E /* URL.swift */,
 				302FCA5026828AD900D4461E /* AWAlertViewController.swift */,
 				301651132683630E00388390 /* NSManagedObject.swift */,
 			);
@@ -578,6 +587,7 @@
 				2BF76A3B24C435FE00A3BAB8 /* NoteCell.swift */,
 				2B86871B24C6CE8700664892 /* SoundCell.swift */,
 				2B81B1CE24C592E8007CB1D6 /* TableHeaderView.swift */,
+				30CDADB226A583C3009DF2EB /* RoundedButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -619,6 +629,7 @@
 				2B0DBDDE24B38025005B6A6A /* AlarmMapController.swift */,
 				2BF4A6A124BCD3FF00F52A4D /* SearchResultsController.swift */,
 				2BF76A3924C4242300A3BAB8 /* LocationSettingsController.swift */,
+				30CDADAC26A44F20009DF2EB /* RadiusInputController.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -690,6 +701,8 @@
 				30165101268320E600388390 /* AlarmsManagerProtocol.swift */,
 				301651032683278900388390 /* AlarmsManagerDelegate.swift */,
 				30165137268488FD00388390 /* AlarmCategoriesManagerProtocol.swift */,
+				30CDADAE26A574AE009DF2EB /* UnitMenuSelectable.swift */,
+				30CDADB026A57BFC009DF2EB /* RadiusInputHandling.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -745,6 +758,7 @@
 				2B0F753E24B5E06800EE9876 /* UIColor.swift */,
 				2BE2691424BD28E0000299A3 /* CLLocation.swift */,
 				2BCA122024B34538009965E4 /* CLLocationCoordinate2D.swift */,
+				302FCA43268206AA00D4461E /* URL.swift */,
 				2BD8EF7824E674B90084B64B /* String.swift */,
 				2BF13DC024B4BDD400B40D4E /* CLLocationDistance.swift */,
 				2BB99DC424D2D8EC0002DDC8 /* MKCoordinateRegion.swift */,
@@ -1051,6 +1065,7 @@
 				2BFD602F24C3745100D03C7A /* PlistReader.swift in Sources */,
 				2BAF05EC24C5F83900AB7FF4 /* UITableViewCell.swift in Sources */,
 				3016511F26837D0F00388390 /* Category+CoreDataProperties.swift in Sources */,
+				30CDADAD26A44F20009DF2EB /* RadiusInputController.swift in Sources */,
 				2BF4A6A024BBCF2300F52A4D /* AWError.swift in Sources */,
 				2BBDE5D924B9AB3D000AF05F /* AudioBrowserViewModel.swift in Sources */,
 				2BF4A69824BBCB8800F52A4D /* UIAlertAction.swift in Sources */,
@@ -1071,6 +1086,8 @@
 				2BCA122124B34538009965E4 /* CLLocationCoordinate2D.swift in Sources */,
 				2B6C7BA724B8E3B4000DEEDA /* RootController.swift in Sources */,
 				2B81B1CF24C592E8007CB1D6 /* TableHeaderView.swift in Sources */,
+				30CDADAF26A574AE009DF2EB /* UnitMenuSelectable.swift in Sources */,
+				30CDADB126A57BFC009DF2EB /* RadiusInputHandling.swift in Sources */,
 				2B58487524DC3D0F0043BB59 /* UIViewController+Containment.swift in Sources */,
 				2BB99DC224D2D7820002DDC8 /* LocationNotificationInfo.swift in Sources */,
 				2BCA121E24B33C36009965E4 /* AlarmsManager.swift in Sources */,
@@ -1104,6 +1121,7 @@
 				2BF4A6A424BCE2D500F52A4D /* MKMapView.swift in Sources */,
 				2B0F173C24B9EE3500DD8AB9 /* EmptyLocationCell.swift in Sources */,
 				301651142683630E00388390 /* NSManagedObject.swift in Sources */,
+				30CDADB326A583C3009DF2EB /* RoundedButton.swift in Sources */,
 				2BF0E0E024B9B29D00653D27 /* AudioBrowserViewController.swift in Sources */,
 				302FCA592682954000D4461E /* AWTableView.swift in Sources */,
 			);
@@ -1128,6 +1146,7 @@
 				2B58488224DC3F270043BB59 /* CLLocationDistance.swift in Sources */,
 				2B48A17B24DD352E00D74D9A /* NotificationViewController.swift in Sources */,
 				30165135268484CC00388390 /* UserDefaults.swift in Sources */,
+				30CDADB426A5A4A7009DF2EB /* URL.swift in Sources */,
 				2BB99DBF24D2D7400002DDC8 /* CLLocationCoordinate2D.swift in Sources */,
 				30B02476268F3B7F0059A6F4 /* SimpleAlarmEntry.swift in Sources */,
 				3038FDF22695B8F9006C3C0B /* String.swift in Sources */,
@@ -1167,6 +1186,7 @@
 				3038FDF62695EE5A006C3C0B /* EmptyWidgetEntryView.swift in Sources */,
 				30A783DF268CCC9D0066795E /* UserDefaults.swift in Sources */,
 				30D14D3D268B2C0400B4C983 /* LocationNotificationInfo.swift in Sources */,
+				30CDADB526A5A4A8009DF2EB /* URL.swift in Sources */,
 				30E62973268B5DA3003655AB /* LocationManager.swift in Sources */,
 				30D14D42268B2C5800B4C983 /* CLLocationCoordinate2D.swift in Sources */,
 				30B0247E268F721B0059A6F4 /* WidgetAlarmsProvider+MapDrawing.swift in Sources */,
@@ -1217,7 +1237,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BUILD_NUMBER = 5;
+				BUILD_NUMBER = 6;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1282,7 +1302,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				BUILD_NUMBER = 5;
+				BUILD_NUMBER = 6;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1345,7 +1365,7 @@
 				CODE_SIGN_ENTITLEMENTS = Glarm/Base/Glarm.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "${BUILD_NUMBER}";
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Glarm/Base/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = "$(MINIMUM_SYSTEM_VERSION)";
@@ -1372,7 +1392,7 @@
 				CODE_SIGN_ENTITLEMENTS = Glarm/Base/Glarm.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "${BUILD_NUMBER}";
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Glarm/Base/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = "$(MINIMUM_SYSTEM_VERSION)";
@@ -1396,7 +1416,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Extensions/NotificationContentExtension/NotificationContentExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "${BUILD_NUMBER}";
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/NotificationContentExtension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = "$(MINIMUM_SYSTEM_VERSION)";
@@ -1420,7 +1440,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Extensions/NotificationContentExtension/NotificationContentExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "${BUILD_NUMBER}";
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = "$(SRCROOT)/Extensions/NotificationContentExtension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = "$(MINIMUM_SYSTEM_VERSION)";
@@ -1447,7 +1467,7 @@
 				CODE_SIGN_ENTITLEMENTS = GlarmWidget/GlarmWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "${BUILD_NUMBER}";
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = GlarmWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = "$(MINIMUM_SYSTEM_VERSION)";
@@ -1474,7 +1494,7 @@
 				CODE_SIGN_ENTITLEMENTS = GlarmWidget/GlarmWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = "${BUILD_NUMBER}";
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 5346R7RC8E;
 				INFOPLIST_FILE = GlarmWidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = "$(MINIMUM_SYSTEM_VERSION)";

@@ -25,7 +25,7 @@ class WidgetAlarmsProvider: NSObject, TimelineProvider {
         locationManager.stopUpdatingLocation()
     }
     
-    private var location: CLLocation? { locationManager.location ?? UserDefaults.appGroupSuite.lastLocation }
+    private var location: CLLocation? { locationManager.location ?? UserDefaults.lastLocation }
         
     func getSnapshot(in context: Context, completion: @escaping (WidgetAlarmEntry) -> Void) {
         print("Snapshot")
@@ -98,7 +98,7 @@ class WidgetAlarmsProvider: NSObject, TimelineProvider {
     private func fetchMostRecentAlarm(completion: @escaping (SimpleAlarmEntry?) -> Void) {
         locationManager.startUpdatingLocation()
         
-        guard let recentAlarms = UserDefaults.appGroupSuite.recentAlarms?.sorted(by:     \.dateCreated, .orderedDescending) else {
+        guard let recentAlarms = UserDefaults.recentAlarms?.sorted(by:     \.dateCreated, .orderedDescending) else {
             completion(nil)
             return
         }
@@ -135,6 +135,6 @@ class WidgetAlarmsProvider: NSObject, TimelineProvider {
 extension WidgetAlarmsProvider: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        UserDefaults.appGroupSuite.lastLocation = locations.last
+        UserDefaults.lastLocation = locations.last
     }
 }

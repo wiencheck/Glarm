@@ -12,4 +12,8 @@ extension URL {
     var isLocal: Bool {
         return absoluteString.prefix(4) != "http"
     }
+    
+    init?(scheme: String) {
+        self.init(string: scheme + "://")
+    }
 }

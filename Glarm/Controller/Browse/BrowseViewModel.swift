@@ -33,8 +33,8 @@ final class BrowseViewModel {
     }
     
     private var alarms = [String: [AlarmEntryProtocol]]()
-        
     private var sectionNames = [String]()
+    private var categories: [String: Category] = [:]
     
     func loadData() {
         manager.fetchAlarms { alarms in
@@ -45,7 +45,7 @@ final class BrowseViewModel {
     
     private func sort(alarms: [AlarmEntryProtocol]) {
         var newAlarms: [String: [AlarmEntryProtocol]] = [:]
-        var categoryNames = [String]()
+        var newCategories = [String: Category]()
         
         for alarm in alarms.sorted(by: \.dateCreated, .orderedDescending) {
             let key: String
@@ -53,9 +53,9 @@ final class BrowseViewModel {
                 key = activeSection.title
             } else if alarm.isMarked {
                 key = markedSection.title
-            } else if let name = alarm.category?.name {
-                key = name
-                categoryNames.append(name)
+            } else if let category = alarm.category {
+                key = category.name
+                newCategories[key] = category
             } else {
                 key = pastSection.title
             }
@@ -68,10 +68,13 @@ final class BrowseViewModel {
                 markedSection.title,
                 pastSection.title
             ]
-            sections.insert(contentsOf: categoryNames.sorted(), at: sections.lastIndex)
+            sections.insert(contentsOf: newCategories
+                                .map(\.key)
+                                .sorted(), at: sections.lastIndex)
             return sections
         }()
         self.alarms = newAlarms
+        self.categories = newCategories
     }
     
     func alarm(at path: IndexPath) -> AlarmEntryProtocol? {
@@ -221,15 +224,18 @@ extension BrowseViewModel {
         var model = AlarmCell.Model(alarm: alarm)
         // Prevent displaying category name in category sections
         if !staticSections.map(\.index).contains(path.section) {
-            model.category?.name = ""
+            model.markedStateConfiguration = .none
         }
         return model
     }
     
-    func headerTitle(in section: Int) -> String {
+    func headerContents(in section: Int) -> (title: String, imageName: String?) {
         let name = sectionNames[section]
         let sec = Section(section, name)
-        return localizedSectionTitle(forSection: sec)
+        if let category = categories[name] {
+            return (category.name, category.imageName)
+        }
+        return (localizedSectionTitle(forSection: sec), nil)
     }
 }
 

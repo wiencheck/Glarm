@@ -44,7 +44,7 @@
 "edit_categoryHeader" = "Category";
 "edit_settingsHeader" = "Settings";
 "edit_notePlaceholder" = "Add note";
-"edit_exactScrubbingMessage" = "Move your finger up while holding the slider to adjust its sensitivity";
+"edit_exactScrubbingMessage" = "By moving your finger closer or further from the slider you can adjust its sensitivity";
 
 // MARK: Category screen
 "category_none" = "None";

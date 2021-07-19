@@ -30,9 +30,7 @@ struct WidgetAlarmEntry: TimelineEntry {
     
     var name: String { alarm.locationInfo?.name ?? "None" }
     
-    var note: String { alarm.note }
-    
-    var url: URL? { URL(string: "//:\(alarm.uid)") }
+    var note: String { alarm.note }    
 }
 
 extension SimpleAlarmEntry: Hashable {

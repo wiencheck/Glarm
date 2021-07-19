@@ -38,11 +38,22 @@ extension UITableView {
         return number == 0
     }
     
+    @available(iOS, deprecated: 14.0)
     func dequeueReusableCell(withIdentifier identifier: String, style: UITableViewCell.CellStyle) -> UITableViewCell {
         var cell: UITableViewCell! = dequeueReusableCell(withIdentifier: identifier)
         if cell == nil {
             cell = UITableViewCell(style: style, reuseIdentifier: identifier)
         }
+        return cell
+    }
+    
+    func makeReusableCell(withIdentifier identifier: String, withContentViewConfiguration configuration: UIListContentConfiguration = .cell()) -> UITableViewCell {
+        var cell: UITableViewCell! = dequeueReusableCell(withIdentifier: identifier)
+        if cell == nil {
+            cell = UITableViewCell(style: .default, reuseIdentifier: identifier)
+        }
+        cell.contentConfiguration = configuration
+        
         return cell
     }
 }

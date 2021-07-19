@@ -20,7 +20,7 @@ struct EmptyWidgetEntryView: View {
             Text("Press here to create one +")
                 .multilineTextAlignment(.center)
         }
-        .widgetURL(SharedConstants.URLs.newAlarmURL)
+        .widgetURL(URL(scheme: SharedConstants.newAlarmURLScheme))
     }
     
 }

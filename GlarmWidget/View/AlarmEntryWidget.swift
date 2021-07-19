@@ -37,9 +37,10 @@ struct WidgetEntryView: View {
     
     private var url: URL? {
         if isEmpty {
-            return SharedConstants.URLs.newAlarmURL
+            return URL(scheme: SharedConstants.newAlarmURLScheme)
         } else {
-            return SharedConstants.URLs.alarmOpenedURL?.appendingPathComponent(entry.uid)
+            let urlString = SharedConstants.editAlarmURLScheme + .schemeAppendix + entry.uid
+            return URL(string: urlString)
         }
     }
 }

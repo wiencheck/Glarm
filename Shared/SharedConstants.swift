@@ -11,6 +11,7 @@ import UIKit
 
 enum SharedConstants {
     static let radiusOverlayAlpha: CGFloat = 0.4
+    static let mapRegionSpanMultiplier: Double = 1.8
     
     static let appGroupIdentifier = "group.adw.glarm"
     
@@ -25,8 +26,6 @@ enum SharedConstants {
     
     static let notificationContentExtensionCategory = "NotificationContentExtension"
     
-    enum URLs {
-        static let newAlarmURL = URL(string: "://newalarm")
-        static let alarmOpenedURL = URL(string: "://alarmOpenedWithUid:")
-    }
+    static let newAlarmURLScheme = "glarm-newalarm"
+    static let editAlarmURLScheme = "glarm-editalarm"
 }

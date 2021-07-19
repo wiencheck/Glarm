@@ -46,7 +46,7 @@ extension WidgetAlarmsProvider {
         let options = MKMapSnapshotter.Options()
         
         /* Set snapshotter options */
-        options.region = MKCoordinateRegion(coordinates: coordinates, spanMultiplier: 1.2)
+        options.region = MKCoordinateRegion(coordinates: coordinates, spanMultiplier: SharedConstants.mapRegionSpanMultiplier)
         options.size = size
         options.pointOfInterestFilter = .excludingAll
         if let traitCollection = traitCollection {

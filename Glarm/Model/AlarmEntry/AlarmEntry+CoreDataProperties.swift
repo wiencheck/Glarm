@@ -62,6 +62,15 @@ extension AlarmEntry {
         dateCreated = Date()
         uuid = UUID()
     }
+    
+    public override func didChangeValue(forKey key: String) {
+        super.didChangeValue(forKey: key)
+        
+        if key == "category",
+           category != nil {
+            isMarked = false
+        }
+    }
 
 }
 

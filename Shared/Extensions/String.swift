@@ -12,6 +12,8 @@ extension String {
     static func localized(_ key: LocalizedStringKey) -> String {
         return key.localized
     }
+    
+    static let schemeAppendix: String = "://"
 }
 
 extension String: LocalizedError {

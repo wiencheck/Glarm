@@ -11,7 +11,7 @@ import UIKit
 final class TableHeaderView: UITableViewHeaderFooterView {
     static let preferredHeight: CGFloat = 34
     
-    private lazy var label: UILabel = {
+    private(set) lazy var label: UILabel = {
         let l = UILabel()
         l.textColor = .secondaryLabel()
         l.font = .headerTitle
@@ -19,7 +19,13 @@ final class TableHeaderView: UITableViewHeaderFooterView {
         return l
     }()
     
-    private lazy var button: UIButton = {
+    private(set) lazy var imageView: UIImageView = {
+        let i = UIImageView()
+        i.tintColor = .label
+        return i
+    }()
+    
+    private(set) lazy var button: UIButton = {
         let b = UIButton(type: .system)
         b.alpha = 0
         b.text = "Button"
@@ -36,6 +42,14 @@ final class TableHeaderView: UITableViewHeaderFooterView {
             return label.text
         } set {
             label.text = newValue?.uppercased()
+        }
+    }
+    
+    var image: UIImage? {
+        get {
+            imageView.image
+        } set {
+            imageView.image = newValue
         }
     }
     
@@ -81,6 +95,7 @@ final class TableHeaderView: UITableViewHeaderFooterView {
     override func prepareForReuse() {
         super.prepareForReuse()
         label.text = nil
+        imageView.image = nil
         button.text = nil
     }
     
@@ -117,8 +132,12 @@ extension TableHeaderView {
 
 private extension TableHeaderView {
     func setupView() {
-        contentView.addSubview(label)
-        label.snp.makeConstraints { make in
+        let stack = UIStackView(arrangedSubviews: [label, imageView])
+        stack.axis = .horizontal
+        stack.spacing = 8
+        
+        contentView.addSubview(stack)
+        stack.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.leading.equalTo(contentView.layoutMarginsGuide)
         }
@@ -129,7 +148,7 @@ private extension TableHeaderView {
             make.top.equalToSuperview().inset(6)
 
             make.trailing.equalTo(contentView.layoutMarginsGuide)
-            make.leading.greaterThanOrEqualTo(label.snp.trailing).offset(12)
+            make.leading.greaterThanOrEqualTo(stack.snp.trailing).offset(12)
         }
     }
 }

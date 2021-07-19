@@ -52,6 +52,12 @@ class MapController: UIViewController {
         }
     }
     
+    private var isInputVisible = false {
+        didSet {
+            updateDrawerContent(animated: true)
+        }
+    }
+    
     internal lazy var mapView: MKMapView = {
         let m = MKMapView()
         m.showsUserLocation = true
@@ -78,6 +84,12 @@ class MapController: UIViewController {
         let s = LocationSettingsController(location: locationName, radius: radius)
         s.delegate = self
         return s
+    }()
+    
+    private lazy var radiusInputController: RadiusInputController = {
+        let vc = RadiusInputController()
+        vc.delegate = self
+        return vc
     }()
     
     private var annotation: MKPointAnnotation! {
@@ -163,9 +175,9 @@ class MapController: UIViewController {
     }
 }
 
-extension MapController: Drawerable {
+extension MapController: Drawerable {    
     var drawerContentViewController: UIViewController? {
-        return settingsController
+        return isInputVisible ? radiusInputController : settingsController
     }
 }
 
@@ -227,17 +239,30 @@ extension MapController: LocationSettingsControllerDelegate, UIPopoverPresentati
         present(nav, animated: true, completion: nil)
     }
     
+    func radiusButtonPressed() {
+        isInputVisible = true
+    }
+    
     func searchButtonPressed() {
         
     }
     
     func radiusChanged(_ radius: CLLocationDistance) {
         self.radius = radius
-        //setRadius(radius, interactive: true)
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
+    }
+}
+
+extension MapController: RadiusInputControllerDelegate {
+    func radiusInput(_ controller: RadiusInputController, didChangeRadiusInput radius: CLLocationDistance) {
+        self.radius = radius
+    }
+    
+    func radiusInputDidCommitRadius() {
+        isInputVisible = false
     }
 }
 

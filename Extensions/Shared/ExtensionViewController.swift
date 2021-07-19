@@ -279,7 +279,7 @@ private extension ExtensionViewController {
         } else if coordinate == .zero {
             mapView.setCenter(userCoordinate, animated: animated)
         } else {
-            let region = mapView.regionThatFits(MKCoordinateRegion(coordinates: [userCoordinate, coordinate]))
+            let region = mapView.regionThatFits(MKCoordinateRegion(coordinates: [userCoordinate, coordinate], spanMultiplier: SharedConstants.mapRegionSpanMultiplier))
             mapView.setRegion(region, animated: animated)
         }
     }
@@ -302,6 +302,6 @@ private extension ExtensionViewController {
 extension ExtensionViewController: CLLocationManagerDelegate {
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         updateDetailText()
-        UserDefaults.appGroupSuite.lastLocation = locations.last
+        UserDefaults.lastLocation = locations.last
     }
 }

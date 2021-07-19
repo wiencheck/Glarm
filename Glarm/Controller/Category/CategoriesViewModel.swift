@@ -78,7 +78,7 @@ extension CategoriesViewModel {
         return categories[section - 1].count
     }
     
-    func cellConfiguration(at path: IndexPath) -> (text: String, imageName: String?, selected: Bool)? {
+    func cellContents(at path: IndexPath) -> (text: String, imageName: String?, selected: Bool)? {
         if path.section == 0 {
             return (.localized(.category_none), nil, selectedCategory == nil)
         }
